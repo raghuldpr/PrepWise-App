@@ -1,362 +1,148 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-  Target,
-  CheckCircle2,
-  XCircle,
-  AlertTriangle,
-  ArrowRight,
-  Sparkles,
-  RefreshCw,
-  Loader2,
-  Compass,
-  Check,
-  Zap,
-  TrendingUp,
-  Award,
-  AlertCircle
-} from 'lucide-react';
-import { analyzeSkillGap, getLatestGapAnalysis } from '../../services/skillService';
-import { getAiErrorMessage } from '../../utils/aiErrorUtils';
-import CareerHubHeader from '../../components/hub/CareerHubHeader';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { AlertCircle, ArrowRight, CheckCircle2, CircleDashed, Target, TrendingUp } from 'lucide-react';
 import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
-import ProgressBar from '../../components/common/ProgressBar';
+import Button from '../../components/common/Button';
 import LoadingState from '../../components/common/LoadingState';
-import ErrorState from '../../components/common/ErrorState';
-import EmptyState from '../../components/common/EmptyState';
+import RolePicker, { useProfileRole } from '../../components/hub/RolePicker';
+import { analyzeSkillGap, errorMessage, getLatestGapAnalysis } from '../../services/learningService';
+
+const STATUS = {
+  strong: { label: 'Covered', cls: 'border-emerald-600/40 bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300', icon: CheckCircle2 },
+  improve: { label: 'Improve', cls: 'border-amber-600/40 bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300', icon: TrendingUp },
+  missing: { label: 'Missing', cls: 'border-rose-500/40 bg-rose-50 text-rose-800 dark:bg-rose-950/40 dark:text-rose-300', icon: CircleDashed },
+};
+const WEIGHT = { 3: 'Core', 2: 'Important', 1: 'Useful' };
+const ringColor = (s) => (s >= 70 ? '#059669' : s >= 40 ? '#d97706' : '#e11d48');
+
+function Ring({ value }) {
+  const r = 46, c = 2 * Math.PI * r;
+  return (
+    <svg width="120" height="120" viewBox="0 0 120 120" role="img" aria-label={`Readiness ${value} percent`}>
+      <circle cx="60" cy="60" r={r} fill="none" stroke="currentColor" strokeOpacity="0.12" strokeWidth="10" />
+      <circle cx="60" cy="60" r={r} fill="none" stroke={ringColor(value)} strokeWidth="10" strokeLinecap="round" strokeDasharray={`${(value / 100) * c} ${c}`} transform="rotate(-90 60 60)" />
+      <text x="60" y="64" textAnchor="middle" className="fill-current font-extrabold" fontSize="28">{value}%</text>
+    </svg>
+  );
+}
 
 export default function SkillGap() {
   const navigate = useNavigate();
-
-  const [targetRole, setTargetRole] = useState('Full Stack Software Engineer');
-  const [loading, setLoading] = useState(false);
-  const [fetchingInitial, setFetchingInitial] = useState(true);
-  const [error, setError] = useState(null);
+  const [params] = useSearchParams();
+  const { profileRoleId, loaded } = useProfileRole();
+  const [pick, setPick] = useState({ roleId: params.get('role') || 'software-engineer', stackId: params.get('stack') || '' });
   const [analysis, setAnalysis] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    loadLatestAnalysis();
-  }, []);
-
-  const loadLatestAnalysis = async () => {
-    try {
-      setFetchingInitial(true);
-      const data = await getLatestGapAnalysis();
-      if (data) {
-        setAnalysis(data);
-        if (data.targetRole) setTargetRole(data.targetRole);
-      } else {
-        // Fallback default trigger
-        await handleAnalyze(targetRole);
-      }
-    } catch (err) {
-      console.log("No previous analysis found, running default...");
-      await handleAnalyze(targetRole);
-    } finally {
-      setFetchingInitial(false);
-    }
-  };
-
-  const handleAnalyze = async (roleToAnalyze) => {
+  const run = useCallback(async (p) => {
     setLoading(true);
-    setError(null);
+    setError('');
     try {
-      const data = await analyzeSkillGap(roleToAnalyze || targetRole);
-      setAnalysis(data);
+      setAnalysis(await analyzeSkillGap({ roleId: p.roleId, stackId: p.stackId || null }));
     } catch (err) {
-      console.error("Failed to perform skill gap analysis:", err);
-      setError(getAiErrorMessage(err));
+      setError(errorMessage(err, 'Could not analyse your skills. Please try again.'));
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const existingStrengths = analysis?.existingStrengths || [
-    'Core Java & Object-Oriented Programming',
-    'HTML5, CSS3, & Modern JavaScript (ES6+)',
-    'Git & GitHub Version Control',
-    'Basic RESTful API Design'
-  ];
+  // First visit: use the profile's target role (or the role in the URL) and analyse straight away.
+  useEffect(() => {
+    if (!loaded) return;
+    const initial = { roleId: params.get('role') || profileRoleId || 'software-engineer', stackId: params.get('stack') || '' };
+    setPick(initial);
+    run(initial);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loaded]);
 
-  const missingSkills = analysis?.missingSkills || [
-    'System Design & Microservices Architecture',
-    'Spring Boot Security & JWT Auth',
-    'PostgreSQL & Complex SQL Joins / Indexing',
-    'Docker & Container Orchestration'
-  ];
-
-  const skillsToImprove = analysis?.skillsToImprove || [
-    'Data Structures & Algorithm Optimization',
-    'React State Management & Performance',
-    'Unit Testing (JUnit 5 & Mockito)'
-  ];
-
-  const learningOrder = analysis?.recommendedLearningOrder || [
-    'Master Spring Security & Authentication Filters',
-    'Practice Database Indexing & Query Tuning in PostgreSQL',
-    'Implement Microservices Architecture with Spring Cloud',
-    'Study System Design: Caching (Redis) & Load Balancing',
-    'Containerize Applications using Docker & Kubernetes'
-  ];
-
-  // Calculate readiness score
-  const totalSkillsCount = existingStrengths.length + missingSkills.length + skillsToImprove.length;
-  const masteredWeight = existingStrengths.length * 1.0;
-  const improvingWeight = skillsToImprove.length * 0.5;
-  const readinessPercentage = totalSkillsCount > 0 
-    ? Math.round(((masteredWeight + improvingWeight) / totalSkillsCount) * 100) 
-    : 65;
+  const next = (path) => navigate(`${path}?role=${analysis.roleId}${pick.stackId ? `&stack=${pick.stackId}` : ''}`);
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6 font-body pb-12">
-      <CareerHubHeader />
-
-      {/* Hero Banner */}
-      <div className="bg-[#EFECE6] dark:bg-[#1E1E1E] border border-[rgba(0,0,0,0.08)] dark:border-[#2E2E2E] rounded-2xl p-6 sm:p-8 relative overflow-hidden shadow-xs">
-        <div className="absolute -right-10 -top-10 w-44 h-44 bg-[#C85232]/10 rounded-full blur-2xl pointer-events-none"></div>
-
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative z-10">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C85232]/10 border border-[#C85232]/25 text-[#C85232] font-semibold text-xs">
-              <Target size={14} />
-              <span>Competency & Readiness Audit</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-bold font-heading text-[#111111] dark:text-white">
-              AI Skill Gap Analysis
-            </h1>
-            <p className="text-xs sm:text-sm text-[#5E5B56] dark:text-neutral-300 leading-relaxed">
-              Compare your current skill set against company interview requirements to identify critical missing competencies and prioritize your learning sequence.
-            </p>
-          </div>
-
-          <div className="bg-[#EAE6DF] dark:bg-[#121212] p-4 rounded-xl border border-[rgba(0,0,0,0.08)] dark:border-[#2E2E2E] shrink-0 w-full sm:w-auto text-center sm:text-right">
-            <div className="text-[11px] text-[#5E5B56] dark:text-neutral-400 font-semibold mb-1">Target Readiness Score</div>
-            <div className="text-2xl font-black font-heading text-[#C85232]">{readinessPercentage}%</div>
-            <p className="text-[10px] text-emerald-700 dark:text-emerald-400 font-medium mt-0.5">
-              {readinessPercentage >= 75 ? '🔥 High Placement Probability' : '📈 Dynamic Improvement Needed'}
-            </p>
-          </div>
-        </div>
+    <div className="max-w-5xl mx-auto space-y-8 pb-12">
+      <div className="border-b border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.12)] pb-4">
+        <Badge variant="primary" icon={Target}>SKILL GAP</Badge>
+        <h1 className="text-3xl font-extrabold font-heading mt-2">Where you stand for your target role</h1>
+        <p className="text-sm text-[#5E5B56] dark:text-[#A0A0A0] mt-1 max-w-2xl">
+          Your skills are compared with what the role typically needs. Skills come from your profile and your latest resume check. Nothing is guessed by an AI.
+        </p>
       </div>
 
-      {/* Target Role Selector Input */}
-      <Card padding="normal" className="space-y-4">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <h2 className="text-sm font-bold font-heading text-[#111111] dark:text-white flex items-center gap-2">
-              <Sparkles size={16} className="text-[#C85232]" />
-              Select Target Career Role
-            </h2>
-            <p className="text-xs text-[#5E5B56] dark:text-[#A0A0A0]">
-              Skill gap analysis automatically recalculates based on market expectations for this role.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <input
-              type="text"
-              value={targetRole}
-              onChange={(e) => setTargetRole(e.target.value)}
-              placeholder="e.g. SDE-1, Full Stack Developer, Cloud Engineer"
-              className="bg-[#FAF8F5] dark:bg-[#121212] border border-[rgba(0,0,0,0.12)] dark:border-[#333333] rounded-xl px-3.5 py-2 text-xs text-[#111111] dark:text-white focus:outline-none focus:border-[#C85232] w-full sm:w-64"
-            />
-            <button
-              onClick={() => handleAnalyze(targetRole)}
-              disabled={loading}
-              className="px-4 py-2 bg-[#C85232] hover:bg-[#B34528] disabled:bg-neutral-600 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shrink-0 shadow-xs transition-all active:scale-98"
-            >
-              {loading ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
-              <span>Analyze</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Readiness Bar */}
-        <div className="pt-2">
-          <ProgressBar
-            value={readinessPercentage}
-            label={`Readiness Match for ${analysis?.targetRole || targetRole}`}
-            showValue={true}
-            colorClass="bg-[#C85232]"
-          />
-        </div>
+      <Card className="space-y-4">
+        <RolePicker roleId={pick.roleId} stackId={pick.stackId} onChange={setPick} disabled={loading} />
+        <Button onClick={() => run(pick)} disabled={loading}>Analyze my skills</Button>
+        {error && <p role="alert" className="text-sm text-rose-600 inline-flex items-center gap-1.5"><AlertCircle size={16} /> {error}</p>}
       </Card>
 
-      {(fetchingInitial || loading) && (
-        <LoadingState message="Analyzing skill gaps for your target role..." />
-      )}
+      {loading && !analysis && <LoadingState message="Comparing your skills with the role..." />}
 
-      {!loading && !fetchingInitial && error && (
-        <ErrorState message={error} onRetry={() => handleAnalyze(targetRole)} />
-      )}
-
-      {!loading && !fetchingInitial && !error && !analysis && (
-        <EmptyState
-          title="No Skill Gap Analysis Found"
-          description="Analyze your target role to discover missing skills and recommended learning path."
-          actionLabel="Run Skill Analysis"
-          onAction={() => handleAnalyze(targetRole)}
-        />
-      )}
-
-      {!loading && !fetchingInitial && !error && analysis && (
+      {analysis && (
         <>
-          {/* Main Comparison Grid: Current (✓) vs. Missing Skills (❌) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Existing Strengths (✓ Covered) */}
-        <Card padding="normal" className="space-y-4 border-l-4 border-l-emerald-500">
-          <div className="flex items-center justify-between pb-3 border-b border-[rgba(0,0,0,0.06)] dark:border-[#2A2A2A]">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
-                <CheckCircle2 size={16} />
-              </div>
-              <h3 className="font-bold text-sm font-heading text-[#111111] dark:text-white">
-                Acquired Strengths (✓)
-              </h3>
-            </div>
-            <Badge variant="success" size="sm">
-              {existingStrengths.length} Mastered
-            </Badge>
-          </div>
-
-          <div className="space-y-2.5">
-            {existingStrengths.map((skill, idx) => (
-              <div
-                key={idx}
-                className="flex items-start gap-3 p-3 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/40"
-              >
-                <div className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] shrink-0 mt-0.5">
-                  <Check size={12} strokeWidth={3} />
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs font-bold text-emerald-950 dark:text-emerald-200">
-                    {skill}
-                  </p>
-                  <p className="text-[10px] text-emerald-700/80 dark:text-emerald-400 mt-0.5">
-                    Verified in baseline assessment & profile
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        {/* Missing Skills (❌ Critical Gap) */}
-        <Card padding="normal" className="space-y-4 border-l-4 border-l-rose-500">
-          <div className="flex items-center justify-between pb-3 border-b border-[rgba(0,0,0,0.06)] dark:border-[#2A2A2A]">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-rose-100 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold">
-                <XCircle size={16} />
-              </div>
-              <h3 className="font-bold text-sm font-heading text-[#111111] dark:text-white">
-                Missing Skills (Missing)
-              </h3>
-            </div>
-            <Badge variant="danger" size="sm">
-              {missingSkills.length} Action Needed
-            </Badge>
-          </div>
-
-          <div className="space-y-2.5">
-            {missingSkills.map((skill, idx) => (
-              <div
-                key={idx}
-                className="flex items-start gap-3 p-3 rounded-xl bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200/60 dark:border-rose-900/40"
-              >
-                <div className="w-5 h-5 rounded-full bg-rose-500 text-white flex items-center justify-center text-[10px] shrink-0 mt-0.5">
-                  <XCircle size={12} strokeWidth={2.5} />
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs font-bold text-rose-950 dark:text-rose-200">
-                    {skill}
-                  </p>
-                  <p className="text-[10px] text-rose-700/80 dark:text-rose-400 mt-0.5">
-                    High demand requirement for target role interviews
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-      </div>
-
-      {/* Skills to Improve (⚡ Growth Focus) */}
-      <Card padding="normal" className="space-y-4 border-l-4 border-l-amber-500">
-        <div className="flex items-center justify-between pb-3 border-b border-[rgba(0,0,0,0.06)] dark:border-[#2A2A2A]">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-amber-100 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
-              <Zap size={16} />
-            </div>
-            <h3 className="font-bold text-sm font-heading text-[#111111] dark:text-white">
-              Skills to Refine & Improve
-            </h3>
-          </div>
-          <Badge variant="warning" size="sm">
-            {skillsToImprove.length} Moderate Proficiency
-          </Badge>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {skillsToImprove.map((skill, idx) => (
-            <div
-              key={idx}
-              className="p-3.5 rounded-xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/40"
-            >
-              <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 mb-1">
-                <TrendingUp size={14} />
-                <span className="text-[10px] font-extrabold uppercase">Refinement</span>
-              </div>
-              <p className="text-xs font-bold text-amber-950 dark:text-amber-200">
-                {skill}
+          <Card className="flex flex-col md:flex-row items-center gap-6">
+            <Ring value={analysis.readiness} />
+            <div className="flex-1 text-center md:text-left">
+              <h2 className="text-xl font-bold font-heading">{analysis.readiness}% ready for {analysis.targetRole}</h2>
+              <p className="text-sm text-[#5E5B56] dark:text-[#A0A0A0] mt-1">
+                {analysis.existingStrengths.length} covered, {analysis.skillsToImprove.length} to improve, {analysis.missingSkills.length} missing.
               </p>
-            </div>
-          ))}
-        </div>
-      </Card>
-
-      {/* Recommended Learning Sequence */}
-      <Card padding="normal" className="space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-[rgba(0,0,0,0.06)] dark:border-[#2A2A2A]">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#C85232]/10 text-[#C85232] flex items-center justify-center font-bold">
-              <Compass size={16} />
-            </div>
-            <div>
-              <h3 className="font-bold text-sm font-heading text-[#111111] dark:text-white">
-                Recommended Priority Learning Sequence
-              </h3>
-              <p className="text-[11px] text-[#5E5B56] dark:text-[#A0A0A0]">
-                Optimized path to eliminate gaps with maximum efficiency
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={() => navigate('/hub/roadmap')}
-            className="px-3.5 py-1.5 bg-[#C85232] text-white font-bold text-xs rounded-xl hover:bg-[#B34528] flex items-center gap-1.5 shadow-xs transition-all"
-          >
-            <span>View Full Interactive Roadmap</span>
-            <ArrowRight size={14} />
-          </button>
-        </div>
-
-        <div className="space-y-3 pt-1">
-          {learningOrder.map((step, idx) => (
-            <div
-              key={idx}
-              className="flex items-center gap-3.5 p-3.5 rounded-xl bg-[#FAF8F5] dark:bg-[#121212] border border-[rgba(0,0,0,0.06)] dark:border-[#2A2A2A]"
-            >
-              <div className="w-7 h-7 rounded-lg bg-[#C85232] text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
-                {idx + 1}
+              {analysis.basedOn && (
+                <p className="text-xs text-[#5E5B56] dark:text-[#A0A0A0] mt-2">
+                  Based on {analysis.basedOn.declaredSkills} skill{analysis.basedOn.declaredSkills === 1 ? '' : 's'} in your profile{analysis.basedOn.usedResume ? ' and your latest resume check' : ''}.{' '}
+                  {analysis.basedOn.declaredSkills === 0 && !analysis.basedOn.usedResume && (
+                    <>Add skills in <Link className="underline text-[#C85232]" to="/onboarding/skills">your profile</Link> or <Link className="underline text-[#C85232]" to="/hub/resume">check a resume</Link> for a real result.</>
+                  )}
+                </p>
+              )}
+              <div className="flex flex-wrap gap-3 mt-4 justify-center md:justify-start">
+                <Button onClick={() => next('/hub/roadmap')}>Create my roadmap</Button>
+                <Button variant="secondary" onClick={() => next('/hub/study-plan')}>Make a study plan</Button>
               </div>
-              <p className="text-xs font-semibold text-[#111111] dark:text-neutral-200">
-                {step}
-              </p>
             </div>
-          ))}
-        </div>
-      </Card>
+          </Card>
+
+          <section>
+            <h2 className="text-lg font-bold font-heading mb-3">What this role needs</h2>
+            <div className="space-y-2">
+              {analysis.items.map((i) => {
+                const s = STATUS[i.status];
+                const Icon = s.icon;
+                return (
+                  <Card key={i.label} padding="compact" className="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <p className="font-semibold text-sm">{i.label}</p>
+                      <p className="text-xs text-[#5E5B56] dark:text-[#A0A0A0]">{WEIGHT[i.weight]}{i.status !== 'missing' ? ` • evidence ${Math.round(i.evidence * 100)}%` : ''}</p>
+                    </div>
+                    <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-0.5 text-xs font-semibold ${s.cls}`}><Icon size={14} /> {s.label}</span>
+                  </Card>
+                );
+              })}
+            </div>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-bold font-heading mb-3">Suggested learning order</h2>
+            {analysis.learningOrder.length === 0 ? (
+              <p className="text-sm text-[#5E5B56] dark:text-[#A0A0A0]">You already cover everything this role asks for. Build projects and practise interviews next.</p>
+            ) : (
+              <ol className="space-y-2">
+                {analysis.learningOrder.map((s, idx) => (
+                  <Card key={s.topicId} padding="compact" className="flex items-start gap-3">
+                    <span className="mt-0.5 h-6 w-6 shrink-0 rounded-full bg-[#C85232] text-white text-xs font-bold flex items-center justify-center">{idx + 1}</span>
+                    <div className="flex-1">
+                      <p className="font-semibold text-sm">{s.title} <span className="font-normal text-xs text-[#5E5B56] dark:text-[#A0A0A0]">• about {s.hours} hours</span></p>
+                      <p className="text-xs text-[#5E5B56] dark:text-[#A0A0A0]">{s.reason}</p>
+                    </div>
+                  </Card>
+                ))}
+              </ol>
+            )}
+            {analysis.learningOrder.length > 0 && (
+              <button type="button" onClick={() => next('/hub/roadmap')} className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[#C85232]">
+                Turn this into a roadmap with resources <ArrowRight size={14} />
+              </button>
+            )}
+          </section>
         </>
       )}
     </div>

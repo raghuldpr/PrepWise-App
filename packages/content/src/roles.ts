@@ -194,3 +194,56 @@ export const ROLE_BY_ID = new Map(ROLES.map((r) => [r.id, r]));
 export function roleSkillNames(role: RoleProfile): string[] {
   return role.skills.flatMap((s) => ("skill" in s ? [s.skill] : s.anyOf));
 }
+
+/** Stack choices that resolve an "any of" requirement, so a roadmap follows one coherent path. */
+export type StackPreset = { id: string; label: string; skills: string[] };
+export const STACK_PRESETS: Record<string, StackPreset[]> = {
+  "backend-developer": [
+    { id: "java", label: "Java + Spring Boot", skills: ["Java", "Spring Boot", "MySQL"] },
+    { id: "python", label: "Python + Django / FastAPI", skills: ["Python", "Django", "PostgreSQL"] },
+    { id: "node", label: "Node.js + Express", skills: ["Node.js", "Express.js", "MongoDB"] },
+  ],
+  "frontend-developer": [
+    { id: "react", label: "React", skills: ["React"] },
+    { id: "angular", label: "Angular", skills: ["Angular", "TypeScript"] },
+    { id: "vue", label: "Vue.js", skills: ["Vue.js"] },
+  ],
+  "full-stack-developer": [
+    { id: "mern", label: "MERN (MongoDB, Express, React, Node)", skills: ["JavaScript", "React", "Node.js", "Express.js", "MongoDB"] },
+    { id: "java-react", label: "Java Spring Boot + React", skills: ["Java", "React", "Spring Boot", "MySQL"] },
+    { id: "python-react", label: "Python + React", skills: ["Python", "React", "FastAPI", "PostgreSQL"] },
+  ],
+  "mobile-developer": [
+    { id: "android", label: "Android (Kotlin)", skills: ["Android", "Kotlin"] },
+    { id: "flutter", label: "Flutter (Dart)", skills: ["Flutter", "Dart"] },
+    { id: "react-native", label: "React Native", skills: ["React Native", "JavaScript"] },
+    { id: "ios", label: "iOS (Swift)", skills: ["iOS", "Swift"] },
+  ],
+  "devops-engineer": [
+    { id: "aws", label: "AWS", skills: ["AWS", "Python"] },
+    { id: "azure", label: "Azure", skills: ["Azure", "Bash"] },
+    { id: "gcp", label: "Google Cloud", skills: ["Google Cloud", "Go"] },
+  ],
+  "software-engineer": [
+    { id: "java", label: "Java", skills: ["Java"] },
+    { id: "python", label: "Python", skills: ["Python"] },
+    { id: "cpp", label: "C++", skills: ["C++"] },
+  ],
+  "qa-engineer": [
+    { id: "java", label: "Java + Selenium", skills: ["Java"] },
+    { id: "python", label: "Python + pytest", skills: ["Python"] },
+    { id: "js", label: "JavaScript + Playwright", skills: ["JavaScript"] },
+  ],
+};
+
+/** Onboarding "skills" (27 seeded names) -> taxonomy skill names. Aptitude skills have no taxonomy equivalent. */
+export const SEED_SKILL_MAP: Record<string, string[]> = {
+  "Java": ["Java"], "Python": ["Python"], "C++": ["C++"], "C": ["C"], "JavaScript": ["JavaScript"], "TypeScript": ["TypeScript"], "SQL": ["SQL"],
+  "Data Structures & Algorithms": ["Data Structures", "Algorithms"],
+  "Operating Systems": ["Operating Systems"], "Database Management Systems": ["DBMS"], "Computer Networks": ["Computer Networks"],
+  "System Design & Architecture": ["System Design"], "Object-Oriented Programming (OOP)": ["Object-Oriented Programming"],
+  "Spring Boot": ["Spring Boot"], "Node.js & Express": ["Node.js", "Express.js"], "PostgreSQL": ["PostgreSQL"], "MySQL": ["MySQL"],
+  "RESTful APIs": ["REST APIs"], "Docker & Containers": ["Docker"], "Git & GitHub": ["Git", "GitHub"], "AWS & Cloud Fundamentals": ["AWS"],
+  "React.js": ["React"], "HTML5 & CSS3": ["HTML", "CSS"], "Tailwind CSS": ["Tailwind CSS"],
+  "Quantitative Aptitude": [], "Logical Reasoning": [], "Verbal Ability & Communication": ["Communication"],
+};

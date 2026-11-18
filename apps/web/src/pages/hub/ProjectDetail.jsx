@@ -1,341 +1,112 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import {
-  Code2,
-  Sparkles,
-  BookmarkCheck,
-  Bookmark,
-  ArrowLeft,
-  Layers,
-  CheckCircle2,
-  Compass,
-  Lightbulb,
-  Rocket,
-  Check,
-  Loader2,
-  BarChart2,
-  Cpu,
-  AlertCircle
-} from 'lucide-react';
-import { getProjectById, saveProject, getSavedProjects } from '../../services/projectService';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft, Bookmark, BookmarkCheck, Clock } from 'lucide-react';
+import Card from '../../components/common/Card';
+import Badge from '../../components/common/Badge';
 import LoadingState from '../../components/common/LoadingState';
 import ErrorState from '../../components/common/ErrorState';
+import { selectClass } from '../../components/hub/RolePicker';
+import { errorMessage, getProjectById, getSavedProjects, saveProject, setProjectStatus, unsaveProject } from '../../services/learningService';
+
+const STATUS = { SAVED: 'Saved', PLANNED: 'Planned', IN_PROGRESS: 'In progress', COMPLETED: 'Completed' };
 
 export default function ProjectDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-
   const [project, setProject] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [savedRow, setSavedRow] = useState(null);
   const [error, setError] = useState(null);
+  const [notice, setNotice] = useState('');
+  const [loading, setLoading] = useState(true);
 
-  const [isSaved, setIsSaved] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
-
-  useEffect(() => {
-    fetchProjectData();
-    checkIfSaved();
-  }, [id]);
-
-  const fetchProjectData = async () => {
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      setError(null);
-      const data = await getProjectById(id);
-      setProject(data);
+      const [p, saved] = await Promise.all([getProjectById(id), getSavedProjects()]);
+      setProject(p);
+      setSavedRow(saved.find((s) => String(s.projectId) === String(id)) ?? null);
     } catch (err) {
-      console.error("Failed to load project details:", err);
-      setError("Unable to load project recommendation details. Please try again.");
+      setError(err.response?.status === 404 ? 'This project was not found.' : 'Could not load this project.');
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
-  const checkIfSaved = async () => {
+  useEffect(() => { load(); }, [load]);
+
+  const toggleSave = async () => {
+    setNotice('');
     try {
-      const savedList = await getSavedProjects();
-      const match = savedList.some(sp => String(sp.project?.id || sp.projectId) === String(id));
-      setIsSaved(match);
-    } catch (err) {
-      console.error("Failed to check saved projects:", err);
-    }
+      if (savedRow) { await unsaveProject(id); setSavedRow(null); } else { setSavedRow(await saveProject(id)); }
+    } catch (err) { setNotice(errorMessage(err, 'Could not update your saved projects.')); }
+  };
+  const changeStatus = async (status) => {
+    setNotice('');
+    try { setSavedRow(await setProjectStatus(id, status)); } catch (err) { setNotice(errorMessage(err, 'Could not update the status.')); }
   };
 
-  const handleAddToLearningPlan = async () => {
-    if (isSaved || saving) return;
-
-    try {
-      setSaving(true);
-      await saveProject(id);
-      setIsSaved(true);
-      setSaveSuccess(true);
-      setTimeout(() => setSaveSuccess(false), 3000);
-    } catch (err) {
-      console.error("Failed to save project:", err);
-      alert("Could not add project to your learning plan.");
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  // Helper to parse comma-separated or list-based text into arrays
-  const parseList = (str) => {
-    if (!str) return [];
-    if (Array.isArray(str)) return str;
-    return String(str)
-      .split(/,|\n|;/)
-      .map(item => item.trim())
-      .filter(item => item.length > 0);
-  };
-
-  if (loading) {
-    return <LoadingState message="Loading project specification..." />;
-  }
-
-  if (error || !project) {
-    return <ErrorState message={error || "The requested project specification could not be located."} onRetry={fetchProjectData} />;
-  }
-
-  const techStackList = parseList(project.techStack || project.technologyStack);
-  const skillsList = parseList(project.skillsCovered);
-  const roadmapSteps = parseList(project.roadmap || project.developmentRoadmap);
+  if (loading) return <div className="max-w-4xl mx-auto py-12 px-4"><LoadingState message="Loading the project..." /></div>;
+  if (error || !project) return <div className="max-w-4xl mx-auto py-12 px-4"><ErrorState message={error || 'Project not found.'} onRetry={load} /></div>;
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 font-body pb-12">
-      {/* Top Header & Back Button */}
-      <div className="flex items-center justify-between">
-        <button
-          onClick={() => navigate('/hub/projects')}
-          className="inline-flex items-center gap-2 text-xs font-semibold text-[#5E5B56] dark:text-[#A0A0A0] hover:text-[#111111] dark:hover:text-white transition-colors"
-        >
-          <ArrowLeft size={16} /> Back to Project Recommendations
-        </button>
+    <div className="max-w-4xl mx-auto space-y-8 pb-12">
+      <button onClick={() => navigate('/hub/projects')} className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#5E5B56] dark:text-[#A0A0A0] hover:text-[#C85232]">
+        <ArrowLeft size={16} /> All projects
+      </button>
 
-        {/* CTA Button */}
-        <button
-          onClick={handleAddToLearningPlan}
-          disabled={isSaved || saving}
-          className={`px-5 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 shadow-md transition-all ${
-            isSaved
-              ? 'bg-emerald-600 text-white cursor-default'
-              : 'bg-[#C85232] hover:bg-[#B34528] text-white active:scale-98'
-          }`}
-        >
-          {saving ? (
-            <Loader2 size={16} className="animate-spin" />
-          ) : isSaved ? (
-            <>
-              <CheckCircle2 size={16} />
-              <span>Saved in Learning Plan</span>
-            </>
-          ) : (
-            <>
-              <Bookmark size={16} />
-              <span>Add to Learning Plan</span>
-            </>
+      <div className="border-b border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.12)] pb-4 space-y-2">
+        <div className="flex flex-wrap gap-2"><Badge variant="primary">{project.domain}</Badge><Badge>{project.difficulty.toLowerCase()}</Badge>{project.fullStack && <Badge>full-stack</Badge>}</div>
+        <h1 className="text-3xl font-extrabold font-heading">{project.title}</h1>
+        <p className="text-sm text-[#5E5B56] dark:text-[#A0A0A0] inline-flex items-center gap-1.5"><Clock size={14} /> About {project.hours} hours • {project.languages.join(', ')}</p>
+        <div className="flex flex-wrap items-center gap-4 pt-1">
+          <button type="button" onClick={toggleSave} aria-pressed={!!savedRow} className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#C85232]">
+            {savedRow ? <BookmarkCheck size={18} /> : <Bookmark size={18} />} {savedRow ? 'Saved' : 'Save this project'}
+          </button>
+          {savedRow && (
+            <select aria-label="Project status" value={savedRow.status} onChange={(e) => changeStatus(e.target.value)} className={`${selectClass} !mt-0 max-w-[11rem]`}>
+              {Object.entries(STATUS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+            </select>
           )}
-        </button>
+        </div>
+        {notice && <p role="alert" className="text-sm text-rose-600">{notice}</p>}
       </div>
 
-      {/* Save Toast Notification */}
-      {saveSuccess && (
-        <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-center gap-2">
-          <CheckCircle2 size={18} />
-          <span>Project successfully added to your personalized learning plan!</span>
-        </div>
-      )}
+      <section><h2 className="text-lg font-bold font-heading mb-2">The problem</h2><p className="text-sm">{project.problemStatement}</p></section>
 
-      {/* Hero Banner Card */}
-      <div className="bg-surface border border-[rgba(0,0,0,0.08)] dark:border-[#2E2E2E] rounded-2xl p-6 sm:p-8 relative overflow-hidden shadow-sm">
-        <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-[#C85232]/10 rounded-full blur-3xl pointer-events-none"></div>
+      <section>
+        <h2 className="text-lg font-bold font-heading mb-2">Features to build</h2>
+        <ul className="list-disc pl-5 text-sm space-y-1">{project.features.map((x) => <li key={x}>{x}</li>)}</ul>
+      </section>
 
-        <div className="flex flex-col md:flex-row items-start justify-between gap-6 relative z-10">
-          <div className="space-y-3 flex-1">
-            <div className="flex items-center gap-2">
-              <span className={`px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider ${
-                project.difficulty === 'EASY'
-                  ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
-                  : project.difficulty === 'HARD'
-                  ? 'bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30'
-                  : 'bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30'
-              }`}>
-                {project.difficulty || 'MEDIUM'} DIFFICULTY
-              </span>
-              <span className="text-xs text-[#5E5B56] dark:text-neutral-400">• Portfolio Ready</span>
-            </div>
-
-            <h1 className="text-2xl sm:text-3xl font-bold font-heading text-[#111111] dark:text-white">
-              {project.title}
-            </h1>
-
-            <p className="text-xs sm:text-sm text-[#5E5B56] dark:text-neutral-300 leading-relaxed max-w-3xl">
-              {project.problemStatement || project.description}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Grid: Tech Stack & Skills Covered */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Technology Stack Card */}
-        <div className="bg-white dark:bg-[#1A1A1A] border border-[rgba(0,0,0,0.08)] dark:border-[#2A2A2A] rounded-2xl p-6 shadow-sm">
-          <div className="flex items-center gap-2.5 pb-4 border-b border-[rgba(0,0,0,0.06)] dark:border-[#2A2A2A]">
-            <div className="w-8 h-8 rounded-lg bg-[#C85232]/10 text-[#C85232] flex items-center justify-center font-bold">
-              <Code2 size={18} />
-            </div>
-            <div>
-              <h2 className="font-bold text-sm font-heading text-[#111111] dark:text-white">Recommended Technology Stack</h2>
-              <p className="text-[11px] text-[#5E5B56] dark:text-[#A0A0A0]">Frameworks, tools, and databases</p>
-            </div>
-          </div>
-
-          <div className="mt-4 flex flex-wrap gap-2">
-            {techStackList.map((tech, idx) => (
-              <span
-                key={idx}
-                className="px-3 py-1.5 rounded-xl bg-[#FAF8F5] dark:bg-[#222222] border border-[rgba(0,0,0,0.08)] dark:border-[#333333] text-xs font-semibold text-[#111111] dark:text-white"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Skills Covered Card */}
-        <div className="bg-white dark:bg-[#1A1A1A] border border-[rgba(0,0,0,0.08)] dark:border-[#2A2A2A] rounded-2xl p-6 shadow-sm">
-          <div className="flex items-center gap-2.5 pb-4 border-b border-[rgba(0,0,0,0.06)] dark:border-[#2A2A2A]">
-            <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
-              <Cpu size={18} />
-            </div>
-            <div>
-              <h2 className="font-bold text-sm font-heading text-[#111111] dark:text-white">Skills You Will Master</h2>
-              <p className="text-[11px] text-[#5E5B56] dark:text-[#A0A0A0]">Key concepts evaluated in interviews</p>
-            </div>
-          </div>
-
-          <div className="mt-4 flex flex-wrap gap-2">
-            {skillsList.map((skill, idx) => (
-              <span
-                key={idx}
-                className="px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 text-emerald-700 dark:text-emerald-300 text-xs font-semibold"
-              >
-                {skill}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Why This Project & Placement Relevance Card */}
-      <div className="bg-white dark:bg-[#1A1A1A] border border-[rgba(0,0,0,0.08)] dark:border-[#2A2A2A] rounded-2xl p-6 sm:p-8 shadow-sm space-y-4">
-        <div className="flex items-center gap-2.5 pb-4 border-b border-[rgba(0,0,0,0.06)] dark:border-[#2A2A2A]">
-          <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
-            <Lightbulb size={18} />
-          </div>
-          <div>
-            <h2 className="font-bold text-base font-heading text-[#111111] dark:text-white">Why This Project?</h2>
-            <p className="text-xs text-[#5E5B56] dark:text-[#A0A0A0]">Recruiter value and interview discussion leverage</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-          <div className="p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#121212] border border-[rgba(0,0,0,0.06)] dark:border-[#2A2A2A]">
-            <h3 className="text-xs font-bold text-[#C85232] mb-1.5 uppercase tracking-wider">Placement Relevance</h3>
-            <p className="text-xs text-[#2A2A2A] dark:text-neutral-300 leading-relaxed">
-              {project.placementRelevance || "High relevance for Software Development Engineer (SDE) and Full Stack roles."}
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#121212] border border-[rgba(0,0,0,0.06)] dark:border-[#2A2A2A]">
-            <h3 className="text-xs font-bold text-[#C85232] mb-1.5 uppercase tracking-wider">Technical Depth & Impact</h3>
-            <p className="text-xs text-[#2A2A2A] dark:text-neutral-300 leading-relaxed">
-              {project.whyItsUseful || "Demonstrates production-level architecture design, RESTful API practices, clean state management, and reliable database indexing."}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Step-by-Step Development Roadmap Card */}
-      <div className="bg-white dark:bg-[#1A1A1A] border border-[rgba(0,0,0,0.08)] dark:border-[#2A2A2A] rounded-2xl p-6 sm:p-8 shadow-sm">
-        <div className="flex items-center gap-2.5 pb-4 border-b border-[rgba(0,0,0,0.06)] dark:border-[#2A2A2A] mb-6">
-          <div className="w-8 h-8 rounded-lg bg-[#C85232]/10 text-[#C85232] flex items-center justify-center font-bold">
-            <Compass size={18} />
-          </div>
-          <div>
-            <h2 className="font-bold text-base font-heading text-[#111111] dark:text-white">Development Roadmap</h2>
-            <p className="text-xs text-[#5E5B56] dark:text-[#A0A0A0]">Step-by-step execution path for completion</p>
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          {roadmapSteps.map((step, idx) => (
-            <div key={idx} className="flex items-start gap-4 p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#121212] border border-[rgba(0,0,0,0.06)] dark:border-[#2A2A2A]">
-              <div className="w-7 h-7 rounded-lg bg-[#C85232] text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
-                {idx + 1}
-              </div>
-              <div>
-                <p className="text-xs text-[#111111] dark:text-neutral-200 font-medium leading-relaxed">
-                  {step}
-                </p>
-              </div>
-            </div>
+      <section>
+        <h2 className="text-lg font-bold font-heading mb-2">Build plan</h2>
+        <ol className="space-y-2">
+          {project.milestones.map((m, i) => (
+            <Card key={m} padding="compact" className="flex items-start gap-3">
+              <span className="h-6 w-6 shrink-0 rounded-full bg-[#C85232] text-white text-xs font-bold flex items-center justify-center">{i + 1}</span>
+              <p className="text-sm">{m}</p>
+            </Card>
           ))}
-        </div>
-      </div>
+        </ol>
+      </section>
 
-      {/* Future Enhancements Card */}
-      {project.futureEnhancements && (
-        <div className="bg-white dark:bg-[#1A1A1A] border border-[rgba(0,0,0,0.08)] dark:border-[#2A2A2A] rounded-2xl p-6 sm:p-8 shadow-sm">
-          <div className="flex items-center gap-2.5 pb-4 border-b border-[rgba(0,0,0,0.06)] dark:border-[#2A2A2A] mb-4">
-            <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
-              <Rocket size={18} />
-            </div>
-            <div>
-              <h2 className="font-bold text-base font-heading text-[#111111] dark:text-white">Future Enhancements & Stretch Goals</h2>
-              <p className="text-xs text-[#5E5B56] dark:text-[#A0A0A0]">Ideas to make your project stand out during interviews</p>
-            </div>
-          </div>
+      <section className="grid md:grid-cols-2 gap-6">
+        <Card><h2 className="font-bold font-heading mb-2">Skills it covers</h2>
+          <div className="flex flex-wrap gap-1.5">{project.skills.map((s) => <span key={s} className="rounded-full border border-[#5E5B56]/30 px-2.5 py-0.5 text-xs">{s}</span>)}</div>
+        </Card>
+        <Card><h2 className="font-bold font-heading mb-2">Why it helps in placements</h2>
+          <p className="text-sm">{project.whyItsUseful}</p><p className="text-sm mt-2">{project.placementRelevance}</p>
+        </Card>
+      </section>
 
-          <p className="text-xs text-[#2A2A2A] dark:text-neutral-300 leading-relaxed whitespace-pre-line">
-            {project.futureEnhancements}
-          </p>
-        </div>
-      )}
-
-      {/* Bottom Floating Action Bar */}
-      <div className="pt-4 flex items-center justify-between border-t border-[rgba(0,0,0,0.08)] dark:border-[#2A2A2A]">
-        <button
-          onClick={() => navigate('/hub/projects')}
-          className="text-xs font-bold text-[#5E5B56] dark:text-[#A0A0A0] hover:text-[#111111] dark:hover:text-white transition-colors"
-        >
-          ← Back to All Projects
-        </button>
-
-        <button
-          onClick={handleAddToLearningPlan}
-          disabled={isSaved || saving}
-          className={`px-6 py-3 rounded-xl font-bold text-xs flex items-center gap-2 shadow-md transition-all ${
-            isSaved
-              ? 'bg-emerald-600 text-white cursor-default'
-              : 'bg-[#C85232] hover:bg-[#B34528] text-white active:scale-98'
-          }`}
-        >
-          {saving ? (
-            <Loader2 size={16} className="animate-spin" />
-          ) : isSaved ? (
-            <>
-              <CheckCircle2 size={16} />
-              <span>Saved in Learning Plan</span>
-            </>
-          ) : (
-            <>
-              <Bookmark size={16} />
-              <span>Add to Learning Plan</span>
-            </>
-          )}
-        </button>
-      </div>
+      <section>
+        <h2 className="text-lg font-bold font-heading mb-2">Ideas to extend it</h2>
+        <ul className="list-disc pl-5 text-sm space-y-1">{project.futureEnhancements.split('; ').map((x) => <li key={x}>{x}</li>)}</ul>
+        <p className="text-xs text-[#5E5B56] dark:text-[#A0A0A0] mt-4">
+          Add the finished project to your resume, then <Link to="/hub/resume" className="underline text-[#C85232]">check it in the Resume Analyzer</Link>.
+        </p>
+      </section>
     </div>
   );
 }

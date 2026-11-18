@@ -22,6 +22,13 @@
       "when": 1795011271097,
       "tag": "0005_resume",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1795012841088,
+      "tag": "0006_learning",
+      "breakpoints": true
     }
   ]
 }

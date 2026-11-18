@@ -197,6 +197,68 @@ export const resumeAnalyses = sqliteTable(
   (t) => [index("analyses_resume_idx").on(t.resumeId, t.createdAt), index("analyses_user_idx").on(t.userId, t.createdAt)],
 );
 
+export const skillGapAnalyses = sqliteTable(
+  "skill_gap_analyses",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    roleId: text("role_id").notNull(),
+    targetRole: text("target_role").notNull(),
+    readiness: integer("readiness").notNull(),
+    resultJson: text("result_json").notNull(),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [index("gap_user_idx").on(t.userId, t.createdAt)],
+);
+
+export const learningRoadmaps = sqliteTable(
+  "learning_roadmaps",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    roleId: text("role_id").notNull(),
+    targetRole: text("target_role").notNull(),
+    dataJson: text("data_json").notNull(),
+    completedJson: text("completed_json").notNull().default("[]"),
+    createdAt: text("created_at").notNull().default(now),
+    updatedAt: text("updated_at").notNull().default(now),
+  },
+  (t) => [index("roadmaps_user_idx").on(t.userId, t.updatedAt)],
+);
+
+export const studyPlans = sqliteTable(
+  "study_plans",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    roleId: text("role_id").notNull(),
+    title: text("title").notNull(),
+    targetRole: text("target_role").notNull(),
+    durationWeeks: integer("duration_weeks").notNull(),
+    dataJson: text("data_json").notNull(),
+    completedJson: text("completed_json").notNull().default("[]"),
+    createdAt: text("created_at").notNull().default(now),
+    updatedAt: text("updated_at").notNull().default(now),
+  },
+  (t) => [index("plans_user_idx").on(t.userId, t.updatedAt)],
+);
+
+export const PROJECT_STATUSES = ["SAVED", "PLANNED", "IN_PROGRESS", "COMPLETED"] as const;
+export const userProjects = sqliteTable(
+  "user_projects",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    // The catalog lives in code (packages/content), so this is an id, not a foreign key.
+    projectId: integer("project_id").notNull(),
+    status: text("status", { enum: PROJECT_STATUSES }).notNull().default("SAVED"),
+    startedAt: text("started_at"),
+    completedAt: text("completed_at"),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("user_projects_unique").on(t.userId, t.projectId)],
+);
+
 // Profile columns that clients may edit (shared by the update route and the response mapper).
 export const PROFILE_TEXT_FIELDS = [
   "phone", "avatarUrl", "degree", "branch", "currentSemester", "education", "college",

@@ -1,370 +1,202 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-  Calendar,
-  Sparkles,
-  Clock,
-  CheckCircle2,
-  BookOpen,
-  Target,
-  Loader2,
-  Check,
-  ChevronRight,
-  Flame,
-  Zap,
-  BarChart2,
-  Filter,
-  ListTodo,
-  AlertCircle
-} from 'lucide-react';
-import { generateStudyPlan, getUserStudyPlans } from '../../services/studyPlanService';
-import { getAiErrorMessage } from '../../utils/aiErrorUtils';
-import CareerHubHeader from '../../components/hub/CareerHubHeader';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { AlertCircle, AlertTriangle, CalendarDays, CheckSquare, ChevronDown, ChevronUp, Square, Trash2 } from 'lucide-react';
 import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
-import ProgressBar from '../../components/common/ProgressBar';
+import Button from '../../components/common/Button';
 import LoadingState from '../../components/common/LoadingState';
-import ErrorState from '../../components/common/ErrorState';
-import EmptyState from '../../components/common/EmptyState';
+import RolePicker, { selectClass, useProfileRole } from '../../components/hub/RolePicker';
+import {
+  deleteStudyPlan, errorMessage, generateStudyPlan, getStudyPlanById, getUserStudyPlans, saveStudyPlanProgress,
+} from '../../services/learningService';
+
+const WEEKS = [2, 4, 6, 8, 12, 16, 20, 26];
+const HOURS = [6, 10, 15, 20, 30];
+const KIND = {
+  learn: 'bg-sky-100 text-sky-800 dark:bg-sky-950/50 dark:text-sky-300',
+  project: 'bg-violet-100 text-violet-800 dark:bg-violet-950/50 dark:text-violet-300',
+  practice: 'bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300',
+  revision: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
+  mock: 'bg-rose-100 text-rose-800 dark:bg-rose-950/50 dark:text-rose-300',
+};
+const DAY_ORDER = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 export default function StudyPlan() {
-  const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const { profileRoleId, loaded } = useProfileRole();
+  const [pick, setPick] = useState({ roleId: params.get('role') || 'software-engineer', stackId: params.get('stack') || '' });
+  const [weeks, setWeeks] = useState(8);
+  const [hours, setHours] = useState(10);
+  const [level, setLevel] = useState('Intermediate');
 
-  // Inputs state
-  const [availableStudyTime, setAvailableStudyTime] = useState('2 hours / day');
-  const [targetRole, setTargetRole] = useState('Full Stack Software Engineer');
-  const [currentSkillLevel, setCurrentSkillLevel] = useState('Intermediate');
-  const [targetDeadline, setTargetDeadline] = useState('6 Weeks');
+  const [list, setList] = useState([]);
+  const [current, setCurrent] = useState(null);
+  const [done, setDone] = useState(new Set());
+  const [open, setOpen] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const saveTimer = useRef(null);
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [currentPlan, setCurrentPlan] = useState(null);
-  const [completedTasks, setCompletedTasks] = useState({});
-
-  useEffect(() => {
-    loadUserStudyPlans();
+  const show = useCallback((p) => {
+    setCurrent(p);
+    setDone(new Set(p.completed));
+    setOpen({ 1: true });
   }, []);
 
-  const loadUserStudyPlans = async () => {
-    try {
-      const plans = await getUserStudyPlans();
-      if (plans && plans.length > 0) {
-        setCurrentPlan(plans[0]);
-      } else {
-        await handleGenerate();
+  useEffect(() => {
+    if (!loaded) return;
+    setPick((p) => ({ ...p, roleId: params.get('role') || profileRoleId || p.roleId }));
+    (async () => {
+      try {
+        const plans = await getUserStudyPlans();
+        setList(plans);
+        if (plans[0]) show(await getStudyPlanById(plans[0].id));
+      } catch (err) {
+        setError(errorMessage(err, 'Could not load your study plans.'));
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.log("No existing study plan, generating default...");
-      await handleGenerate();
-    }
-  };
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loaded]);
 
-  const handleGenerate = async (e) => {
-    if (e) e.preventDefault();
-    setLoading(true);
-    setError(null);
+  const generate = async () => {
+    setBusy(true);
+    setError('');
     try {
-      const payload = {
-        availableStudyTime,
-        targetRole,
-        currentSkillLevel,
-        targetDeadline
-      };
-      const data = await generateStudyPlan(payload);
-      setCurrentPlan(data);
-      setCompletedTasks({});
+      const p = await generateStudyPlan({ roleId: pick.roleId, stackId: pick.stackId || null, weeks, hoursPerWeek: hours, level });
+      show(p);
+      setList(await getUserStudyPlans());
     } catch (err) {
-      console.error("Failed to generate study plan:", err);
-      setError(getAiErrorMessage(err));
+      setError(errorMessage(err, 'Could not create the plan. Please try again.'));
     } finally {
-      setLoading(false);
+      setBusy(false);
     }
   };
 
-  const toggleTask = (taskId) => {
-    setCompletedTasks(prev => ({
-      ...prev,
-      [taskId]: !prev[taskId]
-    }));
+  const toggle = (id) => {
+    const next = new Set(done);
+    next.has(id) ? next.delete(id) : next.add(id);
+    setDone(next);
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => saveStudyPlanProgress(current.id, [...next]).catch(() => setError('Could not save your progress.')), 600);
   };
 
-  // Structured default weekly breakdown
-  const weeklySchedule = [
-    {
-      weekNumber: 1,
-      title: 'Week 1: Data Structures & Core Java Fundamentals',
-      focus: 'Arrays, HashMaps, Two Pointers & Big-O Notation',
-      days: [
-        { id: 'w1d1', day: 'Mon', task: 'Solve 2 LeetCode Medium Array problems (Two Pointers)', time: '45m' },
-        { id: 'w1d2', day: 'Tue', task: 'Study Java Collections Framework & HashMap internal working', time: '45m' },
-        { id: 'w1d3', day: 'Wed', task: 'Practice String manipulation & Slidng Window pattern', time: '45m' },
-        { id: 'w1d4', day: 'Thu', task: 'Review OOP principles: Inheritance, Interfaces & Polymorphism', time: '45m' },
-        { id: 'w1d5', day: 'Fri', task: 'Implement custom LinkedList & Binary Search Tree in Java', time: '60m' },
-        { id: 'w1d6', day: 'Sat', task: 'Mock Technical Interview Drill: 3 timed DSA questions', time: '90m' },
-        { id: 'w1d7', day: 'Sun', task: 'Weekly review & rest / backlog catchup', time: '30m' },
-      ]
-    },
-    {
-      weekNumber: 2,
-      title: 'Week 2: Spring Boot Architecture & RESTful API Design',
-      focus: 'Controllers, Services, Repositories & Spring Security',
-      days: [
-        { id: 'w2d1', day: 'Mon', task: 'Build Spring Boot REST API with DTO pattern and validation', time: '60m' },
-        { id: 'w2d2', day: 'Tue', task: 'Configure Spring Data JPA & Hibernate entity mappings', time: '60m' },
-        { id: 'w2d3', day: 'Wed', task: 'Implement JWT authentication & custom security filter chain', time: '75m' },
-        { id: 'w2d4', day: 'Thu', task: 'Write unit tests using JUnit 5 & Mockito for Service layer', time: '45m' },
-        { id: 'w2d5', day: 'Fri', task: 'Connect PostgreSQL database with Liquibase / Flyway migrations', time: '60m' },
-        { id: 'w2d6', day: 'Sat', task: 'Mini-Project: Deploy REST backend to Cloud Container', time: '90m' },
-        { id: 'w2d7', day: 'Sun', task: 'Weekly architectural retrospective & code cleanup', time: '30m' },
-      ]
-    },
-    {
-      weekNumber: 3,
-      title: 'Week 3: System Design & Database Performance',
-      focus: 'Database Indexing, Caching (Redis) & Microservices',
-      days: [
-        { id: 'w3d1', day: 'Mon', task: 'Study PostgreSQL B-Tree indexing, execution plans & EXPLAIN ANALYZE', time: '60m' },
-        { id: 'w3d2', day: 'Tue', task: 'Integrate Redis caching layer for frequent database queries', time: '60m' },
-        { id: 'w3d3', day: 'Wed', task: 'Learn System Design: Load Balancing, CDN & Database Sharding', time: '60m' },
-        { id: 'w3d4', day: 'Thu', task: 'Design URL Shortener / Rate Limiter architecture on whiteboard', time: '60m' },
-        { id: 'w3d5', day: 'Fri', task: 'Implement asynchronous messaging using RabbitMQ / Kafka', time: '75m' },
-        { id: 'w3d6', day: 'Sat', task: 'System Design Mock Interview: Design E-Commerce Checkout', time: '90m' },
-        { id: 'w3d7', day: 'Sun', task: 'Weekly assessment & progress synchronization', time: '30m' },
-      ]
-    }
-  ];
+  const remove = async () => {
+    if (!window.confirm('Delete this study plan?')) return;
+    await deleteStudyPlan(current.id);
+    const rest = await getUserStudyPlans();
+    setList(rest);
+    if (rest[0]) show(await getStudyPlanById(rest[0].id)); else setCurrent(null);
+  };
 
-  const totalTasksCount = weeklySchedule.reduce((acc, week) => acc + week.days.length, 0);
-  const completedTasksCount = Object.values(completedTasks).filter(Boolean).length;
-  const progressPercent = Math.round((completedTasksCount / totalTasksCount) * 100) || 0;
+  const plan = current?.data;
+  const taskIds = useMemo(() => (plan ? plan.weeklySchedule.flatMap((w) => w.dailyTasks.map((t) => t.id)) : []), [plan]);
+  const pct = taskIds.length ? Math.round((taskIds.filter((i) => done.has(i)).length / taskIds.length) * 100) : 0;
+  const trimmed = plan?.coverage.trimmed.length > 0;
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6 font-body pb-12">
-      <CareerHubHeader />
-
-      {/* Hero Banner */}
-      <div className="bg-[#EFECE6] dark:bg-[#1E1E1E] border border-[rgba(0,0,0,0.08)] dark:border-[#2E2E2E] rounded-2xl p-6 sm:p-8 relative overflow-hidden shadow-xs">
-        <div className="absolute -right-10 -top-10 w-44 h-44 bg-[#C85232]/10 rounded-full blur-2xl pointer-events-none"></div>
-
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative z-10">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C85232]/10 border border-[#C85232]/25 text-[#C85232] font-semibold text-xs">
-              <Calendar size={14} />
-              <span>Time & Goal-Based Schedule</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-bold font-heading text-[#111111] dark:text-white">
-              Personalized Study Plan
-            </h1>
-            <p className="text-xs sm:text-sm text-[#5E5B56] dark:text-neutral-300 leading-relaxed">
-              Daily time allocations, practice questions, and weekly milestone checklists engineered around your specific availability and target placement deadline.
-            </p>
-          </div>
-
-          <div className="bg-[#EAE6DF] dark:bg-[#121212] p-4 rounded-xl border border-[rgba(0,0,0,0.08)] dark:border-[#2E2E2E] shrink-0 w-full sm:w-auto text-center sm:text-right">
-            <div className="text-[11px] text-[#5E5B56] dark:text-neutral-400 font-semibold mb-1">Study Streak & Progress</div>
-            <div className="text-2xl font-black font-heading text-[#C85232] flex items-center justify-center sm:justify-end gap-1">
-              <Flame size={20} className="text-amber-500 fill-amber-500" />
-              <span>{completedTasksCount} / {totalTasksCount}</span>
-            </div>
-            <p className="text-[10px] text-emerald-700 dark:text-emerald-400 font-medium mt-0.5">
-              {progressPercent}% Tasks Completed
-            </p>
-          </div>
-        </div>
+    <div className="max-w-5xl mx-auto space-y-8 pb-12">
+      <div className="border-b border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.12)] pb-4">
+        <Badge variant="primary" icon={CalendarDays}>STUDY PLAN</Badge>
+        <h1 className="text-3xl font-extrabold font-heading mt-2">A week-by-week schedule that fits your time</h1>
+        <p className="text-sm text-[#5E5B56] dark:text-[#A0A0A0] mt-1 max-w-2xl">
+          Choose how many weeks and hours you have. The plan fits your roadmap into that time and tells you plainly if it cannot all fit.
+        </p>
       </div>
 
-      {/* Time & Deadline Input Form */}
-      <Card padding="normal" className="space-y-4">
-        <h2 className="text-sm font-bold font-heading text-[#111111] dark:text-white flex items-center gap-2">
-          <Filter size={16} className="text-[#C85232]" />
-          Configure Availability & Deadline Inputs
-        </h2>
-
-        <form onSubmit={handleGenerate} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div>
-            <label className="block text-[11px] font-bold text-[#111111] dark:text-neutral-300 mb-1.5">
-              Available Daily Time
-            </label>
-            <select
-              value={availableStudyTime}
-              onChange={(e) => setAvailableStudyTime(e.target.value)}
-              className="w-full bg-[#FAF8F5] dark:bg-[#121212] border border-[rgba(0,0,0,0.12)] dark:border-[#333333] rounded-xl px-3 py-2 text-xs text-[#111111] dark:text-white focus:outline-none focus:border-[#C85232]"
-            >
-              <option value="1 hour / day">1 hour / day (Light)</option>
-              <option value="2 hours / day">2 hours / day (Recommended)</option>
-              <option value="3-4 hours / day">3-4 hours / day (Intensive)</option>
-              <option value="Full-time Bootcamp">Full-time (6+ hours / day)</option>
+      <Card className="space-y-4">
+        <RolePicker roleId={pick.roleId} stackId={pick.stackId} onChange={setPick} disabled={busy} />
+        <div className="grid sm:grid-cols-3 gap-4">
+          <label className="block text-sm font-semibold">Time until your target
+            <select value={weeks} onChange={(e) => setWeeks(Number(e.target.value))} disabled={busy} className={selectClass}>
+              {WEEKS.map((w) => <option key={w} value={w}>{w} weeks</option>)}
             </select>
-          </div>
-
-          <div>
-            <label className="block text-[11px] font-bold text-[#111111] dark:text-neutral-300 mb-1.5">
-              Target Career Role
-            </label>
-            <input
-              type="text"
-              value={targetRole}
-              onChange={(e) => setTargetRole(e.target.value)}
-              placeholder="e.g. SDE-1"
-              className="w-full bg-[#FAF8F5] dark:bg-[#121212] border border-[rgba(0,0,0,0.12)] dark:border-[#333333] rounded-xl px-3 py-2 text-xs text-[#111111] dark:text-white focus:outline-none focus:border-[#C85232]"
-            />
-          </div>
-
-          <div>
-            <label className="block text-[11px] font-bold text-[#111111] dark:text-neutral-300 mb-1.5">
-              Current Proficiency
-            </label>
-            <select
-              value={currentSkillLevel}
-              onChange={(e) => setCurrentSkillLevel(e.target.value)}
-              className="w-full bg-[#FAF8F5] dark:bg-[#121212] border border-[rgba(0,0,0,0.12)] dark:border-[#333333] rounded-xl px-3 py-2 text-xs text-[#111111] dark:text-white focus:outline-none focus:border-[#C85232]"
-            >
-              <option value="Beginner">Beginner (Building Foundations)</option>
-              <option value="Intermediate">Intermediate (Familiar with Core)</option>
-              <option value="Advanced">Advanced (Interview Drill)</option>
+          </label>
+          <label className="block text-sm font-semibold">Hours each week
+            <select value={hours} onChange={(e) => setHours(Number(e.target.value))} disabled={busy} className={selectClass}>
+              {HOURS.map((h) => <option key={h} value={h}>{h} hours</option>)}
             </select>
-          </div>
-
-          <div>
-            <label className="block text-[11px] font-bold text-[#111111] dark:text-neutral-300 mb-1.5">
-              Placement Target Deadline
-            </label>
-            <select
-              value={targetDeadline}
-              onChange={(e) => setTargetDeadline(e.target.value)}
-              className="w-full bg-[#FAF8F5] dark:bg-[#121212] border border-[rgba(0,0,0,0.12)] dark:border-[#333333] rounded-xl px-3 py-2 text-xs text-[#111111] dark:text-white focus:outline-none focus:border-[#C85232]"
-            >
-              <option value="2 Weeks">2 Weeks (Sprint)</option>
-              <option value="4 Weeks">4 Weeks (Standard)</option>
-              <option value="6 Weeks">6 Weeks (Balanced)</option>
-              <option value="12 Weeks">12 Weeks (Comprehensive)</option>
+          </label>
+          <label className="block text-sm font-semibold">How fast you learn
+            <select value={level} onChange={(e) => setLevel(e.target.value)} disabled={busy} className={selectClass}>
+              <option value="Beginner">Slowly (needs more time)</option>
+              <option value="Intermediate">Average</option>
+              <option value="Advanced">Quickly (needs less time)</option>
             </select>
-          </div>
-
-          <div className="sm:col-span-2 lg:col-span-4 flex justify-end pt-1">
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full sm:w-auto px-6 py-2.5 bg-[#C85232] hover:bg-[#B34528] disabled:bg-neutral-600 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98"
-            >
-              {loading ? (
-                <>
-                  <Loader2 size={16} className="animate-spin" />
-                  <span>Curating Custom Schedule...</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles size={16} />
-                  <span>Generate Custom Study Plan</span>
-                </>
-              )}
-            </button>
-          </div>
-        </form>
-
-        <div className="pt-2">
-          <ProgressBar
-            value={progressPercent}
-            label={`Overall Goal Progress (${targetDeadline} Deadline)`}
-            showValue={true}
-            colorClass="bg-[#C85232]"
-          />
+          </label>
         </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button onClick={generate} disabled={busy}>{busy ? 'Building...' : current ? 'Create a new plan' : 'Create my plan'}</Button>
+          {list.length > 1 && (
+            <select aria-label="Earlier plans" value={current?.id ?? ''} onChange={async (e) => show(await getStudyPlanById(Number(e.target.value)))} className={`${selectClass} !mt-0 max-w-xs`}>
+              {list.map((p) => <option key={p.id} value={p.id}>{p.title} • {new Date(p.createdAt).toLocaleDateString()}</option>)}
+            </select>
+          )}
+        </div>
+        {error && <p role="alert" className="text-sm text-rose-600 inline-flex items-center gap-1.5"><AlertCircle size={16} /> {error}</p>}
       </Card>
 
-      {loading && (
-        <LoadingState message="Generating custom study schedule..." />
-      )}
+      {loading && <LoadingState message="Loading your study plans..." />}
 
-      {!loading && error && (
-        <ErrorState message={error} onRetry={handleGenerate} />
-      )}
-
-      {!loading && !error && !currentPlan && (
-        <EmptyState
-          title="No Study Plan Found"
-          description="Create a personalized weekly study schedule aligned with your interview deadline and available hours."
-          actionLabel="Create Study Plan"
-          onAction={handleGenerate}
-        />
-      )}
-
-      {!loading && !error && currentPlan && (
+      {plan && (
         <>
-          {/* Weekly Task Breakdown */}
-
-      {/* Generated Plan Display Cards */}
-      <div className="space-y-6">
-        {weeklySchedule.map((week) => (
-          <Card key={week.weekNumber} padding="normal" className="space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[rgba(0,0,0,0.06)] dark:border-[#2A2A2A]">
-              <div>
-                <span className="px-2.5 py-0.5 rounded-full bg-[#C85232]/10 text-[#C85232] font-extrabold text-[10px] uppercase tracking-wider border border-[#C85232]/20">
-                  MILESTONE BLOCK
-                </span>
-                <h3 className="text-base font-bold font-heading text-[#111111] dark:text-white mt-1">
-                  {week.title}
-                </h3>
-                <p className="text-xs text-[#5E5B56] dark:text-[#A0A0A0]">
-                  Core Focus: {week.focus}
-                </p>
-              </div>
-
-              <div className="flex items-center gap-1 text-xs text-neutral-400">
-                <Clock size={14} className="text-[#C85232]" />
-                <span>{availableStudyTime} Allocation</span>
-              </div>
+          <Card className="space-y-3">
+            <h2 className="text-xl font-bold font-heading">{plan.title}</h2>
+            <div className={`rounded-lg p-3 text-sm flex items-start gap-2 ${trimmed ? 'bg-amber-50 text-amber-900 dark:bg-amber-950/40 dark:text-amber-200' : 'bg-emerald-50 text-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-200'}`}>
+              {trimmed && <AlertTriangle size={16} className="mt-0.5 shrink-0" />}
+              <p>{plan.coverage.note}</p>
             </div>
-
-            {/* Daily Tasks List */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-              {week.days.map((dayItem) => {
-                const isChecked = !!completedTasks[dayItem.id];
-
-                return (
-                  <div
-                    key={dayItem.id}
-                    onClick={() => toggleTask(dayItem.id)}
-                    className={`p-3.5 rounded-xl border transition-all cursor-pointer flex items-start gap-3 ${
-                      isChecked
-                        ? 'bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800/60'
-                        : 'bg-[#FAF8F5] dark:bg-[#121212] border-[rgba(0,0,0,0.06)] dark:border-[#2A2A2A] hover:border-[#C85232]'
-                    }`}
-                  >
-                    <div
-                      className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
-                        isChecked
-                          ? 'bg-emerald-500 border-emerald-500 text-white'
-                          : 'border-neutral-400 dark:border-neutral-600 bg-white dark:bg-[#1A1A1A]'
-                      }`}
-                    >
-                      {isChecked && <Check size={14} strokeWidth={3} />}
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2 mb-1">
-                        <span className="px-2 py-0.5 rounded bg-white dark:bg-[#1E1E1E] text-[10px] font-extrabold text-[#111111] dark:text-neutral-300 border border-[rgba(0,0,0,0.08)] dark:border-[#333333]">
-                          {dayItem.day}
-                        </span>
-                        <span className="text-[10px] font-semibold text-neutral-500 flex items-center gap-1">
-                          <Clock size={11} />
-                          {dayItem.time}
-                        </span>
-                      </div>
-
-                      <p className={`text-xs font-medium leading-relaxed ${
-                        isChecked ? 'line-through text-neutral-500 dark:text-neutral-400' : 'text-[#111111] dark:text-white'
-                      }`}>
-                        {dayItem.task}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
+            <div>
+              <div className="flex justify-between text-xs font-semibold"><span>Tasks done</span><span>{pct}%</span></div>
+              <div className="h-2 rounded-full bg-[rgba(0,0,0,0.08)] dark:bg-[rgba(255,255,255,0.1)] mt-1" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
+                <div className="h-2 rounded-full bg-[#C85232]" style={{ width: `${pct}%` }} />
+              </div>
             </div>
           </Card>
-        ))}
-      </div>
+
+          <div className="space-y-3">
+            {plan.weeklySchedule.map((w) => {
+              const ids = w.dailyTasks.map((t) => t.id);
+              const n = ids.filter((i) => done.has(i)).length;
+              const byDay = DAY_ORDER.map((d) => [d, w.dailyTasks.filter((t) => t.day === d)]).filter(([, t]) => t.length);
+              return (
+                <Card key={w.weekNumber} padding="compact">
+                  <button type="button" onClick={() => setOpen((o) => ({ ...o, [w.weekNumber]: !o[w.weekNumber] }))} className="w-full flex items-center justify-between gap-3 text-left" aria-expanded={!!open[w.weekNumber]}>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[#C85232]">Week {w.weekNumber} • {n}/{ids.length} done</p>
+                      <h3 className="font-bold font-heading">{w.focusTopic}</h3>
+                    </div>
+                    {open[w.weekNumber] ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  </button>
+                  {open[w.weekNumber] && (
+                    <div className="mt-3 space-y-3">
+                      <p className="text-sm"><span className="font-semibold">Goal:</span> {w.weeklyGoal}</p>
+                      {byDay.map(([day, tasks]) => (
+                        <div key={day}>
+                          <p className="text-xs font-semibold uppercase text-[#5E5B56] dark:text-[#A0A0A0] mb-1">{day}</p>
+                          <ul className="space-y-1.5">
+                            {tasks.map((t) => (
+                              <li key={t.id}>
+                                <button type="button" onClick={() => toggle(t.id)} aria-pressed={done.has(t.id)} className="flex items-start gap-2 text-left w-full">
+                                  {done.has(t.id) ? <CheckSquare size={16} className="text-emerald-600 mt-0.5 shrink-0" /> : <Square size={16} className="mt-0.5 shrink-0" />}
+                                  <span className={`text-sm ${done.has(t.id) ? 'line-through opacity-60' : ''}`}>{t.text}</span>
+                                  <span className={`ml-auto shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold ${KIND[t.kind]}`}>{t.hours}h</span>
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </Card>
+              );
+            })}
+          </div>
+
+          <button type="button" onClick={remove} className="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-600"><Trash2 size={14} /> Delete this plan</button>
         </>
       )}
     </div>
