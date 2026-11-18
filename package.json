@@ -1,0 +1,17 @@
+{
+  "name": "prepwise",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev:api": "npm run dev -w @prepwise/api",
+    "dev:web": "npm run dev -w @prepwise/web",
+    "test": "vitest run",
+    "typecheck": "tsc -b --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "~5.8.3",
+    "vitest": "^3.2.4"
+  }
+}

@@ -1,0 +1,15 @@
+name = "prepwise-api"
+main = "src/index.ts"
+compatibility_date = "2025-09-01"
+
+# The Worker serves the React build and the API from one origin (cookies stay first-party, no CORS).
+[assets]
+directory = "../web/dist"
+not_found_handling = "single-page-application"
+run_worker_first = ["/api/*"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "prepwise-db"
+database_id = "bc2fb20a-9fb7-41e3-9dca-9295a0db22c7"
+migrations_dir = "migrations"

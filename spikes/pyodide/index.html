@@ -1,0 +1,35 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Pyodide worker spike</title>
+<pre id="log">starting…</pre>
+<script>
+  const log = (s) => (document.getElementById("log").textContent += "\n" + s);
+  const tests = [
+    { input: [[2, 7, 11, 15], 9], expected: [0, 1] },
+    { input: [[3, 2, 4], 6], expected: [1, 2] },
+  ];
+  const good = `def two_sum(nums, target):\n    seen = {}\n    for i, n in enumerate(nums):\n        if target - n in seen:\n            return [seen[target - n], i]\n        seen[n] = i`;
+  const bad = `def two_sum(nums, target):\n    return [0, 0]`;
+  const loop = `def two_sum(nums, target):\n    while True:\n        pass`;
+
+  function run(code, timeoutMs) {
+    return new Promise((resolve) => {
+      const w = new Worker("worker.js");
+      const timer = setTimeout(() => { w.terminate(); resolve({ timedOut: true }); }, timeoutMs);
+      w.onmessage = (e) => {
+        if (e.data.type === "loaded") log("  pyodide loaded in " + e.data.ms + " ms");
+        if (e.data.type === "result") { clearTimeout(timer); w.terminate(); resolve(e.data); }
+      };
+      w.postMessage({ code, tests, fn: "two_sum" });
+    });
+  }
+  (async () => {
+    log("good solution:"); let r = await run(good, 60000);
+    log("  " + JSON.stringify(r.results.map(x => x.pass)) + " run " + r.ms + " ms");
+    log("wrong solution:"); r = await run(bad, 60000);
+    log("  " + JSON.stringify(r.results.map(x => x.pass)));
+    log("infinite loop (5s timeout, worker killed):"); r = await run(loop, 20000 );
+    log("  " + JSON.stringify(r.timedOut ? "timedOut=true" : r));
+    log("DONE");
+  })();
+</script>
