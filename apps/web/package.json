@@ -8,10 +8,12 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@prepwise/content": "^0.1.0",
     "@prepwise/core": "*",
     "@tailwindcss/vite": "^4.3.5",
     "axios": "^1.21.1",
     "lucide-react": "^0.546.0",
+    "mammoth": "^1.13.0",
     "pdfjs-dist": "^5.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

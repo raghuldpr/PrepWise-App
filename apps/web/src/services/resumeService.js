@@ -1,32 +1,9 @@
 import api from './api';
 
-export const uploadResume = async (file) => {
-  const formData = new FormData();
-  formData.append('file', file);
-  const response = await api.post('/resume/upload', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-  return response.data;
-};
-
-export const analyzeResume = async (resumeId) => {
-  const response = await api.post(`/resume/${resumeId}/analyze`);
-  return response.data;
-};
-
-export const getResumeAnalysis = async (resumeId) => {
-  const response = await api.get(`/resume/${resumeId}/analysis`);
-  return response.data;
-};
-
-export const getUserResumes = async () => {
-  const response = await api.get('/resume');
-  return response.data;
-};
-
-export const getResumeById = async (resumeId) => {
-  const response = await api.get(`/resume/${resumeId}`);
-  return response.data;
-};
+// Analysis runs in the browser (see lib/extractText.js and @prepwise/core); the API only stores results.
+export const saveAnalysis = async (payload) => (await api.post('/resume/analyses', payload)).data;
+export const getUserResumes = async () => (await api.get('/resume')).data;
+export const getResumeById = async (id) => (await api.get(`/resume/${id}`)).data;
+export const getAnalysis = async (analysisId) => (await api.get(`/resume/analyses/${analysisId}`)).data;
+export const getResumeText = async (id) => (await api.get(`/resume/${id}/text`)).data;
+export const deleteResume = async (id) => (await api.delete(`/resume/${id}`)).data;

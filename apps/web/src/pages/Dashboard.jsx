@@ -269,7 +269,7 @@ export default function Dashboard() {
                 Analyze Resume
               </h3>
               <p className="text-sm text-[#5E5B56] dark:text-[#A0A0A0] leading-relaxed mb-6">
-                Upload your resume for an instant AI audit, keyword optimization, and targeted placement feedback.
+                Upload your resume for an instant check: a score, the skills we find, what is missing for your target role, and specific fixes.
               </p>
             </div>
             <Link

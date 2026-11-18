@@ -7,6 +7,7 @@ import { authRoutes } from "./routes/auth";
 import { companyRoutes } from "./routes/companies";
 import { progressRoutes } from "./routes/progress";
 import { questionRoutes } from "./routes/questions";
+import { resumeRoutes } from "./routes/resume";
 import { onboardingRoutes } from "./routes/onboarding";
 import { skillRoutes } from "./routes/skills";
 import { userRoutes } from "./routes/users";
@@ -22,6 +23,7 @@ app.route("/api/questions", questionRoutes);
 app.route("/api/attempts", attemptRoutes);
 app.route("/api/progress", progressRoutes);
 app.route("/api/companies", companyRoutes);
+app.route("/api/resume", resumeRoutes);
 app.route("/api/onboarding", onboardingRoutes);
 app.route("/api/skills", skillRoutes);
 

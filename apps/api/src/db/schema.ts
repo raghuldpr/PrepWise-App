@@ -163,6 +163,40 @@ export const progress = sqliteTable(
   (t) => [uniqueIndex("progress_user_category_unique").on(t.userId, t.categoryId)],
 );
 
+export const resumes = sqliteTable(
+  "resumes",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    originalFilename: text("original_filename").notNull(),
+    fileType: text("file_type", { enum: ["pdf", "docx", "txt"] }).notNull(),
+    fileSize: integer("file_size").notNull().default(0),
+    wordCount: integer("word_count").notNull().default(0),
+    // Text is extracted in the browser; the original file is never uploaded or stored.
+    textContent: text("text_content").notNull(),
+    uploadedAt: text("uploaded_at").notNull().default(now),
+  },
+  (t) => [index("resumes_user_idx").on(t.userId, t.uploadedAt)],
+);
+
+export const resumeAnalyses = sqliteTable(
+  "resume_analyses",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    resumeId: integer("resume_id").notNull().references(() => resumes.id, { onDelete: "cascade" }),
+    userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    targetRole: text("target_role").notNull(),
+    targetRoleId: text("target_role_id"),
+    jobDescription: text("job_description"),
+    score: integer("score").notNull(),
+    grade: text("grade").notNull(),
+    resultJson: text("result_json").notNull(),
+    analyzerVersion: text("analyzer_version").notNull(),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [index("analyses_resume_idx").on(t.resumeId, t.createdAt), index("analyses_user_idx").on(t.userId, t.createdAt)],
+);
+
 // Profile columns that clients may edit (shared by the update route and the response mapper).
 export const PROFILE_TEXT_FIELDS = [
   "phone", "avatarUrl", "degree", "branch", "currentSemester", "education", "college",
