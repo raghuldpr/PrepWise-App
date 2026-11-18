@@ -283,6 +283,25 @@ export const interviews = sqliteTable(
   (t) => [index("interviews_user_idx").on(t.userId, t.createdAt)],
 );
 
+export const CODING_VERDICTS = ["Accepted", "Wrong Answer", "Runtime Error", "Time Limit Exceeded", "Compile Error"] as const;
+export const codingSubmissions = sqliteTable(
+  "coding_submissions",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    // The problem bank lives in code (packages/content), so this is a slug, not a foreign key.
+    problemId: text("problem_id").notNull(),
+    language: text("language", { enum: ["javascript", "python"] }).notNull(),
+    verdict: text("verdict", { enum: CODING_VERDICTS }).notNull(),
+    passed: integer("passed").notNull(),
+    total: integer("total").notNull(),
+    timeMs: integer("time_ms").notNull().default(0),
+    code: text("code").notNull(),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [index("coding_user_problem_idx").on(t.userId, t.problemId, t.createdAt)],
+);
+
 // Profile columns that clients may edit (shared by the update route and the response mapper).
 export const PROFILE_TEXT_FIELDS = [
   "phone", "avatarUrl", "degree", "branch", "currentSemester", "education", "college",

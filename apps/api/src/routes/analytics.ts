@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { CODING_PROBLEMS } from "@prepwise/content";
 import { classifyAreas, computeStreak, MODULE_LABELS, modulePercent } from "@prepwise/core";
 import { type AppEnv, requireAuth } from "../lib/http";
 
@@ -21,7 +22,7 @@ analyticsRoutes.get("/", async (c) => {
   const db = c.env.DB;
   const userId = c.get("userId");
 
-  const [totals, perModule, moduleTotals, progressRows, recent, days, mock] = await db.batch([
+  const [totals, perModule, moduleTotals, progressRows, recent, days, mock, coding] = await db.batch([
     db.prepare(`SELECT COUNT(*) AS attempted, COALESCE(SUM(is_correct),0) AS solved, COALESCE(SUM(time_taken_seconds),0) AS secs
                 FROM attempts WHERE user_id = ? AND graded = 1`).bind(userId),
     db.prepare(`SELECT c.module_type AS module, COUNT(*) AS attempted, COALESCE(SUM(a.is_correct),0) AS solved,
@@ -38,7 +39,10 @@ analyticsRoutes.get("/", async (c) => {
                 WHERE a.user_id = ? ORDER BY a.attempted_at DESC, a.id DESC LIMIT 5`).bind(userId),
     db.prepare(`SELECT DISTINCT substr(attempted_at, 1, 10) AS d FROM attempts WHERE user_id = ? ORDER BY d DESC LIMIT 400`).bind(userId),
     db.prepare(`SELECT COUNT(*) AS n, COALESCE(AVG(overall_score),0) AS avg FROM interviews WHERE user_id = ? AND status = 'COMPLETED'`).bind(userId),
+    db.prepare(`SELECT COUNT(DISTINCT problem_id) AS attempted, COUNT(DISTINCT CASE WHEN verdict = 'Accepted' THEN problem_id END) AS solved
+                FROM coding_submissions WHERE user_id = ?`).bind(userId),
   ]);
+  const cd = (coding.results[0] ?? {}) as { attempted: number; solved: number };
   const mk = (mock.results[0] ?? {}) as { n: number; avg: number };
 
   const t = (totals.results[0] ?? {}) as { attempted: number; solved: number; secs: number };
@@ -62,7 +66,13 @@ analyticsRoutes.get("/", async (c) => {
     };
   };
   const modules = Object.fromEntries(MODULES.map((m) => [m, moduleDto(m)]));
-  const withContent = MODULES.filter((m) => (mt.get(m) ?? 0) > 0);
+  // Coding practice is judged in the browser against the problem bank in code, not the questions table.
+  modules.CODING = {
+    moduleType: "CODING", moduleName: MODULE_LABELS.CODING, attempted: cd.attempted ?? 0, solved: cd.solved ?? 0,
+    accuracy: cd.attempted ? round1(((cd.solved ?? 0) / cd.attempted) * 100) : 0,
+    progressPercent: modulePercent(cd.solved ?? 0, CODING_PROBLEMS.length),
+  };
+  const withContent = MODULES.filter((m) => m === "CODING" || (mt.get(m) ?? 0) > 0);
   const overallProgress = withContent.length ? round1(withContent.reduce((s, m) => s + modules[m].progressPercent, 0) / withContent.length) : 0;
 
   const prog = progressRows.results as {

@@ -36,6 +36,13 @@
       "when": 1795014366389,
       "tag": "0007_interviews",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1795016256493,
+      "tag": "0008_coding",
+      "breakpoints": true
     }
   ]
 }

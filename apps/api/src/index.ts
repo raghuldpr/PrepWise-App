@@ -4,6 +4,7 @@ import { type AppEnv, errorBody, originGuard } from "./lib/http";
 import { analyticsRoutes } from "./routes/analytics";
 import { attemptRoutes } from "./routes/attempts";
 import { authRoutes } from "./routes/auth";
+import { codingRoutes } from "./routes/coding";
 import { companyRoutes } from "./routes/companies";
 import { interviewRoutes } from "./routes/interviews";
 import { progressRoutes } from "./routes/progress";
@@ -34,6 +35,7 @@ app.route("/api/projects", projectRoutes);
 app.route("/api/onboarding", onboardingRoutes);
 app.route("/api/skills", skillRoutes);
 app.route("/api/interviews", interviewRoutes);
+app.route("/api/coding", codingRoutes);
 
 app.notFound((c) => c.json(errorBody(404, "Not found"), 404));
 app.onError((err, c) => {

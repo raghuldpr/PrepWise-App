@@ -31,7 +31,13 @@ import {
 } from 'lucide-react';
 
 
-export default function Technical() {
+export default function Technical({
+  moduleType = 'TECHNICAL',
+  badge = 'TECHNICAL & CS CORE',
+  heading = 'Technical & Core CS Assessment Practice',
+  blurb = 'Deep dive into Data Structures, Algorithms, OS, DBMS, Networks, and System Design.',
+  fallbackLabel = 'Core Computer Science & Technical',
+}) {
   const navigate = useNavigate();
 
   // State
@@ -68,7 +74,7 @@ export default function Technical() {
     try {
       const data = await getCategories();
       const techCategories = data.filter(
-        (c) => c.moduleType === 'TECHNICAL' || c.moduleType === 'DSA' || c.moduleType === 'CODING'
+        (c) => c.moduleType === moduleType
       );
       setCategories(techCategories);
     } catch (err) {
@@ -98,7 +104,7 @@ export default function Technical() {
       if (selectedCategory) {
         params.categoryId = selectedCategory.id;
       } else {
-        params.moduleType = 'TECHNICAL';
+        params.moduleType = moduleType;
       }
       if (selectedDifficulty !== 'ALL') {
         params.difficulty = selectedDifficulty;
@@ -178,8 +184,8 @@ export default function Technical() {
     const categoryId = selectedCategory ? selectedCategory.id : 'all-technical';
     navigate(`/placement/results/${categoryId}`, {
       state: {
-        moduleType: 'TECHNICAL',
-        categoryName: selectedCategory ? selectedCategory.name : 'Core Computer Science & Technical',
+        moduleType,
+        categoryName: selectedCategory ? selectedCategory.name : fallbackLabel,
         totalQuestions: sessionStats.attempted,
         correctCount: sessionStats.correct,
         accuracy:
@@ -199,17 +205,17 @@ export default function Technical() {
         <div>
           <div className="flex items-center gap-2 mb-2">
             <Badge variant="primary" icon={Code}>
-              TECHNICAL & CS CORE
+              {badge}
             </Badge>
             <Badge variant="default" icon={Cpu}>
               Placement Engineering
             </Badge>
           </div>
           <h1 className="text-3xl font-extrabold font-heading text-[#111111] dark:text-white">
-            Technical & Core CS Assessment Practice
+            {heading}
           </h1>
           <p className="text-sm text-[#5E5B56] dark:text-[#A0A0A0] mt-1">
-            Deep dive into Data Structures, Algorithms, OS, DBMS, Networks, and System Design.
+            {blurb}
           </p>
         </div>
 
@@ -272,15 +278,15 @@ export default function Technical() {
           >
             <div className="flex items-center justify-between mb-2">
               <Badge variant="primary" icon={Layers}>
-                ALL TECHNICAL
+                {moduleType === 'DSA' ? 'ALL DSA' : 'ALL TECHNICAL'}
               </Badge>
               <Sparkles size={16} className="text-[#C85232]" />
             </div>
             <h3 className="font-bold text-base text-[#111111] dark:text-white font-heading">
-              Comprehensive Technical
+              {moduleType === 'DSA' ? 'All DSA topics' : 'Comprehensive Technical'}
             </h3>
             <p className="text-xs text-[#5E5B56] dark:text-[#A0A0A0] mt-1 line-clamp-2">
-              Mixed questions from DSA, OS, DBMS, Computer Networks & Architecture.
+              {moduleType === 'DSA' ? 'Mixed questions from every data structures and algorithms topic.' : 'Mixed questions from DSA, OS, DBMS, Computer Networks & Architecture.'}
             </p>
           </Card>
 
@@ -468,7 +474,7 @@ export default function Technical() {
             <div className="pt-4 border-t border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.1)] flex flex-col sm:flex-row justify-between items-center gap-4">
               <div className="text-xs text-[#5E5B56] dark:text-[#A0A0A0]">
                 {attemptResult
-                  ? 'Technical answer verified by AI Engine.'
+                  ? 'Answer checked against the stored correct option.'
                   : 'Select option and click submit for instant evaluation.'}
               </div>
 
@@ -499,7 +505,7 @@ export default function Technical() {
               )}
             </div>
 
-            {/* AI Answer Evaluation Feedback */}
+            {/* Answer feedback */}
             {attemptResult && (
               <div className="mt-6 space-y-4 animate-fadeIn">
                 <div
@@ -538,7 +544,7 @@ export default function Technical() {
                 {attemptResult.explanation && (
                   <Card className="bg-[#EAE6DF]/80 dark:bg-[#242424]/80 border-amber-500/30 p-5 space-y-2">
                     <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400 font-bold text-sm font-heading">
-                      <Lightbulb size={18} /> AI Technical Explanation:
+                      <Lightbulb size={18} /> Explanation:
                     </div>
                     <p className="text-sm md:text-base leading-relaxed text-[#111111] dark:text-[#E2E2E2] whitespace-pre-line font-mono text-xs md:text-sm">
                       {attemptResult.explanation}
