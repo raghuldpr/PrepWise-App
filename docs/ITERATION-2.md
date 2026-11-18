@@ -49,3 +49,20 @@ All are MCQ with 4 options, one correct answer and an explanation. Content is no
 - The practice screen text "immediate AI feedback" is stale (feedback is the stored explanation).
 - Free-text and coding answers are not graded yet.
 - No login rate limiting; nothing about company interview rounds or salaries.
+
+## Addendum: question batch 1 (77 new questions, migration 0004)
+
+Drafted with AI at build time by `scripts/author-extra-questions.mjs`; **the content still needs a human read-through** (see below). Numeric answers (series, directions, ranking, seating) are computed or brute-forced in that script, and the structure is checked by `questions.test.ts`.
+
+| Category | Before | Added | Now |
+|---|---|---|---|
+| Logical & Verbal Reasoning | 2 | 31 | 33 |
+| Object-Oriented Programming | 0 | 32 | 32 |
+| Computer Networks | 11 | 14 | 25 |
+
+Total 210 questions, 840 options, one correct each. Aptitude is now 70 (37 quantitative + 33 reasoning), Technical 105, DSA 35. New questions are not tagged to companies (the old tags were arbitrary, and I did not want to invent "asked at Google" claims).
+
+Reviewer notes:
+- Two questions touch language/standard changes: Java constructor rules (kept to rules that do not depend on the newest Java release) and HTTP idempotency (per RFC 9110).
+- Still missing: coding problems (Iteration 6), HR/behavioral questions (Iteration 5), more DSA and DBMS/SQL, and quantitative aptitude beyond 37.
+- Content workflow: edit the batch script or JSON, then `node scripts/build-seed.mjs`. Never edit an applied migration; add a new batch file and a new `EXTRA` entry for the next set.

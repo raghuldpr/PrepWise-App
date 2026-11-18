@@ -30,7 +30,7 @@ r = await call("GET", "/api/questions/categories");
 check("8 categories", r.status === 200 && r.json.length === 8, r.json?.length);
 
 r = await call("GET", "/api/questions?moduleType=TECHNICAL&page=0&size=5");
-check("page shape + 5 items", r.status === 200 && r.json.content.length === 5 && r.json.totalElements === 59 && r.json.totalPages === 12, JSON.stringify({ n: r.json?.content?.length, t: r.json?.totalElements, p: r.json?.totalPages }));
+check("page shape + 5 items", r.status === 200 && r.json.content.length === 5 && r.json.totalElements >= 59 && r.json.totalPages === Math.ceil(r.json.totalElements / 5), JSON.stringify({ n: r.json?.content?.length, t: r.json?.totalElements, p: r.json?.totalPages }));
 const q1 = r.json.content[0];
 check("list never leaks answers", r.json.content.every((q) => q.expectedAnswer === null && q.explanation === null && q.options.every((o) => o.isCorrect === null)));
 check("each MCQ has 4 options", r.json.content.every((q) => q.options.length === 4));

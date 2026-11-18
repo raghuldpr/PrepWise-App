@@ -1,14 +1,18 @@
 import { describe, expect, it } from "vitest";
 import companies from "./companies.json";
 import data from "./questions.json";
+import extra1 from "./questions-extra-1.json";
 
-const { categories, questions } = data as {
+const { categories, questions: baseQuestions } = data as {
   categories: { id: number; moduleType: string }[];
   questions: {
     id: number; categoryId: number; companyId: number | null; title: string; questionText: string;
     difficulty: string; questionType: string; expectedAnswer: string; options: { text: string; correct: boolean }[];
   }[];
 };
+
+// base seed (migration 0003) plus every extra batch (migration 0004+)
+const questions = [...baseQuestions, ...(extra1 as { questions: typeof baseQuestions }).questions];
 
 describe("question bank integrity", () => {
   it("has unique ids and unique question text", () => {

@@ -1,0 +1,2314 @@
+{
+ "questions": [
+  {
+   "id": 134,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Number Series - Increasing Differences",
+   "questionText": "Find the next number in the series: 2, 6, 12, 20, 30, ?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Number Series",
+   "expectedAnswer": "42",
+   "explanation": "The differences are 4, 6, 8, 10, so the next difference is 12 and the next term is 30 + 12 = 42.",
+   "options": [
+    {
+     "text": "40",
+     "correct": false
+    },
+    {
+     "text": "42",
+     "correct": true
+    },
+    {
+     "text": "44",
+     "correct": false
+    },
+    {
+     "text": "36",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 135,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Number Series - Geometric Progression",
+   "questionText": "Find the next number in the series: 3, 9, 27, 81, ?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Number Series",
+   "expectedAnswer": "243",
+   "explanation": "Each term is multiplied by 3: 81 x 3 = 243.",
+   "options": [
+    {
+     "text": "243",
+     "correct": true
+    },
+    {
+     "text": "162",
+     "correct": false
+    },
+    {
+     "text": "324",
+     "correct": false
+    },
+    {
+     "text": "216",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 136,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Number Series - Squares Plus One",
+   "questionText": "Find the next number in the series: 2, 5, 10, 17, 26, ?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Number Series",
+   "expectedAnswer": "37",
+   "explanation": "The terms follow n^2 + 1 (1+1, 4+1, 9+1, 16+1, 25+1). The next is 6^2 + 1 = 37.",
+   "options": [
+    {
+     "text": "35",
+     "correct": false
+    },
+    {
+     "text": "36",
+     "correct": false
+    },
+    {
+     "text": "38",
+     "correct": false
+    },
+    {
+     "text": "37",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 137,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Number Series - Double and Add One",
+   "questionText": "Find the next number in the series: 5, 11, 23, 47, ?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Number Series",
+   "expectedAnswer": "95",
+   "explanation": "Each term is twice the previous term plus 1: 47 x 2 + 1 = 95.",
+   "options": [
+    {
+     "text": "93",
+     "correct": false
+    },
+    {
+     "text": "97",
+     "correct": false
+    },
+    {
+     "text": "95",
+     "correct": true
+    },
+    {
+     "text": "94",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 138,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Number Series - Fibonacci Pattern",
+   "questionText": "Find the missing number: 1, 1, 2, 3, 5, 8, ?, 21",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Number Series",
+   "expectedAnswer": "13",
+   "explanation": "Each term is the sum of the two before it. 5 + 8 = 13, and 8 + 13 = 21 confirms it.",
+   "options": [
+    {
+     "text": "11",
+     "correct": false
+    },
+    {
+     "text": "13",
+     "correct": true
+    },
+    {
+     "text": "12",
+     "correct": false
+    },
+    {
+     "text": "14",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 139,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Number Series - Growing Differences",
+   "questionText": "Find the next number in the series: 7, 10, 14, 19, 25, ?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Number Series",
+   "expectedAnswer": "32",
+   "explanation": "The differences are 3, 4, 5, 6, so the next difference is 7: 25 + 7 = 32.",
+   "options": [
+    {
+     "text": "32",
+     "correct": true
+    },
+    {
+     "text": "31",
+     "correct": false
+    },
+    {
+     "text": "33",
+     "correct": false
+    },
+    {
+     "text": "34",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 140,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Number Series - Decreasing Differences",
+   "questionText": "Find the next number in the series: 100, 95, 85, 70, 50, ?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Number Series",
+   "expectedAnswer": "25",
+   "explanation": "The differences are -5, -10, -15, -20, so the next is -25: 50 - 25 = 25.",
+   "options": [
+    {
+     "text": "20",
+     "correct": false
+    },
+    {
+     "text": "30",
+     "correct": false
+    },
+    {
+     "text": "15",
+     "correct": false
+    },
+    {
+     "text": "25",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 141,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Syllogism - Chain of All Statements",
+   "questionText": "Statements: All cats are dogs. All dogs are birds.\nConclusions: I. All cats are birds. II. Some birds are dogs.",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Syllogism",
+   "expectedAnswer": "Both I and II follow",
+   "explanation": "I follows by chaining 'All cats are dogs' and 'All dogs are birds'. II follows because 'All dogs are birds' implies that some birds are dogs.",
+   "options": [
+    {
+     "text": "Only I follows",
+     "correct": false
+    },
+    {
+     "text": "Only II follows",
+     "correct": false
+    },
+    {
+     "text": "Both I and II follow",
+     "correct": true
+    },
+    {
+     "text": "Neither I nor II follows",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 142,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Syllogism - Some and All",
+   "questionText": "Statements: Some pens are books. All books are tables.\nConclusions: I. Some pens are tables. II. All tables are books.",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Syllogism",
+   "expectedAnswer": "Only I follows",
+   "explanation": "The pens that are books are also tables, so I follows. II reverses 'All books are tables', which is not allowed.",
+   "options": [
+    {
+     "text": "Only II follows",
+     "correct": false
+    },
+    {
+     "text": "Only I follows",
+     "correct": true
+    },
+    {
+     "text": "Both I and II follow",
+     "correct": false
+    },
+    {
+     "text": "Neither I nor II follows",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 143,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Syllogism - Negative Statement",
+   "questionText": "Statements: No flower is a tree. Some trees are plants.\nConclusions: I. Some plants are not flowers. II. No plant is a flower.",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Syllogism",
+   "expectedAnswer": "Only I follows",
+   "explanation": "The plants that are trees cannot be flowers (no flower is a tree), so some plants are not flowers. II is too strong: other plants may be flowers.",
+   "options": [
+    {
+     "text": "Only I follows",
+     "correct": true
+    },
+    {
+     "text": "Only II follows",
+     "correct": false
+    },
+    {
+     "text": "Both I and II follow",
+     "correct": false
+    },
+    {
+     "text": "Neither I nor II follows",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 144,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Blood Relations - Father's Brother's Son",
+   "questionText": "Pointing to a photograph, Riya says, 'He is the son of my father's only brother.' How is the man related to Riya?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Blood Relations",
+   "expectedAnswer": "Cousin",
+   "explanation": "My father's brother is my uncle, and his son is my cousin.",
+   "options": [
+    {
+     "text": "Brother",
+     "correct": false
+    },
+    {
+     "text": "Uncle",
+     "correct": false
+    },
+    {
+     "text": "Nephew",
+     "correct": false
+    },
+    {
+     "text": "Cousin",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 145,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Blood Relations - Generation Chain",
+   "questionText": "A is B's sister. C is B's mother. D is C's father. How is A related to D?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Blood Relations",
+   "expectedAnswer": "Granddaughter",
+   "explanation": "C is the mother of both A and B, and D is C's father. So A is D's daughter's daughter, i.e. his granddaughter.",
+   "options": [
+    {
+     "text": "Daughter",
+     "correct": false
+    },
+    {
+     "text": "Grandmother",
+     "correct": false
+    },
+    {
+     "text": "Granddaughter",
+     "correct": true
+    },
+    {
+     "text": "Great-granddaughter",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 146,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Blood Relations - Only Daughter of My Mother",
+   "questionText": "Introducing a man, a woman says, 'His mother is the only daughter of my mother.' How is the woman related to the man?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Blood Relations",
+   "expectedAnswer": "Mother",
+   "explanation": "The only daughter of the woman's mother is the woman herself, so she is the man's mother.",
+   "options": [
+    {
+     "text": "Sister",
+     "correct": false
+    },
+    {
+     "text": "Mother",
+     "correct": true
+    },
+    {
+     "text": "Aunt",
+     "correct": false
+    },
+    {
+     "text": "Grandmother",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 147,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Direction Sense - Return Path",
+   "questionText": "A man walks 5 km north, turns right and walks 3 km, then turns right again and walks 5 km. How far, and in which direction, is he from his starting point?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Direction Sense",
+   "expectedAnswer": "3 km East",
+   "explanation": "North 5 km, then east 3 km, then south 5 km brings him back to the same latitude, 3 km east of the start.",
+   "options": [
+    {
+     "text": "3 km East",
+     "correct": true
+    },
+    {
+     "text": "3 km West",
+     "correct": false
+    },
+    {
+     "text": "5 km East",
+     "correct": false
+    },
+    {
+     "text": "8 km North",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 148,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Direction Sense - Turning Angles",
+   "questionText": "Rohan faces East. He turns 90 degrees clockwise and then 180 degrees anticlockwise. Which direction is he facing now?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Direction Sense",
+   "expectedAnswer": "North",
+   "explanation": "East turned 90 degrees clockwise is South. Turning 180 degrees from South gives North.",
+   "options": [
+    {
+     "text": "South",
+     "correct": false
+    },
+    {
+     "text": "East",
+     "correct": false
+    },
+    {
+     "text": "West",
+     "correct": false
+    },
+    {
+     "text": "North",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 149,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Direction Sense - Four Legged Walk",
+   "questionText": "Aman starts at P and walks 10 m west. He turns left and walks 10 m, then turns right and walks 10 m, then turns right again and walks 10 m. Where is he with respect to P?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Direction Sense",
+   "expectedAnswer": "20 m West",
+   "explanation": "West 10 m, left (south) 10 m, right (west) 10 m, right (north) 10 m. Net: 20 m west and 0 m north-south.",
+   "options": [
+    {
+     "text": "10 m West",
+     "correct": false
+    },
+    {
+     "text": "20 m South",
+     "correct": false
+    },
+    {
+     "text": "20 m West",
+     "correct": true
+    },
+    {
+     "text": "30 m West",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 150,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Coding-Decoding - Letter Shift",
+   "questionText": "In a certain code, ROAD is written as URDG. How is SWIM written in that code?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Coding-Decoding",
+   "expectedAnswer": "VZLP",
+   "explanation": "Every letter is moved 3 places forward (R->U, O->R, A->D, D->G). So S->V, W->Z, I->L, M->P gives VZLP.",
+   "options": [
+    {
+     "text": "VYLP",
+     "correct": false
+    },
+    {
+     "text": "VZLP",
+     "correct": true
+    },
+    {
+     "text": "UZLP",
+     "correct": false
+    },
+    {
+     "text": "VZKP",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 151,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Coding-Decoding - Next Letter",
+   "questionText": "If MONDAY is coded as NPOEBZ, how is FRIDAY coded?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Coding-Decoding",
+   "expectedAnswer": "GSJEBZ",
+   "explanation": "Each letter is replaced by the next letter of the alphabet: F->G, R->S, I->J, D->E, A->B, Y->Z.",
+   "options": [
+    {
+     "text": "GSJEBZ",
+     "correct": true
+    },
+    {
+     "text": "GSJDBZ",
+     "correct": false
+    },
+    {
+     "text": "ESHCZX",
+     "correct": false
+    },
+    {
+     "text": "GRJEBZ",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 152,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Coding-Decoding - Reverse Order",
+   "questionText": "If TABLE is coded as ELBAT, how is CHAIR coded?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Coding-Decoding",
+   "expectedAnswer": "RIAHC",
+   "explanation": "The word is written backwards: TABLE -> ELBAT, so CHAIR -> RIAHC.",
+   "options": [
+    {
+     "text": "RAIHC",
+     "correct": false
+    },
+    {
+     "text": "CHAIR",
+     "correct": false
+    },
+    {
+     "text": "DIBJS",
+     "correct": false
+    },
+    {
+     "text": "RIAHC",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 153,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Ranking - Position from the Other End",
+   "questionText": "In a row of 40 students, Ravi is 12th from the left. What is his position from the right?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Ranking",
+   "expectedAnswer": "29th",
+   "explanation": "Position from the right = total - position from the left + 1 = 40 - 12 + 1 = 29.",
+   "options": [
+    {
+     "text": "28th",
+     "correct": false
+    },
+    {
+     "text": "30th",
+     "correct": false
+    },
+    {
+     "text": "29th",
+     "correct": true
+    },
+    {
+     "text": "27th",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 154,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Seating - Five Friends in a Row",
+   "questionText": "Five friends A, B, C, D and E sit in a row facing north. A is to the left of B but to the right of C. D is to the right of B but to the left of E. Who sits in the middle?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Seating Arrangement",
+   "expectedAnswer": "B",
+   "explanation": "C is left of A, A is left of B, B is left of D, D is left of E. The order is C, A, B, D, E, so B is in the middle.",
+   "options": [
+    {
+     "text": "A",
+     "correct": false
+    },
+    {
+     "text": "B",
+     "correct": true
+    },
+    {
+     "text": "C",
+     "correct": false
+    },
+    {
+     "text": "D",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 155,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Ranking - Total Students from Two Ranks",
+   "questionText": "In a class, Priya ranks 7th from the top and 28th from the bottom. How many students are in the class?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Ranking",
+   "expectedAnswer": "34",
+   "explanation": "Total = rank from top + rank from bottom - 1 = 7 + 28 - 1 = 34.",
+   "options": [
+    {
+     "text": "34",
+     "correct": true
+    },
+    {
+     "text": "35",
+     "correct": false
+    },
+    {
+     "text": "33",
+     "correct": false
+    },
+    {
+     "text": "36",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 156,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Analogy - Place of Work",
+   "questionText": "Doctor : Hospital :: Teacher : ?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Analogy",
+   "expectedAnswer": "School",
+   "explanation": "A doctor works in a hospital in the same way a teacher works in a school.",
+   "options": [
+    {
+     "text": "Student",
+     "correct": false
+    },
+    {
+     "text": "Books",
+     "correct": false
+    },
+    {
+     "text": "Salary",
+     "correct": false
+    },
+    {
+     "text": "School",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 157,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Odd One Out - Planets",
+   "questionText": "Which one is different from the others: Mercury, Venus, Moon, Mars?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Odd One Out",
+   "expectedAnswer": "Moon",
+   "explanation": "Mercury, Venus and Mars are planets. The Moon is a natural satellite of the Earth.",
+   "options": [
+    {
+     "text": "Mercury",
+     "correct": false
+    },
+    {
+     "text": "Venus",
+     "correct": false
+    },
+    {
+     "text": "Moon",
+     "correct": true
+    },
+    {
+     "text": "Mars",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 158,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Synonym - Abundant",
+   "questionText": "Choose the word closest in meaning to ABUNDANT.",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Synonyms",
+   "expectedAnswer": "Plentiful",
+   "explanation": "Abundant means existing in large quantities, which is the same as plentiful.",
+   "options": [
+    {
+     "text": "Scarce",
+     "correct": false
+    },
+    {
+     "text": "Plentiful",
+     "correct": true
+    },
+    {
+     "text": "Rare",
+     "correct": false
+    },
+    {
+     "text": "Limited",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 159,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Antonym - Benevolent",
+   "questionText": "Choose the word opposite in meaning to BENEVOLENT.",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Antonyms",
+   "expectedAnswer": "Malevolent",
+   "explanation": "Benevolent means well-meaning and kind. Malevolent means wishing harm to others.",
+   "options": [
+    {
+     "text": "Malevolent",
+     "correct": true
+    },
+    {
+     "text": "Generous",
+     "correct": false
+    },
+    {
+     "text": "Charitable",
+     "correct": false
+    },
+    {
+     "text": "Kind",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 160,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "One Word - Lover of Books",
+   "questionText": "Choose the single word for 'a person who loves books'.",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "One-Word Substitution",
+   "expectedAnswer": "Bibliophile",
+   "explanation": "A bibliophile loves books. A philatelist collects stamps, a numismatist collects coins, and a misanthrope dislikes people.",
+   "options": [
+    {
+     "text": "Philatelist",
+     "correct": false
+    },
+    {
+     "text": "Numismatist",
+     "correct": false
+    },
+    {
+     "text": "Misanthrope",
+     "correct": false
+    },
+    {
+     "text": "Bibliophile",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 161,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Sentence Correction - Subject-Verb Agreement",
+   "questionText": "Choose the grammatically correct sentence.",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Sentence Correction",
+   "expectedAnswer": "Neither of the students has submitted the assignment.",
+   "explanation": "'Neither' is singular, so it takes the singular verb 'has', and 'of the students' needs the plural noun.",
+   "options": [
+    {
+     "text": "Neither of the students have submitted the assignment.",
+     "correct": false
+    },
+    {
+     "text": "Neither of the student has submitted the assignment.",
+     "correct": false
+    },
+    {
+     "text": "Neither of the students has submitted the assignment.",
+     "correct": true
+    },
+    {
+     "text": "Neither of the students are submitting the assignment.",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 162,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Fill in the Blank - Preposition",
+   "questionText": "Fill in the blank: She is allergic ____ peanuts.",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Prepositions",
+   "expectedAnswer": "to",
+   "explanation": "The adjective 'allergic' is followed by the preposition 'to'.",
+   "options": [
+    {
+     "text": "of",
+     "correct": false
+    },
+    {
+     "text": "to",
+     "correct": true
+    },
+    {
+     "text": "with",
+     "correct": false
+    },
+    {
+     "text": "at",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 163,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Idiom - Bite the Bullet",
+   "questionText": "What does the idiom 'to bite the bullet' mean?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Idioms",
+   "expectedAnswer": "To face a painful or unpleasant situation bravely",
+   "explanation": "It means to accept an unpleasant but unavoidable situation and deal with it with courage.",
+   "options": [
+    {
+     "text": "To face a painful or unpleasant situation bravely",
+     "correct": true
+    },
+    {
+     "text": "To eat something very hard",
+     "correct": false
+    },
+    {
+     "text": "To act without thinking",
+     "correct": false
+    },
+    {
+     "text": "To avoid a difficult task",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 164,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Reading Comprehension - Photosynthesis",
+   "questionText": "Passage: 'Photosynthesis is the process by which green plants prepare food using sunlight, carbon dioxide and water. Oxygen is released as a by-product.'\nWhich gas is released during photosynthesis?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Reading Comprehension",
+   "expectedAnswer": "Oxygen",
+   "explanation": "The passage states that oxygen is released as a by-product.",
+   "options": [
+    {
+     "text": "Carbon dioxide",
+     "correct": false
+    },
+    {
+     "text": "Nitrogen",
+     "correct": false
+    },
+    {
+     "text": "Hydrogen",
+     "correct": false
+    },
+    {
+     "text": "Oxygen",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 165,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Encapsulation - Hiding Internal State",
+   "questionText": "Which OOP principle bundles data with the methods that operate on it and restricts direct access to the internal state?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Encapsulation",
+   "expectedAnswer": "Encapsulation",
+   "explanation": "Encapsulation keeps fields private and exposes controlled access through methods.",
+   "options": [
+    {
+     "text": "Polymorphism",
+     "correct": false
+    },
+    {
+     "text": "Inheritance",
+     "correct": false
+    },
+    {
+     "text": "Encapsulation",
+     "correct": true
+    },
+    {
+     "text": "Abstraction",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 166,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Compile-Time Polymorphism",
+   "questionText": "Which of the following is an example of compile-time (static) polymorphism?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Polymorphism",
+   "expectedAnswer": "Method overloading",
+   "explanation": "Overloaded methods are chosen by the compiler from the argument types. Overriding is resolved at run time.",
+   "options": [
+    {
+     "text": "Method overriding",
+     "correct": false
+    },
+    {
+     "text": "Method overloading",
+     "correct": true
+    },
+    {
+     "text": "Virtual function dispatch",
+     "correct": false
+    },
+    {
+     "text": "Dynamic binding",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 167,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Abstract Class vs Interface",
+   "questionText": "Which statement about an abstract class and an interface in Java is TRUE?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Abstraction",
+   "expectedAnswer": "An abstract class can have constructors and instance fields, an interface cannot have instance fields",
+   "explanation": "Abstract classes can hold state and constructors. Interfaces only declare constants (static final fields), and a class can extend only one class.",
+   "options": [
+    {
+     "text": "An abstract class can have constructors and instance fields, an interface cannot have instance fields",
+     "correct": true
+    },
+    {
+     "text": "An interface can have constructors, an abstract class cannot",
+     "correct": false
+    },
+    {
+     "text": "Both can be instantiated directly with new",
+     "correct": false
+    },
+    {
+     "text": "A class can extend multiple abstract classes",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 168,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Concrete Class and Abstract Methods",
+   "questionText": "A non-abstract class extends an abstract class but does not implement one of its abstract methods. What happens?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Abstraction",
+   "expectedAnswer": "Compilation error",
+   "explanation": "A concrete class must implement every inherited abstract method or be declared abstract itself.",
+   "options": [
+    {
+     "text": "The method returns null at run time",
+     "correct": false
+    },
+    {
+     "text": "The program compiles and the method does nothing",
+     "correct": false
+    },
+    {
+     "text": "An exception is thrown only when the method is called",
+     "correct": false
+    },
+    {
+     "text": "Compilation error",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 169,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Constructors and Inheritance",
+   "questionText": "In Java, are constructors inherited by subclasses?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Inheritance",
+   "expectedAnswer": "No, a subclass must declare its own constructors",
+   "explanation": "Constructors are not members that are inherited. A subclass constructor calls a superclass constructor with super(...).",
+   "options": [
+    {
+     "text": "Yes, all of them",
+     "correct": false
+    },
+    {
+     "text": "Only public constructors",
+     "correct": false
+    },
+    {
+     "text": "No, a subclass must declare its own constructors",
+     "correct": true
+    },
+    {
+     "text": "Only the no-argument constructor",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 170,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Implicit super() Call",
+   "questionText": "A superclass declares only a constructor that takes an int parameter. A subclass constructor does not call super(...) explicitly. What happens?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Inheritance",
+   "expectedAnswer": "Compilation error, because there is no no-argument superclass constructor to call implicitly",
+   "explanation": "The compiler inserts an implicit super() call. If the superclass has no accessible no-argument constructor, the subclass must call a constructor explicitly.",
+   "options": [
+    {
+     "text": "It compiles and the int parameter defaults to 0",
+     "correct": false
+    },
+    {
+     "text": "Compilation error, because there is no no-argument superclass constructor to call implicitly",
+     "correct": true
+    },
+    {
+     "text": "It compiles and fails with an exception at run time",
+     "correct": false
+    },
+    {
+     "text": "The subclass constructor is skipped",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 171,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Multiple Inheritance and the Diamond Problem",
+   "questionText": "How does Java avoid the diamond problem that arises with multiple inheritance?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Inheritance",
+   "expectedAnswer": "A class can extend only one class, but may implement many interfaces",
+   "explanation": "Single class inheritance removes ambiguity. For interfaces with conflicting default methods, the class must override the method.",
+   "options": [
+    {
+     "text": "A class can extend only one class, but may implement many interfaces",
+     "correct": true
+    },
+    {
+     "text": "It forbids interfaces",
+     "correct": false
+    },
+    {
+     "text": "It merges the methods of all parents automatically",
+     "correct": false
+    },
+    {
+     "text": "It picks the parent that was declared first",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 172,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Virtual Functions in C++",
+   "questionText": "What is the main purpose of virtual functions in C++?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Polymorphism",
+   "expectedAnswer": "To enable run-time polymorphism through the base class pointer or reference",
+   "explanation": "A virtual call is dispatched on the actual object type (via the vtable), not the pointer type.",
+   "options": [
+    {
+     "text": "To make functions run faster",
+     "correct": false
+    },
+    {
+     "text": "To prevent a class from being inherited",
+     "correct": false
+    },
+    {
+     "text": "To allow functions without a body",
+     "correct": false
+    },
+    {
+     "text": "To enable run-time polymorphism through the base class pointer or reference",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 173,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Static Methods and Instance Members",
+   "questionText": "Which statement about a static method in Java is correct?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Static Members",
+   "expectedAnswer": "It cannot directly access non-static instance fields",
+   "explanation": "A static method belongs to the class, so it has no this reference and cannot use instance members without an object.",
+   "options": [
+    {
+     "text": "It can access this",
+     "correct": false
+    },
+    {
+     "text": "It must be called on an object",
+     "correct": false
+    },
+    {
+     "text": "It cannot directly access non-static instance fields",
+     "correct": true
+    },
+    {
+     "text": "It can be overridden to change run-time behaviour",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 174,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Composition - Has-A Relationship",
+   "questionText": "A Car class contains an Engine object. Which relationship does this describe?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Class Relationships",
+   "expectedAnswer": "Composition (has-a)",
+   "explanation": "Using another object as a field is composition. Inheritance describes is-a relationships.",
+   "options": [
+    {
+     "text": "Inheritance (is-a)",
+     "correct": false
+    },
+    {
+     "text": "Composition (has-a)",
+     "correct": true
+    },
+    {
+     "text": "Overloading",
+     "correct": false
+    },
+    {
+     "text": "Polymorphism",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 175,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "SOLID - Single Responsibility Principle",
+   "questionText": "What does the Single Responsibility Principle state?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "SOLID",
+   "expectedAnswer": "A class should have only one reason to change",
+   "explanation": "Each class should focus on one responsibility so changes to one concern do not ripple into others.",
+   "options": [
+    {
+     "text": "A class should have only one reason to change",
+     "correct": true
+    },
+    {
+     "text": "A class should have only one method",
+     "correct": false
+    },
+    {
+     "text": "A class should extend only one class",
+     "correct": false
+    },
+    {
+     "text": "A class should be instantiated only once",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 176,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "SOLID - Liskov Substitution Principle",
+   "questionText": "What does the Liskov Substitution Principle require?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "SOLID",
+   "expectedAnswer": "Objects of a subclass must be usable wherever the superclass is expected without breaking correctness",
+   "explanation": "Subtypes must honour the contract of the base type. A Square that breaks the behaviour of Rectangle's setters is a classic violation.",
+   "options": [
+    {
+     "text": "A subclass must have more methods than its parent",
+     "correct": false
+    },
+    {
+     "text": "Every class must implement an interface",
+     "correct": false
+    },
+    {
+     "text": "Subclasses must not call parent methods",
+     "correct": false
+    },
+    {
+     "text": "Objects of a subclass must be usable wherever the superclass is expected without breaking correctness",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 177,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "SOLID - Open/Closed Principle",
+   "questionText": "What does the Open/Closed Principle say?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "SOLID",
+   "expectedAnswer": "Software entities should be open for extension but closed for modification",
+   "explanation": "You should be able to add new behaviour (for example, a new subclass) without editing existing, tested code.",
+   "options": [
+    {
+     "text": "Classes should be open to the public and closed to subclasses",
+     "correct": false
+    },
+    {
+     "text": "Methods should never be changed once written",
+     "correct": false
+    },
+    {
+     "text": "Software entities should be open for extension but closed for modification",
+     "correct": true
+    },
+    {
+     "text": "All fields should be private",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 178,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "SOLID - Dependency Inversion Principle",
+   "questionText": "What does the Dependency Inversion Principle recommend?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "SOLID",
+   "expectedAnswer": "High-level modules should depend on abstractions, not on concrete implementations",
+   "explanation": "Depending on interfaces lets you swap implementations (for example, a database) without changing the business logic.",
+   "options": [
+    {
+     "text": "Low-level modules should depend on high-level modules directly",
+     "correct": false
+    },
+    {
+     "text": "High-level modules should depend on abstractions, not on concrete implementations",
+     "correct": true
+    },
+    {
+     "text": "Dependencies should be created using new inside the class",
+     "correct": false
+    },
+    {
+     "text": "Every class should have a single dependency",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 179,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "SOLID - Interface Segregation Principle",
+   "questionText": "What does the Interface Segregation Principle state?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "SOLID",
+   "expectedAnswer": "Clients should not be forced to depend on methods they do not use",
+   "explanation": "Prefer several small, focused interfaces over one large one.",
+   "options": [
+    {
+     "text": "Clients should not be forced to depend on methods they do not use",
+     "correct": true
+    },
+    {
+     "text": "An interface should contain as many methods as possible",
+     "correct": false
+    },
+    {
+     "text": "A class should implement only one interface",
+     "correct": false
+    },
+    {
+     "text": "Interfaces should never be split",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 180,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Singleton Pattern",
+   "questionText": "What does the Singleton design pattern guarantee?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Design Patterns",
+   "expectedAnswer": "Only one instance of the class exists and it has a global access point",
+   "explanation": "Singleton restricts instantiation to one object and provides access to it.",
+   "options": [
+    {
+     "text": "Every call creates a new object",
+     "correct": false
+    },
+    {
+     "text": "A class cannot be subclassed",
+     "correct": false
+    },
+    {
+     "text": "Objects are created only from subclasses",
+     "correct": false
+    },
+    {
+     "text": "Only one instance of the class exists and it has a global access point",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 181,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Factory Pattern",
+   "questionText": "What is the main purpose of the Factory pattern?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Design Patterns",
+   "expectedAnswer": "To create objects without exposing the instantiation logic to the client",
+   "explanation": "A factory method returns objects of a common type, so client code does not depend on concrete classes.",
+   "options": [
+    {
+     "text": "To ensure only one object is created",
+     "correct": false
+    },
+    {
+     "text": "To notify observers of state changes",
+     "correct": false
+    },
+    {
+     "text": "To create objects without exposing the instantiation logic to the client",
+     "correct": true
+    },
+    {
+     "text": "To add behaviour to an object at run time",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 182,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Observer Pattern",
+   "questionText": "Which design pattern defines a one-to-many dependency so that when one object changes state all its dependents are notified?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Design Patterns",
+   "expectedAnswer": "Observer",
+   "explanation": "A subject keeps a list of observers and notifies them of changes, as in event listeners.",
+   "options": [
+    {
+     "text": "Strategy",
+     "correct": false
+    },
+    {
+     "text": "Observer",
+     "correct": true
+    },
+    {
+     "text": "Adapter",
+     "correct": false
+    },
+    {
+     "text": "Builder",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 183,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Strategy Pattern",
+   "questionText": "Which pattern encapsulates a family of interchangeable algorithms so the algorithm can be chosen at run time?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Design Patterns",
+   "expectedAnswer": "Strategy",
+   "explanation": "Strategy moves each algorithm into its own class behind a common interface (for example, different sorting or payment strategies).",
+   "options": [
+    {
+     "text": "Strategy",
+     "correct": true
+    },
+    {
+     "text": "Singleton",
+     "correct": false
+    },
+    {
+     "text": "Facade",
+     "correct": false
+    },
+    {
+     "text": "Prototype",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 184,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Decorator Pattern",
+   "questionText": "What does the Decorator pattern let you do?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Design Patterns",
+   "expectedAnswer": "Add responsibilities to an object dynamically without subclassing",
+   "explanation": "Decorators wrap an object that has the same interface and add behaviour before or after delegating to it.",
+   "options": [
+    {
+     "text": "Create a single shared instance",
+     "correct": false
+    },
+    {
+     "text": "Convert one interface into another",
+     "correct": false
+    },
+    {
+     "text": "Hide a complex subsystem behind a simple interface",
+     "correct": false
+    },
+    {
+     "text": "Add responsibilities to an object dynamically without subclassing",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 185,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "final Keyword on a Class",
+   "questionText": "What does declaring a class final mean in Java?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Java Basics",
+   "expectedAnswer": "The class cannot be extended",
+   "explanation": "A final class (for example String) cannot have subclasses.",
+   "options": [
+    {
+     "text": "The class cannot be instantiated",
+     "correct": false
+    },
+    {
+     "text": "All its methods are static",
+     "correct": false
+    },
+    {
+     "text": "The class cannot be extended",
+     "correct": true
+    },
+    {
+     "text": "Its fields cannot be changed",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 186,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Dynamic Method Dispatch Output",
+   "questionText": "What is printed by the following Java code?\nclass A { void show() { System.out.println(\"A\"); } }\nclass B extends A { void show() { System.out.println(\"B\"); } }\nA obj = new B();\nobj.show();",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Polymorphism",
+   "expectedAnswer": "B",
+   "explanation": "The reference type is A but the object is a B. The overridden method is chosen at run time, so B.show() runs.",
+   "options": [
+    {
+     "text": "A",
+     "correct": false
+    },
+    {
+     "text": "B",
+     "correct": true
+    },
+    {
+     "text": "AB",
+     "correct": false
+    },
+    {
+     "text": "Compilation error",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 187,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Overload Resolution",
+   "questionText": "A class has two methods: void f(int x) and void f(long x). Which is called by f(5)?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Polymorphism",
+   "expectedAnswer": "f(int x)",
+   "explanation": "The literal 5 is an int, so the exact match f(int) is preferred over a widening conversion to long.",
+   "options": [
+    {
+     "text": "f(int x)",
+     "correct": true
+    },
+    {
+     "text": "f(long x)",
+     "correct": false
+    },
+    {
+     "text": "Both are called",
+     "correct": false
+    },
+    {
+     "text": "The call is ambiguous and does not compile",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 188,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Immutable Class Example",
+   "questionText": "Which of the following Java classes is immutable?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Java Basics",
+   "expectedAnswer": "String",
+   "explanation": "Once created, a String's contents cannot change. Methods like concat return a new String.",
+   "options": [
+    {
+     "text": "StringBuilder",
+     "correct": false
+    },
+    {
+     "text": "ArrayList",
+     "correct": false
+    },
+    {
+     "text": "Date",
+     "correct": false
+    },
+    {
+     "text": "String",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 189,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "equals() and hashCode() Contract",
+   "questionText": "If two objects are equal according to equals(), what must be true about their hashCode() values?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Java Basics",
+   "expectedAnswer": "They must be equal",
+   "explanation": "The contract requires equal objects to have equal hash codes. Otherwise hash-based collections like HashMap break.",
+   "options": [
+    {
+     "text": "They must be different",
+     "correct": false
+    },
+    {
+     "text": "They can be anything",
+     "correct": false
+    },
+    {
+     "text": "They must be equal",
+     "correct": true
+    },
+    {
+     "text": "They must be zero",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 190,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Upcasting",
+   "questionText": "Assigning a subclass object to a superclass reference variable is called:",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Polymorphism",
+   "expectedAnswer": "Upcasting",
+   "explanation": "Upcasting is implicit and always safe. Downcasting needs an explicit cast and can fail at run time.",
+   "options": [
+    {
+     "text": "Downcasting",
+     "correct": false
+    },
+    {
+     "text": "Upcasting",
+     "correct": true
+    },
+    {
+     "text": "Boxing",
+     "correct": false
+    },
+    {
+     "text": "Overloading",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 191,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "protected Access",
+   "questionText": "Which Java access modifier allows access within the same package and also from subclasses in other packages?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Access Modifiers",
+   "expectedAnswer": "protected",
+   "explanation": "protected members are visible in the package and to subclasses. Package-private is visible only inside the package.",
+   "options": [
+    {
+     "text": "protected",
+     "correct": true
+    },
+    {
+     "text": "private",
+     "correct": false
+    },
+    {
+     "text": "default (package-private)",
+     "correct": false
+    },
+    {
+     "text": "public static",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 192,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Instantiating an Abstract Class",
+   "questionText": "Can you create an object of an abstract class directly using new?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Abstraction",
+   "expectedAnswer": "No, only of a concrete subclass",
+   "explanation": "Abstract classes are incomplete by design. You instantiate a concrete subclass instead.",
+   "options": [
+    {
+     "text": "Yes, always",
+     "correct": false
+    },
+    {
+     "text": "Yes, if it has no fields",
+     "correct": false
+    },
+    {
+     "text": "Yes, if the constructor is public",
+     "correct": false
+    },
+    {
+     "text": "No, only of a concrete subclass",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 193,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Virtual Destructors in C++",
+   "questionText": "Why should a base class that is used polymorphically have a virtual destructor in C++?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Polymorphism",
+   "expectedAnswer": "So deleting a derived object through a base pointer calls the derived destructor",
+   "explanation": "Without a virtual destructor, deleting through a base pointer is undefined behaviour and the derived part may not be destroyed properly (leaks).",
+   "options": [
+    {
+     "text": "So the destructor runs faster",
+     "correct": false
+    },
+    {
+     "text": "So the class cannot be copied",
+     "correct": false
+    },
+    {
+     "text": "So deleting a derived object through a base pointer calls the derived destructor",
+     "correct": true
+    },
+    {
+     "text": "So the object is deleted automatically",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 194,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Cohesion and Coupling",
+   "questionText": "Which combination do good object-oriented designs aim for?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Design Principles",
+   "expectedAnswer": "High cohesion and low coupling",
+   "explanation": "Classes should be focused (high cohesion) and depend on each other as little as possible (low coupling).",
+   "options": [
+    {
+     "text": "Low cohesion and high coupling",
+     "correct": false
+    },
+    {
+     "text": "High cohesion and low coupling",
+     "correct": true
+    },
+    {
+     "text": "High cohesion and high coupling",
+     "correct": false
+    },
+    {
+     "text": "Low cohesion and low coupling",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 195,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Static Method Hiding",
+   "questionText": "A subclass declares a static method with the same signature as a static method in its superclass. What is this called?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Inheritance",
+   "expectedAnswer": "Method hiding (it is not overriding)",
+   "explanation": "Static methods are bound to the class, so the subclass method hides the parent's one. The choice depends on the reference type, not the object.",
+   "options": [
+    {
+     "text": "Method hiding (it is not overriding)",
+     "correct": true
+    },
+    {
+     "text": "Method overriding",
+     "correct": false
+    },
+    {
+     "text": "Method overloading",
+     "correct": false
+    },
+    {
+     "text": "A compilation error",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 196,
+   "categoryId": 7,
+   "companyId": null,
+   "title": "Marker Interface",
+   "questionText": "Which of these is a marker interface in Java (an interface with no methods)?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Java Basics",
+   "expectedAnswer": "Serializable",
+   "explanation": "Serializable has no methods. It only marks that a class's objects can be serialized.",
+   "options": [
+    {
+     "text": "Comparable",
+     "correct": false
+    },
+    {
+     "text": "Runnable",
+     "correct": false
+    },
+    {
+     "text": "Iterator",
+     "correct": false
+    },
+    {
+     "text": "Serializable",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 197,
+   "categoryId": 6,
+   "companyId": null,
+   "title": "ARP - Mapping IP to MAC",
+   "questionText": "Which protocol is used to find the MAC address that belongs to a known IP address on a local network?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Address Resolution",
+   "expectedAnswer": "ARP",
+   "explanation": "The Address Resolution Protocol broadcasts a request and the owner of the IP replies with its MAC address.",
+   "options": [
+    {
+     "text": "DNS",
+     "correct": false
+    },
+    {
+     "text": "DHCP",
+     "correct": false
+    },
+    {
+     "text": "ARP",
+     "correct": true
+    },
+    {
+     "text": "ICMP",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 198,
+   "categoryId": 6,
+   "companyId": null,
+   "title": "DHCP - Automatic Configuration",
+   "questionText": "What does DHCP do?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "DHCP",
+   "expectedAnswer": "Automatically assigns IP addresses and network settings to devices",
+   "explanation": "A DHCP server leases an IP address, subnet mask, gateway and DNS server to each client.",
+   "options": [
+    {
+     "text": "Translates domain names into IP addresses",
+     "correct": false
+    },
+    {
+     "text": "Automatically assigns IP addresses and network settings to devices",
+     "correct": true
+    },
+    {
+     "text": "Encrypts network traffic",
+     "correct": false
+    },
+    {
+     "text": "Converts private addresses to public ones",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 199,
+   "categoryId": 6,
+   "companyId": null,
+   "title": "Subnet Mask for a /26 Network",
+   "questionText": "Which subnet mask corresponds to the prefix length /26?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Subnetting",
+   "expectedAnswer": "255.255.255.192",
+   "explanation": "26 bits are 1s: 255.255.255.11000000, and 11000000 in binary is 192.",
+   "options": [
+    {
+     "text": "255.255.255.192",
+     "correct": true
+    },
+    {
+     "text": "255.255.255.128",
+     "correct": false
+    },
+    {
+     "text": "255.255.255.224",
+     "correct": false
+    },
+    {
+     "text": "255.255.255.240",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 200,
+   "categoryId": 6,
+   "companyId": null,
+   "title": "NAT - Private to Public Translation",
+   "questionText": "What is the main purpose of Network Address Translation (NAT)?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "NAT",
+   "expectedAnswer": "To let devices with private IP addresses share a public IP address",
+   "explanation": "NAT rewrites source addresses and ports so many internal hosts can reach the internet through one public address.",
+   "options": [
+    {
+     "text": "To encrypt packets between two hosts",
+     "correct": false
+    },
+    {
+     "text": "To assign MAC addresses",
+     "correct": false
+    },
+    {
+     "text": "To speed up DNS lookups",
+     "correct": false
+    },
+    {
+     "text": "To let devices with private IP addresses share a public IP address",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 201,
+   "categoryId": 6,
+   "companyId": null,
+   "title": "HTTP 429 Status Code",
+   "questionText": "Which HTTP status code tells a client it has sent too many requests (rate limiting)?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "HTTP",
+   "expectedAnswer": "429 Too Many Requests",
+   "explanation": "429 is returned when a client exceeds a rate limit and often includes a Retry-After header.",
+   "options": [
+    {
+     "text": "401 Unauthorized",
+     "correct": false
+    },
+    {
+     "text": "404 Not Found",
+     "correct": false
+    },
+    {
+     "text": "429 Too Many Requests",
+     "correct": true
+    },
+    {
+     "text": "503 Service Unavailable",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 202,
+   "categoryId": 6,
+   "companyId": null,
+   "title": "Switch vs Hub",
+   "questionText": "Which device forwards frames using MAC addresses at the data link layer?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Network Devices",
+   "expectedAnswer": "Switch",
+   "explanation": "A switch learns which MAC address is on which port and forwards frames only to the right port. A hub repeats traffic to every port.",
+   "options": [
+    {
+     "text": "Hub",
+     "correct": false
+    },
+    {
+     "text": "Switch",
+     "correct": true
+    },
+    {
+     "text": "Repeater",
+     "correct": false
+    },
+    {
+     "text": "Modem",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 203,
+   "categoryId": 6,
+   "companyId": null,
+   "title": "TLS - What It Provides",
+   "questionText": "Which set of guarantees does TLS provide for a connection?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Security",
+   "expectedAnswer": "Encryption, authentication of the server and message integrity",
+   "explanation": "TLS encrypts traffic, authenticates the server with a certificate, and detects tampering.",
+   "options": [
+    {
+     "text": "Encryption, authentication of the server and message integrity",
+     "correct": true
+    },
+    {
+     "text": "Compression, caching and load balancing",
+     "correct": false
+    },
+    {
+     "text": "Routing, switching and addressing",
+     "correct": false
+    },
+    {
+     "text": "Only encryption with no authentication",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 204,
+   "categoryId": 6,
+   "companyId": null,
+   "title": "Distance-Vector Routing Protocol",
+   "questionText": "Which of the following is a distance-vector routing protocol?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Routing",
+   "expectedAnswer": "RIP",
+   "explanation": "RIP shares its routing table with neighbours and uses hop count. OSPF and IS-IS are link-state protocols.",
+   "options": [
+    {
+     "text": "OSPF",
+     "correct": false
+    },
+    {
+     "text": "IS-IS",
+     "correct": false
+    },
+    {
+     "text": "ARP",
+     "correct": false
+    },
+    {
+     "text": "RIP",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 205,
+   "categoryId": 6,
+   "companyId": null,
+   "title": "ICMP - Ping",
+   "questionText": "Which protocol does the ping command use to test reachability?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "ICMP",
+   "expectedAnswer": "ICMP",
+   "explanation": "Ping sends ICMP Echo Request messages and waits for Echo Replies.",
+   "options": [
+    {
+     "text": "TCP",
+     "correct": false
+    },
+    {
+     "text": "HTTP",
+     "correct": false
+    },
+    {
+     "text": "ICMP",
+     "correct": true
+    },
+    {
+     "text": "ARP",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 206,
+   "categoryId": 6,
+   "companyId": null,
+   "title": "Idempotent HTTP Methods",
+   "questionText": "Which HTTP method is idempotent, meaning repeating the same request has the same effect as sending it once?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "HTTP",
+   "expectedAnswer": "PUT",
+   "explanation": "PUT replaces a resource with the given representation, so repeating it leaves the same result. POST usually creates a new resource each time, and PATCH is not guaranteed to be idempotent.",
+   "options": [
+    {
+     "text": "POST",
+     "correct": false
+    },
+    {
+     "text": "PUT",
+     "correct": true
+    },
+    {
+     "text": "PATCH",
+     "correct": false
+    },
+    {
+     "text": "CONNECT",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 207,
+   "categoryId": 6,
+   "companyId": null,
+   "title": "IMAP vs POP3",
+   "questionText": "How does IMAP differ from POP3?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Email Protocols",
+   "expectedAnswer": "IMAP keeps messages on the server and syncs them across devices",
+   "explanation": "POP3 typically downloads and removes mail from the server, while IMAP leaves it there. SMTP is used to send mail.",
+   "options": [
+    {
+     "text": "IMAP keeps messages on the server and syncs them across devices",
+     "correct": true
+    },
+    {
+     "text": "IMAP is used to send email and POP3 to receive it",
+     "correct": false
+    },
+    {
+     "text": "IMAP can only be used on one device",
+     "correct": false
+    },
+    {
+     "text": "IMAP does not support folders",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 208,
+   "categoryId": 6,
+   "companyId": null,
+   "title": "WebSocket vs HTTP",
+   "questionText": "What is the main advantage of a WebSocket connection over repeated HTTP requests for a chat application?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Application Layer",
+   "expectedAnswer": "A persistent full-duplex connection so the server can push messages",
+   "explanation": "After the upgrade handshake, client and server can send messages at any time over one connection.",
+   "options": [
+    {
+     "text": "It does not need TCP",
+     "correct": false
+    },
+    {
+     "text": "It makes pages load without JavaScript",
+     "correct": false
+    },
+    {
+     "text": "It encrypts messages without TLS",
+     "correct": false
+    },
+    {
+     "text": "A persistent full-duplex connection so the server can push messages",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 209,
+   "categoryId": 6,
+   "companyId": null,
+   "title": "Content Delivery Network",
+   "questionText": "What is the main purpose of a Content Delivery Network (CDN)?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "CDN",
+   "expectedAnswer": "To serve content from servers geographically close to users",
+   "explanation": "Caching static assets at edge locations reduces latency and load on the origin server.",
+   "options": [
+    {
+     "text": "To assign IP addresses to clients",
+     "correct": false
+    },
+    {
+     "text": "To translate domain names",
+     "correct": false
+    },
+    {
+     "text": "To serve content from servers geographically close to users",
+     "correct": true
+    },
+    {
+     "text": "To block all incoming traffic",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 210,
+   "categoryId": 6,
+   "companyId": null,
+   "title": "Role of a Router",
+   "questionText": "Which device connects different networks and forwards packets between them using IP addresses?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Network Devices",
+   "expectedAnswer": "Router",
+   "explanation": "Routers work at the network layer and choose the next hop for each packet using their routing tables.",
+   "options": [
+    {
+     "text": "Switch",
+     "correct": false
+    },
+    {
+     "text": "Router",
+     "correct": true
+    },
+    {
+     "text": "Hub",
+     "correct": false
+    },
+    {
+     "text": "Repeater",
+     "correct": false
+    }
+   ]
+  }
+ ]
+}
