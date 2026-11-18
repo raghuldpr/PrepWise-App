@@ -28,99 +28,6 @@ import {
   Target,
 } from 'lucide-react';
 
-// Fallback practice questions if API returns empty set
-const FALLBACK_APTITUDE_QUESTIONS = [
-  {
-    id: 101,
-    title: 'Time & Work - Efficiency Ratio',
-    questionText:
-      'A is twice as efficient as B and together they can finish a piece of work in 14 days. In how many days can A alone complete the work?',
-    difficulty: 'MEDIUM',
-    questionType: 'MCQ',
-    topic: 'Time and Work',
-    options: [
-      { id: 1, optionText: '21 days' },
-      { id: 2, optionText: '28 days' },
-      { id: 3, optionText: '18 days' },
-      { id: 4, optionText: '35 days' },
-    ],
-    expectedAnswer: '21 days',
-    explanation:
-      'Efficiency ratio A : B = 2 : 1. Combined efficiency = 3 units/day. Total work = 3 × 14 = 42 units. Time taken by A alone = Total work / A\'s efficiency = 42 / 2 = 21 days.',
-  },
-  {
-    id: 102,
-    title: 'Percentages & Profit Loss',
-    questionText:
-      'A trader marks his goods at 25% above cost price and allows a discount of 10% for cash payment. What is his profit percentage?',
-    difficulty: 'EASY',
-    questionType: 'MCQ',
-    topic: 'Profit and Loss',
-    options: [
-      { id: 5, optionText: '12.5%' },
-      { id: 6, optionText: '15%' },
-      { id: 7, optionText: '17.5%' },
-      { id: 8, optionText: '20%' },
-    ],
-    expectedAnswer: '12.5%',
-    explanation:
-      'Let Cost Price (CP) = 100. Marked Price (MP) = 125. Selling Price (SP) after 10% discount = 125 - 12.5 = 112.5. Profit = SP - CP = 112.5 - 100 = 12.5%. Profit percentage = 12.5%.',
-  },
-  {
-    id: 103,
-    title: 'Logical Deduction & Syllogisms',
-    questionText:
-      'Statements: All engineers are logical. Some logical people are creative. Conclusions: I. Some engineers are creative. II. All logical people are engineers.',
-    difficulty: 'MEDIUM',
-    questionType: 'MCQ',
-    topic: 'Logical Reasoning',
-    options: [
-      { id: 9, optionText: 'Only Conclusion I follows' },
-      { id: 10, optionText: 'Only Conclusion II follows' },
-      { id: 11, optionText: 'Neither I nor II follows' },
-      { id: 12, optionText: 'Both I and II follow' },
-    ],
-    expectedAnswer: 'Neither I nor II follows',
-    explanation:
-      'From "All A are B" and "Some B are C", no definite connection between A and C can be concluded. Thus, Conclusion I does not follow. Similarly, "All A are B" does not imply "All B are A", so Conclusion II does not follow.',
-  },
-  {
-    id: 104,
-    title: 'Speed, Distance & Trains',
-    questionText:
-      'A train 150 meters long passes a telegraph post in 12 seconds. Find the speed of the train in km/h.',
-    difficulty: 'EASY',
-    questionType: 'MCQ',
-    topic: 'Speed & Distance',
-    options: [
-      { id: 13, optionText: '45 km/h' },
-      { id: 14, optionText: '50 km/h' },
-      { id: 15, optionText: '36 km/h' },
-      { id: 16, optionText: '60 km/h' },
-    ],
-    expectedAnswer: '45 km/h',
-    explanation:
-      'Speed in m/s = Distance / Time = 150 / 12 = 12.5 m/s. Converting to km/h = 12.5 × (18 / 5) = 45 km/h.',
-  },
-  {
-    id: 105,
-    title: 'Probability & Combinations',
-    questionText:
-      'Two dice are thrown simultaneously. What is the probability of getting a sum equal to 8?',
-    difficulty: 'HARD',
-    questionType: 'MCQ',
-    topic: 'Probability',
-    options: [
-      { id: 17, optionText: '5/36' },
-      { id: 18, optionText: '1/6' },
-      { id: 19, optionText: '7/36' },
-      { id: 20, optionText: '1/9' },
-    ],
-    expectedAnswer: '5/36',
-    explanation:
-      'Total outcomes = 6 × 6 = 36. Outcomes with sum = 8: (2,6), (3,5), (4,4), (5,3), (6,2) -> Total 5 favorable outcomes. Probability = 5/36.',
-  },
-];
 
 export default function Aptitude() {
   const navigate = useNavigate();
@@ -198,16 +105,11 @@ export default function Aptitude() {
       if (res && res.content && res.content.length > 0) {
         setQuestions(res.content);
       } else {
-        // Filter fallbacks if needed
-        let filtered = FALLBACK_APTITUDE_QUESTIONS;
-        if (selectedDifficulty !== 'ALL') {
-          filtered = filtered.filter((q) => q.difficulty === selectedDifficulty);
-        }
-        setQuestions(filtered.length > 0 ? filtered : FALLBACK_APTITUDE_QUESTIONS);
+        setQuestions([]);
       }
     } catch (err) {
-      console.warn('Using fallback questions due to API response:', err);
-      setQuestions(FALLBACK_APTITUDE_QUESTIONS);
+      console.error('Failed to load questions:', err);
+      setError('Could not load questions. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
@@ -252,38 +154,8 @@ export default function Aptitude() {
         ],
       }));
     } catch (err) {
-      console.warn('API submission failed, computing local feedback:', err);
-      // Fallback local evaluation if backend offline or testing fallback questions
-      const isCorrect =
-        selectedOption.trim().toLowerCase() ===
-        (currentQuestion.expectedAnswer || '').trim().toLowerCase();
-
-      const result = {
-        attemptId: Date.now(),
-        questionId: currentQuestion.id,
-        isCorrect,
-        score: isCorrect ? 100 : 0,
-        selectedAnswer: selectedOption,
-        correctAnswer: currentQuestion.expectedAnswer || 'Option 1',
-        explanation: currentQuestion.explanation || 'Detailed mathematical breakdown of the problem.',
-        currentAccuracy: Math.round(((sessionStats.correct + (isCorrect ? 1 : 0)) / (sessionStats.attempted + 1)) * 100),
-      };
-
-      setAttemptResult(result);
-      setSessionStats((prev) => ({
-        attempted: prev.attempted + 1,
-        correct: isCorrect ? prev.correct + 1 : prev.correct,
-        totalTime: prev.totalTime + timeTaken,
-        history: [
-          ...prev.history,
-          {
-            questionId: currentQuestion.id,
-            title: currentQuestion.title || currentQuestion.topic,
-            isCorrect,
-            timeTaken,
-          },
-        ],
-      }));
+      console.error('Answer submission failed:', err);
+      setError('Your answer could not be submitted. Please try again.');
     } finally {
       setSubmitting(false);
     }

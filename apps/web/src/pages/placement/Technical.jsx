@@ -30,98 +30,6 @@ import {
   Layers,
 } from 'lucide-react';
 
-const FALLBACK_TECHNICAL_QUESTIONS = [
-  {
-    id: 201,
-    title: 'Data Structures - Binary Tree Traversal',
-    questionText:
-      'Which traversal technique of a Binary Search Tree (BST) visits nodes in ascending sorted numerical order?',
-    difficulty: 'EASY',
-    questionType: 'MCQ',
-    topic: 'Data Structures',
-    options: [
-      { id: 1, optionText: 'Pre-order Traversal (Root, Left, Right)' },
-      { id: 2, optionText: 'In-order Traversal (Left, Root, Right)' },
-      { id: 3, optionText: 'Post-order Traversal (Left, Right, Root)' },
-      { id: 4, optionText: 'Level-order Traversal (BFS)' },
-    ],
-    expectedAnswer: 'In-order Traversal (Left, Root, Right)',
-    explanation:
-      'By definition of a Binary Search Tree, all left subtree keys are smaller than the root, and all right subtree keys are greater. Traversing Left -> Root -> Right (In-order) visits nodes in monotonically increasing sorted order.',
-  },
-  {
-    id: 202,
-    title: 'Operating Systems - Deadlock Conditions',
-    questionText:
-      'Which of the following is NOT one of Coffman\'s four necessary conditions for a deadlock to occur in an operating system?',
-    difficulty: 'MEDIUM',
-    questionType: 'MCQ',
-    topic: 'Operating Systems',
-    options: [
-      { id: 5, optionText: 'Mutual Exclusion' },
-      { id: 6, optionText: 'Hold and Wait' },
-      { id: 7, optionText: 'Preemption Allowed' },
-      { id: 8, optionText: 'Circular Wait' },
-    ],
-    expectedAnswer: 'Preemption Allowed',
-    explanation:
-      'The four necessary Coffman conditions for deadlock are: 1. Mutual Exclusion, 2. Hold and Wait, 3. No Preemption (resources cannot be forcibly taken away), and 4. Circular Wait. "Preemption Allowed" actually prevents deadlocks.',
-  },
-  {
-    id: 203,
-    title: 'Database Management Systems - ACID Properties',
-    questionText:
-      'In a database system, which ACID property ensures that once a transaction is committed, its changes survive system crashes and power failures?',
-    difficulty: 'EASY',
-    questionType: 'MCQ',
-    topic: 'DBMS',
-    options: [
-      { id: 9, optionText: 'Atomicity' },
-      { id: 10, optionText: 'Consistency' },
-      { id: 11, optionText: 'Isolation' },
-      { id: 12, optionText: 'Durability' },
-    ],
-    expectedAnswer: 'Durability',
-    explanation:
-      'Durability guarantees that committed transactions are permanently recorded in non-volatile storage (WAL/transaction logs) and will persist even during power outages or system failure.',
-  },
-  {
-    id: 204,
-    title: 'Computer Networks - OSI Model Layers',
-    questionText:
-      'At which layer of the OSI model do routers operate to inspect IP headers and perform packet routing across subnets?',
-    difficulty: 'MEDIUM',
-    questionType: 'MCQ',
-    topic: 'Computer Networks',
-    options: [
-      { id: 13, optionText: 'Data Link Layer (Layer 2)' },
-      { id: 14, optionText: 'Network Layer (Layer 3)' },
-      { id: 15, optionText: 'Transport Layer (Layer 4)' },
-      { id: 16, optionText: 'Application Layer (Layer 7)' },
-    ],
-    expectedAnswer: 'Network Layer (Layer 3)',
-    explanation:
-      'Routers operate at Layer 3 (Network Layer) of the OSI reference model using IP addresses to route packets across disparate networks. Switches operate primarily at Layer 2 (Data Link Layer).',
-  },
-  {
-    id: 205,
-    title: 'Algorithm Analysis - Time Complexity',
-    questionText:
-      'What is the worst-case time complexity of standard QuickSort algorithm when the pivot chosen is consistently the smallest or largest element?',
-    difficulty: 'HARD',
-    questionType: 'MCQ',
-    topic: 'Algorithms',
-    options: [
-      { id: 17, optionText: 'O(N log N)' },
-      { id: 18, optionText: 'O(N^2)' },
-      { id: 19, optionText: 'O(N)' },
-      { id: 20, optionText: 'O(2^N)' },
-    ],
-    expectedAnswer: 'O(N^2)',
-    explanation:
-      'If the pivot is always the extreme element (e.g. sorted input with first element as pivot), partition splits array into N-1 and 0 elements. The recurrence relation T(N) = T(N-1) + O(N) yields worst-case time complexity O(N^2). Randomized pivoting avoids this.',
-  },
-];
 
 export default function Technical() {
   const navigate = useNavigate();
@@ -200,15 +108,11 @@ export default function Technical() {
       if (res && res.content && res.content.length > 0) {
         setQuestions(res.content);
       } else {
-        let filtered = FALLBACK_TECHNICAL_QUESTIONS;
-        if (selectedDifficulty !== 'ALL') {
-          filtered = filtered.filter((q) => q.difficulty === selectedDifficulty);
-        }
-        setQuestions(filtered.length > 0 ? filtered : FALLBACK_TECHNICAL_QUESTIONS);
+        setQuestions([]);
       }
     } catch (err) {
-      console.warn('Using fallback technical questions:', err);
-      setQuestions(FALLBACK_TECHNICAL_QUESTIONS);
+      console.error('Failed to load questions:', err);
+      setError('Could not load questions. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
@@ -252,41 +156,8 @@ export default function Technical() {
         ],
       }));
     } catch (err) {
-      console.warn('API submission failed, computing local feedback:', err);
-      const isCorrect =
-        selectedOption.trim().toLowerCase() ===
-        (currentQuestion.expectedAnswer || '').trim().toLowerCase();
-
-      const result = {
-        attemptId: Date.now(),
-        questionId: currentQuestion.id,
-        isCorrect,
-        score: isCorrect ? 100 : 0,
-        selectedAnswer: selectedOption,
-        correctAnswer: currentQuestion.expectedAnswer || 'Option 1',
-        explanation:
-          currentQuestion.explanation ||
-          'In-depth technical analysis explaining core CS concepts.',
-        currentAccuracy: Math.round(
-          ((sessionStats.correct + (isCorrect ? 1 : 0)) / (sessionStats.attempted + 1)) * 100
-        ),
-      };
-
-      setAttemptResult(result);
-      setSessionStats((prev) => ({
-        attempted: prev.attempted + 1,
-        correct: isCorrect ? prev.correct + 1 : prev.correct,
-        totalTime: prev.totalTime + timeTaken,
-        history: [
-          ...prev.history,
-          {
-            questionId: currentQuestion.id,
-            title: currentQuestion.title || currentQuestion.topic,
-            isCorrect,
-            timeTaken,
-          },
-        ],
-      }));
+      console.error('Answer submission failed:', err);
+      setError('Your answer could not be submitted. Please try again.');
     } finally {
       setSubmitting(false);
     }

@@ -1,0 +1,37 @@
+[
+ {
+  "id": 1,
+  "name": "Google",
+  "description": "Multinational technology company focusing on search, AI, cloud computing, and consumer electronics.",
+  "website": "https://about.google",
+  "industry": "Technology / Software"
+ },
+ {
+  "id": 2,
+  "name": "Amazon",
+  "description": "Global leader in e-commerce, cloud computing (AWS), digital streaming, and artificial intelligence.",
+  "website": "https://amazon.com",
+  "industry": "E-Commerce / Cloud"
+ },
+ {
+  "id": 3,
+  "name": "Microsoft",
+  "description": "Leader in OS, enterprise software, gaming (Xbox), cloud services (Azure), and AI innovations.",
+  "website": "https://microsoft.com",
+  "industry": "Enterprise Software"
+ },
+ {
+  "id": 4,
+  "name": "TCS",
+  "description": "Tata Consultancy Services - Indian IT services and consulting leader serving global enterprise clients.",
+  "website": "https://tcs.com",
+  "industry": "IT Services / Consulting"
+ },
+ {
+  "id": 5,
+  "name": "Infosys",
+  "description": "Global leader in next-generation digital services and consulting for digital transformation.",
+  "website": "https://infosys.com",
+  "industry": "IT Services / Consulting"
+ }
+]

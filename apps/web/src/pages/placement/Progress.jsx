@@ -6,7 +6,7 @@ import ProgressBar from '../../components/common/ProgressBar';
 import EmptyState from '../../components/common/EmptyState';
 import LoadingState from '../../components/common/LoadingState';
 import ErrorState from '../../components/common/ErrorState';
-import { getUserProgress, getWeakAreas } from '../../services/placementService';
+import { getUserAnalytics } from '../../services/userService';
 import {
   TrendingUp,
   Target,
@@ -28,82 +28,42 @@ import {
   HelpCircle,
 } from 'lucide-react';
 
-const FALLBACK_PROGRESS_DATA = {
-  overallAccuracy: 74,
-  totalAttempted: 128,
-  totalCorrect: 95,
-  totalTimeSeconds: 5400,
-  currentStreakDays: 6,
-  categoryBreakdown: [
-    {
-      id: 'QUANT',
-      categoryName: 'Quantitative Aptitude',
-      attempted: 45,
-      correct: 32,
-      accuracy: 71,
-      moduleType: 'APTITUDE',
-      color: 'bg-emerald-500',
-    },
-    {
-      id: 'LOGICAL',
-      categoryName: 'Logical Reasoning',
-      attempted: 35,
-      correct: 28,
-      accuracy: 80,
-      moduleType: 'APTITUDE',
-      color: 'bg-[#C85232]',
-    },
-    {
-      id: 'VERBAL',
-      categoryName: 'Verbal Ability & Grammar',
-      attempted: 20,
-      correct: 17,
-      accuracy: 85,
-      moduleType: 'APTITUDE',
-      color: 'bg-amber-500',
-    },
-    {
-      id: 'TECH_CS',
-      categoryName: 'Core Technical & CS Fundamentals',
-      attempted: 18,
-      correct: 9,
-      accuracy: 50,
-      moduleType: 'TECHNICAL',
-      color: 'bg-rose-500',
-    },
-    {
-      id: 'DSA',
-      categoryName: 'Data Structures & Algorithms',
-      attempted: 10,
-      correct: 9,
-      accuracy: 90,
-      moduleType: 'DSA',
-      color: 'bg-indigo-500',
-    },
-  ],
-  weakAreas: [
-    {
-      categoryId: 'TECH_CS',
-      categoryName: 'Core Technical & CS Fundamentals',
-      accuracy: 50,
-      attempted: 18,
-      moduleType: 'TECHNICAL',
-      recommendation:
-        'Accuracy is below 60%. Review Operating Systems deadlock handling, B-Tree DB Indexing, and TCP/IP protocol stack.',
-      practiceLink: '/placement/technical',
-    },
-    {
-      categoryId: 'QUANT_PERM',
-      categoryName: 'Permutations & Probability',
-      accuracy: 45,
-      attempted: 12,
-      moduleType: 'APTITUDE',
-      recommendation:
-        'Low accuracy in probability combinations. Practice quantitative word problems and permutation formulas.',
-      practiceLink: '/placement/aptitude',
-    },
-  ],
+const CATEGORY_COLORS = {
+  APTITUDE: 'bg-emerald-500',
+  TECHNICAL: 'bg-rose-500',
+  DSA: 'bg-indigo-500',
+  CODING: 'bg-amber-500',
+  HR: 'bg-[#C85232]',
 };
+
+// Map the /users/analytics response onto the shape this page renders.
+function toProgressView(a) {
+  return {
+    overallAccuracy: Math.round(a.overallAccuracy || 0),
+    totalAttempted: a.totalQuestionsAttempted || 0,
+    totalCorrect: a.totalQuestionsSolved || 0,
+    totalTimeSeconds: (a.totalPracticeMinutes || 0) * 60,
+    currentStreakDays: a.currentStreakDays || 0,
+    categoryBreakdown: (a.categoryBreakdowns || []).map((c) => ({
+      id: c.categoryId,
+      categoryName: c.categoryName,
+      attempted: c.questionsAttempted,
+      correct: c.questionsCorrect,
+      accuracy: Math.round(c.accuracy || 0),
+      moduleType: c.moduleType,
+      color: CATEGORY_COLORS[c.moduleType] || 'bg-slate-500',
+    })),
+    weakAreas: (a.weakAreas || []).map((w) => ({
+      categoryId: w.categoryName,
+      categoryName: w.categoryName,
+      accuracy: Math.round(w.accuracy || 0),
+      attempted: w.attempted,
+      moduleType: w.moduleType,
+      recommendation: w.recommendation,
+      practiceLink: w.practiceLink,
+    })),
+  };
+}
 
 export default function Progress() {
   const navigate = useNavigate();
@@ -121,29 +81,12 @@ export default function Progress() {
     setLoading(true);
     setError(null);
     try {
-      const [progRes, weakRes] = await Promise.allSettled([
-        getUserProgress(),
-        getWeakAreas(60.0),
-      ]);
-
-      let prog = progRes.status === 'fulfilled' ? progRes.value : null;
-      let weak = weakRes.status === 'fulfilled' ? weakRes.value : null;
-
-      if (prog && prog.totalAttempted !== undefined) {
-        setProgressData(prog);
-      } else {
-        setProgressData(FALLBACK_PROGRESS_DATA);
-      }
-
-      if (weak && Array.isArray(weak)) {
-        setWeakAreas(weak);
-      } else {
-        setWeakAreas(FALLBACK_PROGRESS_DATA.weakAreas);
-      }
+      const view = toProgressView(await getUserAnalytics());
+      setProgressData(view);
+      setWeakAreas(view.weakAreas);
     } catch (err) {
-      console.warn('Using fallback progress analytics data:', err);
-      setProgressData(FALLBACK_PROGRESS_DATA);
-      setWeakAreas(FALLBACK_PROGRESS_DATA.weakAreas);
+      console.error('Failed to load progress analytics:', err);
+      setError('Could not load your progress analytics. Please try again.');
     } finally {
       setLoading(false);
     }

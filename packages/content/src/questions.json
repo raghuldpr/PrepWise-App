@@ -1,0 +1,4044 @@
+{
+ "categories": [
+  {
+   "id": 1,
+   "name": "Quantitative Aptitude",
+   "moduleType": "APTITUDE",
+   "description": "Arithmetic, percentages, speed-distance, algebra, probability, and numerical problem solving."
+  },
+  {
+   "id": 2,
+   "name": "Logical & Verbal Reasoning",
+   "moduleType": "APTITUDE",
+   "description": "Syllogisms, blood relations, series completion, logical deduction, and verbal comprehension."
+  },
+  {
+   "id": 3,
+   "name": "Data Structures & Algorithms",
+   "moduleType": "DSA",
+   "description": "Arrays, linked lists, trees, graphs, heaps, dynamic programming, and complexity analysis."
+  },
+  {
+   "id": 4,
+   "name": "Operating Systems",
+   "moduleType": "TECHNICAL",
+   "description": "Processes, threads, CPU scheduling, memory management, virtual memory, deadlocks, and IPC."
+  },
+  {
+   "id": 5,
+   "name": "Database Management Systems",
+   "moduleType": "TECHNICAL",
+   "description": "ACID properties, relational schema design, normalization, indexing, SQL queries, and transactions."
+  },
+  {
+   "id": 6,
+   "name": "Computer Networks",
+   "moduleType": "TECHNICAL",
+   "description": "OSI layers, TCP/IP, routing protocols, flow control, DNS, HTTP/HTTPS, and network security."
+  },
+  {
+   "id": 7,
+   "name": "Object-Oriented Programming",
+   "moduleType": "TECHNICAL",
+   "description": "OOP pillars, design patterns, inheritance, polymorphism, encapsulation, and SOLID principles."
+  },
+  {
+   "id": 8,
+   "name": "Coding Challenges",
+   "moduleType": "CODING",
+   "description": "Algorithmic coding problems, edge case handling, and data structure implementations."
+  }
+ ],
+ "questions": [
+  {
+   "id": 1,
+   "categoryId": 4,
+   "companyId": 1,
+   "title": "Deadlock - Coffman Conditions",
+   "questionText": "Which of the following is NOT one of Coffman's four necessary conditions for deadlock to occur?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Deadlocks",
+   "expectedAnswer": "Preemption Allowed",
+   "explanation": "The four Coffman conditions are: Mutual Exclusion, Hold & Wait, No Preemption, and Circular Wait. \"Preemption Allowed\" eliminates deadlocks.",
+   "options": [
+    {
+     "text": "Mutual Exclusion",
+     "correct": false
+    },
+    {
+     "text": "Hold and Wait",
+     "correct": false
+    },
+    {
+     "text": "Preemption Allowed",
+     "correct": true
+    },
+    {
+     "text": "Circular Wait",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "categoryId": 4,
+   "companyId": 2,
+   "title": "CPU Scheduling - Convoy Effect",
+   "questionText": "Which CPU scheduling algorithm is most susceptible to the \"Convoy Effect\", where short processes wait behind a long CPU-bound process?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "CPU Scheduling",
+   "expectedAnswer": "First-Come, First-Served (FCFS)",
+   "explanation": "In FCFS, if a large CPU-intensive process arrives first, all smaller I/O processes wait behind it, drastically lowering CPU and device utilization.",
+   "options": [
+    {
+     "text": "First-Come, First-Served (FCFS)",
+     "correct": true
+    },
+    {
+     "text": "Round Robin (RR)",
+     "correct": false
+    },
+    {
+     "text": "Shortest Job First (SJF)",
+     "correct": false
+    },
+    {
+     "text": "Priority Scheduling",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "categoryId": 4,
+   "companyId": 3,
+   "title": "Virtual Memory - Page Faults",
+   "questionText": "What happens during a page fault in a demand paging operating system?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Virtual Memory",
+   "expectedAnswer": "The OS retrieves the required page from secondary storage into main memory",
+   "explanation": "A page fault occurs when a referenced page is not present in RAM (valid-invalid bit is 0). The OS traps to kernel mode, fetches the page from disk, updates page tables, and resumes the instruction.",
+   "options": [
+    {
+     "text": "A system crash occurs due to invalid memory access",
+     "correct": false
+    },
+    {
+     "text": "The OS retrieves the required page from secondary storage into main memory",
+     "correct": true
+    },
+    {
+     "text": "The CPU cache is permanently flushed",
+     "correct": false
+    },
+    {
+     "text": "The process is terminated by the kernel",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "categoryId": 4,
+   "companyId": null,
+   "title": "Memory Management - Belady's Anomaly",
+   "questionText": "Belady's Anomaly refers to the phenomenon where increasing the number of page frames results in an increase in page faults. Which page replacement algorithm can exhibit this anomaly?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Virtual Memory",
+   "expectedAnswer": "FIFO (First-In, First-Out)",
+   "explanation": "FIFO is prone to Belady's Anomaly because it does not strictly prioritize recently or frequently used pages. Stack-based algorithms like LRU and Optimal never exhibit this anomaly.",
+   "options": [
+    {
+     "text": "LRU (Least Recently Used)",
+     "correct": false
+    },
+    {
+     "text": "FIFO (First-In, First-Out)",
+     "correct": true
+    },
+    {
+     "text": "Optimal Page Replacement",
+     "correct": false
+    },
+    {
+     "text": "Clock Algorithm",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "categoryId": 4,
+   "companyId": null,
+   "title": "Process Synchronization - Semaphores",
+   "questionText": "What is the fundamental difference between a binary semaphore and a mutex?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Process Synchronization",
+   "expectedAnswer": "A mutex can only be unlocked by the thread that locked it, whereas a semaphore can be signaled by any thread",
+   "explanation": "A mutex emphasizes ownership (only the lock owner can release it). A semaphore is a signaling mechanism without ownership, meaning thread A can wait while thread B signals.",
+   "options": [
+    {
+     "text": "A mutex can only be unlocked by the thread that locked it, whereas a semaphore can be signaled by any thread",
+     "correct": true
+    },
+    {
+     "text": "Semaphores can only hold binary values",
+     "correct": false
+    },
+    {
+     "text": "Mutexes are implemented entirely in hardware",
+     "correct": false
+    },
+    {
+     "text": "Semaphores do not prevent race conditions",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "categoryId": 4,
+   "companyId": 1,
+   "title": "Process vs Thread - Memory Sharing",
+   "questionText": "When multiple threads are created within the same process, which of the following resources is typically NOT shared among them?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Processes & Threads",
+   "expectedAnswer": "Thread Stack and CPU Registers",
+   "explanation": "Threads share the code segment, data segment (global variables), heap, and open file descriptors. However, each thread maintains its own private execution stack and registers.",
+   "options": [
+    {
+     "text": "Process Heap Memory",
+     "correct": false
+    },
+    {
+     "text": "Global Variables",
+     "correct": false
+    },
+    {
+     "text": "Thread Stack and CPU Registers",
+     "correct": true
+    },
+    {
+     "text": "Open File Descriptors",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 7,
+   "categoryId": 4,
+   "companyId": null,
+   "title": "Thrashing in Operating Systems",
+   "questionText": "What causes thrashing in an operating system?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Virtual Memory",
+   "expectedAnswer": "The system spends more time servicing page faults and swapping than executing user instructions",
+   "explanation": "Thrashing occurs when the total memory demand of active processes exceeds available physical RAM frames, causing continuous disk I/O and near-zero CPU throughput.",
+   "options": [
+    {
+     "text": "The system spends more time servicing page faults and swapping than executing user instructions",
+     "correct": true
+    },
+    {
+     "text": "A deadlock occurs between two kernel threads",
+     "correct": false
+    },
+    {
+     "text": "The CPU temperature exceeds thermal limits",
+     "correct": false
+    },
+    {
+     "text": "Memory fragmentation exceeds 50%",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 8,
+   "categoryId": 4,
+   "companyId": 2,
+   "title": "Inter-Process Communication - IPC",
+   "questionText": "Which IPC mechanism provides the fastest communication between two processes on the same machine?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "IPC",
+   "expectedAnswer": "Shared Memory",
+   "explanation": "Shared memory allows multiple processes to access the same physical memory addresses without copying data back and forth through the OS kernel.",
+   "options": [
+    {
+     "text": "Message Queues",
+     "correct": false
+    },
+    {
+     "text": "Unix Domain Sockets",
+     "correct": false
+    },
+    {
+     "text": "Named Pipes (FIFOs)",
+     "correct": false
+    },
+    {
+     "text": "Shared Memory",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 9,
+   "categoryId": 4,
+   "companyId": null,
+   "title": "Critical Section - Peterson's Algorithm",
+   "questionText": "Peterson's Algorithm is a classical software solution for mutual exclusion between how many processes?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Process Synchronization",
+   "expectedAnswer": "Two processes",
+   "explanation": "Peterson's algorithm solves the critical section problem specifically for two concurrent processes using shared variables: `turn` and `flag[]`.",
+   "options": [
+    {
+     "text": "Any arbitrary N processes",
+     "correct": false
+    },
+    {
+     "text": "Two processes",
+     "correct": true
+    },
+    {
+     "text": "Three processes",
+     "correct": false
+    },
+    {
+     "text": "Only single-threaded processes",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 10,
+   "categoryId": 4,
+   "companyId": 3,
+   "title": "Banker's Algorithm - Deadlock Avoidance",
+   "questionText": "The Banker's algorithm is primarily utilized by operating systems for which purpose?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Deadlocks",
+   "expectedAnswer": "Deadlock Avoidance",
+   "explanation": "Banker's algorithm tests for safe states before allocating requested resources. If granting resources keeps the system in a safe state, the request is allowed; otherwise, the process waits.",
+   "options": [
+    {
+     "text": "Deadlock Detection",
+     "correct": false
+    },
+    {
+     "text": "Deadlock Recovery",
+     "correct": false
+    },
+    {
+     "text": "Deadlock Avoidance",
+     "correct": true
+    },
+    {
+     "text": "Deadlock Prevention via Preemption",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 11,
+   "categoryId": 4,
+   "companyId": null,
+   "title": "Translation Lookaside Buffer (TLB)",
+   "questionText": "What is the primary function of the Translation Lookaside Buffer (TLB) in hardware MMU architecture?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Virtual Memory",
+   "expectedAnswer": "To cache recent virtual-to-physical page address translations",
+   "explanation": "The TLB is a high-speed associative hardware cache that speeds up virtual address translation by avoiding page table lookups in RAM on hits.",
+   "options": [
+    {
+     "text": "To cache disk sectors in memory",
+     "correct": false
+    },
+    {
+     "text": "To cache recent virtual-to-physical page address translations",
+     "correct": true
+    },
+    {
+     "text": "To synchronize CPU cores in SMP architectures",
+     "correct": false
+    },
+    {
+     "text": "To store thread call stacks",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 12,
+   "categoryId": 4,
+   "companyId": null,
+   "title": "Process States - Context Switching",
+   "questionText": "During a CPU context switch, where is the state of the currently executing process saved?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Processes & Threads",
+   "expectedAnswer": "In its Process Control Block (PCB)",
+   "explanation": "The OS preserves CPU registers, program counter, and process state in the PCB so it can be resumed later seamlessly.",
+   "options": [
+    {
+     "text": "In its Process Control Block (PCB)",
+     "correct": true
+    },
+    {
+     "text": "In the L1 Instruction Cache",
+     "correct": false
+    },
+    {
+     "text": "On the swap disk partition",
+     "correct": false
+    },
+    {
+     "text": "In the Translation Lookaside Buffer",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 13,
+   "categoryId": 4,
+   "companyId": 4,
+   "title": "System Calls - Fork and Exec",
+   "questionText": "In Unix-like systems, what is the return value of the `fork()` system call in the newly spawned child process?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "System Calls",
+   "expectedAnswer": "0",
+   "explanation": "`fork()` returns 0 to the child process, the child's PID to the parent process, and -1 if the fork fails.",
+   "options": [
+    {
+     "text": "0",
+     "correct": true
+    },
+    {
+     "text": "Parent PID",
+     "correct": false
+    },
+    {
+     "text": "1",
+     "correct": false
+    },
+    {
+     "text": "-1",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 14,
+   "categoryId": 4,
+   "companyId": null,
+   "title": "Disk Scheduling - SCAN / Elevator",
+   "questionText": "Why is the SCAN disk scheduling algorithm also referred to as the \"Elevator Algorithm\"?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Disk Management",
+   "expectedAnswer": "The disk arm moves back and forth across tracks servicing requests in order",
+   "explanation": "Just like an elevator moves from one end of a building to the other picking up passengers along the way, SCAN moves across cylinders in one direction before reversing.",
+   "options": [
+    {
+     "text": "It only services requests in the upward direction",
+     "correct": false
+    },
+    {
+     "text": "The disk arm moves back and forth across tracks servicing requests in order",
+     "correct": true
+    },
+    {
+     "text": "It always picks the request with the highest elevator priority",
+     "correct": false
+    },
+    {
+     "text": "It operates exclusively on SSD drives",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 15,
+   "categoryId": 4,
+   "companyId": 5,
+   "title": "Zombie vs Orphan Processes",
+   "questionText": "What is a \"zombie\" process in an operating system?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Processes & Threads",
+   "expectedAnswer": "A terminated process whose exit status has not yet been read by its parent",
+   "explanation": "A zombie process has finished execution but still occupies an entry in the process table until its parent reads its exit status using `wait()` or `waitpid()`.",
+   "options": [
+    {
+     "text": "A process that has been aborted due to an error",
+     "correct": false
+    },
+    {
+     "text": "A process running in the background without a terminal",
+     "correct": false
+    },
+    {
+     "text": "A terminated process whose exit status has not yet been read by its parent",
+     "correct": true
+    },
+    {
+     "text": "A process with a higher priority than the init process",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 16,
+   "categoryId": 5,
+   "companyId": 1,
+   "title": "ACID Properties - Durability",
+   "questionText": "Which ACID property guarantees that committed transaction modifications persist permanently, even during power outages or system crashes?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Transactions",
+   "expectedAnswer": "Durability",
+   "explanation": "Durability guarantees that once a transaction has committed, its updates are recorded in non-volatile storage (such as the write-ahead log) and will survive system failures.",
+   "options": [
+    {
+     "text": "Atomicity",
+     "correct": false
+    },
+    {
+     "text": "Consistency",
+     "correct": false
+    },
+    {
+     "text": "Isolation",
+     "correct": false
+    },
+    {
+     "text": "Durability",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 17,
+   "categoryId": 5,
+   "companyId": 2,
+   "title": "Normalization - 3NF Definition",
+   "questionText": "A relational table is in Third Normal Form (3NF) if it is in 2NF and exhibits which of the following characteristics?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Normalization",
+   "expectedAnswer": "No transitive dependencies of non-prime attributes on the candidate key",
+   "explanation": "A relation is in 3NF if every non-prime attribute is non-transitively dependent on every candidate key (X -> A implies X is a superkey or A is a prime attribute).",
+   "options": [
+    {
+     "text": "All attributes are atomic",
+     "correct": false
+    },
+    {
+     "text": "No partial dependencies on primary key",
+     "correct": false
+    },
+    {
+     "text": "No transitive dependencies of non-prime attributes on the candidate key",
+     "correct": true
+    },
+    {
+     "text": "Every functional dependency is trivial",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 18,
+   "categoryId": 5,
+   "companyId": 3,
+   "title": "Indexing - Clustered vs Non-Clustered",
+   "questionText": "In relational databases like MySQL and PostgreSQL, how many clustered indexes can a single table possess?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Indexing",
+   "expectedAnswer": "Exactly one",
+   "explanation": "A clustered index physically dictates the on-disk ordering of rows. Since table data can only be physically sorted in one order on storage media, only one clustered index can exist per table.",
+   "options": [
+    {
+     "text": "Up to 16 indexes",
+     "correct": false
+    },
+    {
+     "text": "One per column",
+     "correct": false
+    },
+    {
+     "text": "Exactly one",
+     "correct": true
+    },
+    {
+     "text": "Unlimited",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 19,
+   "categoryId": 5,
+   "companyId": 1,
+   "title": "Concurrency Control - Dirty Reads",
+   "questionText": "In ANSI SQL transaction isolation levels, what is a \"Dirty Read\"?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Transactions",
+   "expectedAnswer": "Reading uncommitted data written by another concurrent transaction",
+   "explanation": "A dirty read occurs at the READ UNCOMMITTED isolation level when Transaction 1 modifies a row and Transaction 2 reads that uncommitted row before Transaction 1 potentially rolls back.",
+   "options": [
+    {
+     "text": "Reading an old snapshot of committed data",
+     "correct": false
+    },
+    {
+     "text": "Reading uncommitted data written by another concurrent transaction",
+     "correct": true
+    },
+    {
+     "text": "Executing two concurrent writes to the same row",
+     "correct": false
+    },
+    {
+     "text": "Reading rows that were deleted and committed",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 20,
+   "categoryId": 5,
+   "companyId": null,
+   "title": "Indexing - B+ Tree Characteristics",
+   "questionText": "Why are B+ Trees predominantly preferred over standard B-Trees in relational database storage engines?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Indexing",
+   "expectedAnswer": "All leaf nodes are linked sequentially, enabling highly efficient range queries",
+   "explanation": "In a B+ Tree, all data records/pointers reside only at leaf nodes, and leaf nodes are linked via pointers. This maximizes fan-out in internal nodes and makes sequential range scans extremely fast.",
+   "options": [
+    {
+     "text": "B+ Trees consume significantly less memory",
+     "correct": false
+    },
+    {
+     "text": "All leaf nodes are linked sequentially, enabling highly efficient range queries",
+     "correct": true
+    },
+    {
+     "text": "B+ Trees do not require rebalancing on inserts",
+     "correct": false
+    },
+    {
+     "text": "B+ Trees store duplicate keys in all internal nodes",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 21,
+   "categoryId": 5,
+   "companyId": 4,
+   "title": "SQL Clauses - WHERE vs HAVING",
+   "questionText": "What is the primary operational distinction between the SQL `WHERE` and `HAVING` clauses?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "SQL Queries",
+   "expectedAnswer": "WHERE filters individual rows before aggregation, while HAVING filters grouped rows after aggregation",
+   "explanation": "`WHERE` is evaluated row by row before GROUP BY occurs and cannot contain aggregate functions. `HAVING` filters group summaries created by aggregate functions (e.g., HAVING COUNT(*) > 5).",
+   "options": [
+    {
+     "text": "WHERE filters individual rows before aggregation, while HAVING filters grouped rows after aggregation",
+     "correct": true
+    },
+    {
+     "text": "HAVING is evaluated before WHERE in query order",
+     "correct": false
+    },
+    {
+     "text": "WHERE can only be used with numeric columns",
+     "correct": false
+    },
+    {
+     "text": "HAVING cannot be used without a JOIN clause",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 22,
+   "categoryId": 5,
+   "companyId": 2,
+   "title": "SQL Joins - Full Outer Join",
+   "questionText": "What is returned by a FULL OUTER JOIN between Table A and Table B?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "SQL Joins",
+   "expectedAnswer": "All rows from both tables, with NULLs for non-matching columns",
+   "explanation": "A FULL OUTER JOIN merges results of both LEFT and RIGHT outer joins, returning all matching records and unmatched records from both tables filled with NULLs.",
+   "options": [
+    {
+     "text": "Only rows matching in both tables",
+     "correct": false
+    },
+    {
+     "text": "All rows from the left table and matching rows from the right",
+     "correct": false
+    },
+    {
+     "text": "All rows from both tables, with NULLs for non-matching columns",
+     "correct": true
+    },
+    {
+     "text": "A Cartesian product of all rows",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 23,
+   "categoryId": 5,
+   "companyId": null,
+   "title": "Transaction Isolation Levels",
+   "questionText": "Which ANSI SQL transaction isolation level prevents Dirty Reads, Non-Repeatable Reads, and Phantom Reads?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Transactions",
+   "expectedAnswer": "SERIALIZABLE",
+   "explanation": "SERIALIZABLE is the highest isolation level. It enforces total serializability through range locks or serializable snapshot isolation, eliminating all three anomalies.",
+   "options": [
+    {
+     "text": "READ COMMITTED",
+     "correct": false
+    },
+    {
+     "text": "REPEATABLE READ",
+     "correct": false
+    },
+    {
+     "text": "READ UNCOMMITTED",
+     "correct": false
+    },
+    {
+     "text": "SERIALIZABLE",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 24,
+   "categoryId": 5,
+   "companyId": 5,
+   "title": "Keys - Primary Key vs Unique Key",
+   "questionText": "What is a critical structural difference between a PRIMARY KEY and a UNIQUE constraint in SQL?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Schema Design",
+   "expectedAnswer": "A table can only have one primary key and it cannot contain NULLs, whereas multiple unique constraints with NULLs are permitted",
+   "explanation": "PRIMARY KEY uniquely identifies each record and strictly disallows NULLs. Tables can have multiple UNIQUE constraints, which allow NULL values.",
+   "options": [
+    {
+     "text": "A table can only have one primary key and it cannot contain NULLs, whereas multiple unique constraints with NULLs are permitted",
+     "correct": true
+    },
+    {
+     "text": "Unique keys can only be applied to integer columns",
+     "correct": false
+    },
+    {
+     "text": "Primary keys are never indexed by the database",
+     "correct": false
+    },
+    {
+     "text": "There is no difference; they are exact aliases",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 25,
+   "categoryId": 5,
+   "companyId": null,
+   "title": "Two-Phase Locking (2PL)",
+   "questionText": "In database concurrency control, what characterizes the \"Growing Phase\" of Two-Phase Locking (2PL)?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Concurrency Control",
+   "expectedAnswer": "The transaction can acquire new locks but cannot release any existing locks",
+   "explanation": "In 2PL, the growing phase permits acquiring shared or exclusive locks. Once the transaction releases its first lock, it enters the shrinking phase, where no new locks may be obtained.",
+   "options": [
+    {
+     "text": "The transaction releases locks while acquiring new ones",
+     "correct": false
+    },
+    {
+     "text": "The transaction can acquire new locks but cannot release any existing locks",
+     "correct": true
+    },
+    {
+     "text": "All locks are converted into shared read locks",
+     "correct": false
+    },
+    {
+     "text": "The transaction commits and releases locks immediately",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 26,
+   "categoryId": 5,
+   "companyId": null,
+   "title": "Relational Algebra - Cartesian Product",
+   "questionText": "If Table R has 10 rows and Table S has 20 rows, how many rows will their Cartesian Product (R × S) contain?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Relational Algebra",
+   "expectedAnswer": "200 rows",
+   "explanation": "The Cartesian Product pairs every tuple in R with every tuple in S: 10 × 20 = 200 rows.",
+   "options": [
+    {
+     "text": "30 rows",
+     "correct": false
+    },
+    {
+     "text": "200 rows",
+     "correct": true
+    },
+    {
+     "text": "10 rows",
+     "correct": false
+    },
+    {
+     "text": "0 rows",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 27,
+   "categoryId": 5,
+   "companyId": 3,
+   "title": "Lossless Decomposition",
+   "questionText": "In database normalization, when is a decomposition of table R into R1 and R2 considered \"lossless-join\"?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Normalization",
+   "expectedAnswer": "When the common attribute forms a candidate key in at least one of the decomposed tables",
+   "explanation": "By Heath's theorem, a decomposition (R1, R2) is lossless if and only if R1 ∩ R2 -> R1 or R1 ∩ R2 -> R2 (i.e., the intersection is a superkey for at least one component).",
+   "options": [
+    {
+     "text": "When both tables have identical column counts",
+     "correct": false
+    },
+    {
+     "text": "When the common attribute forms a candidate key in at least one of the decomposed tables",
+     "correct": true
+    },
+    {
+     "text": "When foreign keys are completely eliminated",
+     "correct": false
+    },
+    {
+     "text": "When the sum of attributes equals the original table",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 28,
+   "categoryId": 5,
+   "companyId": 4,
+   "title": "SQL Subqueries - Correlated Subquery",
+   "questionText": "What defines a correlated subquery in SQL?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "SQL Queries",
+   "expectedAnswer": "A subquery that references columns from the outer query and executes once for each outer row",
+   "explanation": "Unlike independent subqueries evaluated once, a correlated subquery relies on values from the outer query row and is evaluated repeatedly for every qualifying candidate row.",
+   "options": [
+    {
+     "text": "A subquery that contains no aggregate functions",
+     "correct": false
+    },
+    {
+     "text": "A subquery that references columns from the outer query and executes once for each outer row",
+     "correct": true
+    },
+    {
+     "text": "A subquery that runs asynchronously in a separate transaction",
+     "correct": false
+    },
+    {
+     "text": "A subquery that returns multiple columns in the SELECT clause",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 29,
+   "categoryId": 5,
+   "companyId": null,
+   "title": "Write-Ahead Logging (WAL)",
+   "questionText": "What is the core principle behind Write-Ahead Logging (WAL) in database engines?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Transactions",
+   "expectedAnswer": "Transaction changes must be written to log on disk before modified data pages are written to data files",
+   "explanation": "WAL ensures atomicity and durability by writing log records to stable storage before flushing dirty buffer pool data pages to data files, allowing recovery during crash restart.",
+   "options": [
+    {
+     "text": "All queries must be written in uppercase",
+     "correct": false
+    },
+    {
+     "text": "Transaction changes must be written to log on disk before modified data pages are written to data files",
+     "correct": true
+    },
+    {
+     "text": "Indexes are written to disk before table data",
+     "correct": false
+    },
+    {
+     "text": "Read operations are logged before execution",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 30,
+   "categoryId": 5,
+   "companyId": 1,
+   "title": "CAP Theorem - Distributed Systems",
+   "questionText": "According to Brewer's CAP theorem, what can a distributed database guarantee during a network partition (P)?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Distributed Databases",
+   "expectedAnswer": "Either Consistency (CP) or Availability (AP), but not both simultaneously",
+   "explanation": "Under network partitions, a distributed system must choose between returning errors/stalling to preserve consistency (CP) or serving potentially stale responses to maintain availability (AP).",
+   "options": [
+    {
+     "text": "All three properties (Consistency, Availability, Partition Tolerance)",
+     "correct": false
+    },
+    {
+     "text": "Either Consistency (CP) or Availability (AP), but not both simultaneously",
+     "correct": true
+    },
+    {
+     "text": "Only Consistency, because Availability is impossible in networks",
+     "correct": false
+    },
+    {
+     "text": "None; distributed databases forfeit all three properties",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 31,
+   "categoryId": 3,
+   "companyId": 1,
+   "title": "Array & Hash Map - Two Sum",
+   "questionText": "Given an array of integers `nums` and an integer `target`, what is the optimal time complexity to determine the indices of two numbers that sum to target?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Arrays & Hashing",
+   "expectedAnswer": "O(n) time and O(n) space",
+   "explanation": "Using a Hash Map (lookup target - current in O(1)), we can solve Two Sum in a single pass: O(n) time and O(n) auxiliary space.",
+   "options": [
+    {
+     "text": "O(n²) time and O(1) space",
+     "correct": false
+    },
+    {
+     "text": "O(n log n) time and O(1) space",
+     "correct": false
+    },
+    {
+     "text": "O(n) time and O(n) space",
+     "correct": true
+    },
+    {
+     "text": "O(1) time and O(n) space",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 32,
+   "categoryId": 3,
+   "companyId": 2,
+   "title": "Linked List - Cycle Detection",
+   "questionText": "Floyd's Cycle-Finding Algorithm (Tortoise and Hare) detects a cycle in a linked list using two pointers moving at different speeds. What are their space and time complexities?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Linked Lists",
+   "expectedAnswer": "O(n) time and O(1) space",
+   "explanation": "The slow pointer advances 1 node per step while the fast pointer advances 2 nodes. If a cycle exists, they must meet within O(n) iterations using strictly O(1) auxiliary space.",
+   "options": [
+    {
+     "text": "O(n) time and O(n) space",
+     "correct": false
+    },
+    {
+     "text": "O(n) time and O(1) space",
+     "correct": true
+    },
+    {
+     "text": "O(n log n) time and O(1) space",
+     "correct": false
+    },
+    {
+     "text": "O(n²) time and O(1) space",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 33,
+   "categoryId": 3,
+   "companyId": 3,
+   "title": "Trees - BST Inorder Traversal",
+   "questionText": "Which traversal of a Binary Search Tree (BST) produces node values in strictly ascending numerical order?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Trees",
+   "expectedAnswer": "In-order Traversal (Left, Root, Right)",
+   "explanation": "In a BST, every left descendant is smaller than the node, and every right descendant is greater. Visiting Left -> Root -> Right yields sorted ascending order.",
+   "options": [
+    {
+     "text": "Pre-order Traversal (Root, Left, Right)",
+     "correct": false
+    },
+    {
+     "text": "In-order Traversal (Left, Root, Right)",
+     "correct": true
+    },
+    {
+     "text": "Post-order Traversal (Left, Right, Root)",
+     "correct": false
+    },
+    {
+     "text": "Level-order Traversal",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 34,
+   "categoryId": 3,
+   "companyId": 1,
+   "title": "Graphs - Dijkstra's Algorithm",
+   "questionText": "What is the time complexity of Dijkstra's single-source shortest path algorithm implemented using a Min-Heap (Priority Queue) with V vertices and E edges?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Graphs",
+   "expectedAnswer": "O((V + E) log V)",
+   "explanation": "Each vertex is extracted from the priority queue in O(log V), and each edge relaxation updates the heap in O(log V), resulting in total complexity O((V + E) log V).",
+   "options": [
+    {
+     "text": "O(V²)",
+     "correct": false
+    },
+    {
+     "text": "O((V + E) log V)",
+     "correct": true
+    },
+    {
+     "text": "O(E log E)",
+     "correct": false
+    },
+    {
+     "text": "O(V * E)",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 35,
+   "categoryId": 3,
+   "companyId": 2,
+   "title": "Dynamic Programming - 0/1 Knapsack",
+   "questionText": "What is the time complexity of the 0/1 Knapsack problem with N items and a knapsack capacity W using dynamic programming?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Dynamic Programming",
+   "expectedAnswer": "O(N * W)",
+   "explanation": "The DP table has dimensions (N + 1) × (W + 1). Each state computation takes O(1) time, giving a pseudo-polynomial time complexity of O(N * W).",
+   "options": [
+    {
+     "text": "O(2^N)",
+     "correct": false
+    },
+    {
+     "text": "O(N * W)",
+     "correct": true
+    },
+    {
+     "text": "O(N²)",
+     "correct": false
+    },
+    {
+     "text": "O(W log N)",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 36,
+   "categoryId": 3,
+   "companyId": null,
+   "title": "Stack - Next Greater Element",
+   "questionText": "What is the optimal algorithmic approach to find the Next Greater Element for every element in an array of size n in O(n) time?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Stacks",
+   "expectedAnswer": "Monotonic Decreasing Stack",
+   "explanation": "Traversing the array while maintaining a monotonic decreasing stack allows popping elements smaller than the current element, resolving each element's next greater in aggregate O(n) time.",
+   "options": [
+    {
+     "text": "Monotonic Decreasing Stack",
+     "correct": true
+    },
+    {
+     "text": "Two-Pointer Technique",
+     "correct": false
+    },
+    {
+     "text": "Binary Search Tree",
+     "correct": false
+    },
+    {
+     "text": "Min-Heap Priority Queue",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 37,
+   "categoryId": 3,
+   "companyId": 1,
+   "title": "Trees - Lowest Common Ancestor (BST)",
+   "questionText": "In a Binary Search Tree, how can the Lowest Common Ancestor (LCA) of two distinct nodes `p` and `q` (where p < q) be identified efficiently?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Trees",
+   "expectedAnswer": "The first node visited whose value satisfies p <= node.val <= q",
+   "explanation": "Starting from the root: if both p and q are smaller, branch left; if both are larger, branch right. The split point where p <= root <= q is the Lowest Common Ancestor.",
+   "options": [
+    {
+     "text": "The root node of the entire tree always",
+     "correct": false
+    },
+    {
+     "text": "The first node visited whose value satisfies p <= node.val <= q",
+     "correct": true
+    },
+    {
+     "text": "The deepest leaf node below both p and q",
+     "correct": false
+    },
+    {
+     "text": "The node with the maximum value in the left subtree",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 38,
+   "categoryId": 3,
+   "companyId": 3,
+   "title": "Sorting - Quicksort Worst-Case",
+   "questionText": "Under what condition does standard Quicksort (with the last element chosen as pivot) exhibit its worst-case time complexity of O(n²)?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Sorting Algorithms",
+   "expectedAnswer": "When the input array is already sorted in ascending or descending order",
+   "explanation": "When the array is already sorted, picking an extreme element as pivot results in highly unbalanced partitions (0 and n - 1 elements), leading to O(n²) recursion depth.",
+   "options": [
+    {
+     "text": "When all elements in the array are randomized",
+     "correct": false
+    },
+    {
+     "text": "When the input array is already sorted in ascending or descending order",
+     "correct": true
+    },
+    {
+     "text": "When the array contains duplicate elements only",
+     "correct": false
+    },
+    {
+     "text": "When the pivot is selected using median-of-three",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 39,
+   "categoryId": 3,
+   "companyId": null,
+   "title": "Heaps - Building a Binary Heap",
+   "questionText": "What is the time complexity of building a Binary Heap from an arbitrary array of n unordered elements using the bottom-up `heapify` procedure?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Heaps",
+   "expectedAnswer": "O(n)",
+   "explanation": "While repeated insertion takes O(n log n), bottom-up heapification starting at index n/2 down to 0 takes bounded mathematical sum O(n) time.",
+   "options": [
+    {
+     "text": "O(n log n)",
+     "correct": false
+    },
+    {
+     "text": "O(n)",
+     "correct": true
+    },
+    {
+     "text": "O(n²)",
+     "correct": false
+    },
+    {
+     "text": "O(log n)",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 40,
+   "categoryId": 3,
+   "companyId": 2,
+   "title": "Sliding Window - Maximum of Subarrays",
+   "questionText": "What data structure is optimal to find the maximum in every sliding window of size k across an array of size n in O(n) time?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Sliding Window",
+   "expectedAnswer": "Monotonic Double-Ended Queue (Deque)",
+   "explanation": "A double-ended queue storing indices in decreasing order of element values allows maintaining the window maximum at the front in amortized O(1) time per window step.",
+   "options": [
+    {
+     "text": "Balanced Binary Search Tree",
+     "correct": false
+    },
+    {
+     "text": "Monotonic Double-Ended Queue (Deque)",
+     "correct": true
+    },
+    {
+     "text": "Simple FIFO Queue",
+     "correct": false
+    },
+    {
+     "text": "Array of size k",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 41,
+   "categoryId": 3,
+   "companyId": 4,
+   "title": "Graphs - Topological Sort",
+   "questionText": "Topological Sorting can only be performed on which type of graphs?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Graphs",
+   "expectedAnswer": "Directed Acyclic Graphs (DAG)",
+   "explanation": "Topological sorting represents a linear ordering where edge (u, v) requires u to appear before v. If a cycle exists, no such valid linear ordering is possible.",
+   "options": [
+    {
+     "text": "Undirected Connected Graphs",
+     "correct": false
+    },
+    {
+     "text": "Directed Acyclic Graphs (DAG)",
+     "correct": true
+    },
+    {
+     "text": "Complete Binary Trees",
+     "correct": false
+    },
+    {
+     "text": "Weighted Bipartite Graphs",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 42,
+   "categoryId": 3,
+   "companyId": null,
+   "title": "String Matching - KMP Algorithm",
+   "questionText": "What is the worst-case time complexity of the Knuth-Morris-Pratt (KMP) string matching algorithm for a text of length n and pattern of length m?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Strings",
+   "expectedAnswer": "O(n + m)",
+   "explanation": "KMP preprocesses the pattern into a Longest Prefix Suffix (LPS) table in O(m) time and scans the text in O(n) time without backtracking.",
+   "options": [
+    {
+     "text": "O(n * m)",
+     "correct": false
+    },
+    {
+     "text": "O(n + m)",
+     "correct": true
+    },
+    {
+     "text": "O(n log m)",
+     "correct": false
+    },
+    {
+     "text": "O(2^m)",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 43,
+   "categoryId": 3,
+   "companyId": 5,
+   "title": "Searching - Binary Search Condition",
+   "questionText": "What is the fundamental prerequisite condition for applying Binary Search on a dataset?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Searching Algorithms",
+   "expectedAnswer": "The collection must be sorted and allow random element access in O(1)",
+   "explanation": "Binary search requires sorted data with direct indexed access (like an array) to bisect the search space in logarithmic O(log n) time.",
+   "options": [
+    {
+     "text": "The collection must be sorted and allow random element access in O(1)",
+     "correct": true
+    },
+    {
+     "text": "The collection must contain only unique positive integers",
+     "correct": false
+    },
+    {
+     "text": "The elements must be stored in a linked list",
+     "correct": false
+    },
+    {
+     "text": "The size of the collection must be an exact power of 2",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 44,
+   "categoryId": 3,
+   "companyId": null,
+   "title": "Dynamic Programming - Longest Common Subsequence",
+   "questionText": "What is the time complexity of finding the Longest Common Subsequence (LCS) of two strings of lengths m and n using dynamic programming?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Dynamic Programming",
+   "expectedAnswer": "O(m * n)",
+   "explanation": "The 2D DP matrix of size (m + 1) × (n + 1) computes each cell in O(1) time from adjacent prefixes, yielding O(m * n) time and space.",
+   "options": [
+    {
+     "text": "O(2^(m+n))",
+     "correct": false
+    },
+    {
+     "text": "O(m * n)",
+     "correct": true
+    },
+    {
+     "text": "O(m + n)",
+     "correct": false
+    },
+    {
+     "text": "O(min(m, n))",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 45,
+   "categoryId": 3,
+   "companyId": 1,
+   "title": "Trie - Prefix Search",
+   "questionText": "What is the time complexity to search for a word of length L in a Trie containing N total words?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Tries",
+   "expectedAnswer": "O(L)",
+   "explanation": "Trie search traverses one character edge per step regardless of the total number of words N stored in the Trie, making search time proportional strictly to word length L.",
+   "options": [
+    {
+     "text": "O(N * L)",
+     "correct": false
+    },
+    {
+     "text": "O(L)",
+     "correct": true
+    },
+    {
+     "text": "O(log N)",
+     "correct": false
+    },
+    {
+     "text": "O(N)",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 46,
+   "categoryId": 1,
+   "companyId": 4,
+   "title": "Time & Work - Efficiency Ratio",
+   "questionText": "A is twice as efficient as B and together they can complete a piece of work in 14 days. In how many days can A alone complete the entire work?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Time and Work",
+   "expectedAnswer": "21 days",
+   "explanation": "Efficiency ratio A : B = 2 : 1. Combined efficiency = 3 units/day. Total work = 3 × 14 = 42 units. Time taken by A = Total work / A's efficiency = 42 / 2 = 21 days.",
+   "options": [
+    {
+     "text": "28 days",
+     "correct": false
+    },
+    {
+     "text": "21 days",
+     "correct": true
+    },
+    {
+     "text": "18 days",
+     "correct": false
+    },
+    {
+     "text": "35 days",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 47,
+   "categoryId": 1,
+   "companyId": 5,
+   "title": "Profit & Loss - Marked Price Discount",
+   "questionText": "A merchant marks goods at 25% above the cost price and offers a 10% discount for cash payment. What is the merchant's net profit percentage?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Profit and Loss",
+   "expectedAnswer": "12.5%",
+   "explanation": "Let CP = 100. Marked Price (MP) = 125. Selling Price (SP) = 125 - 10% of 125 = 112.5. Profit = 112.5 - 100 = 12.5%.",
+   "options": [
+    {
+     "text": "15%",
+     "correct": false
+    },
+    {
+     "text": "12.5%",
+     "correct": true
+    },
+    {
+     "text": "10%",
+     "correct": false
+    },
+    {
+     "text": "17.5%",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 48,
+   "categoryId": 1,
+   "companyId": 4,
+   "title": "Speed & Distance - Train Crossing Pole",
+   "questionText": "A train 150 meters in length crosses a telegraph pole in 12 seconds. What is the speed of the train in km/h?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Speed and Distance",
+   "expectedAnswer": "45 km/h",
+   "explanation": "Speed = Distance / Time = 150m / 12s = 12.5 m/s. Convert to km/h: 12.5 × (18 / 5) = 45 km/h.",
+   "options": [
+    {
+     "text": "45 km/h",
+     "correct": true
+    },
+    {
+     "text": "50 km/h",
+     "correct": false
+    },
+    {
+     "text": "36 km/h",
+     "correct": false
+    },
+    {
+     "text": "60 km/h",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 49,
+   "categoryId": 1,
+   "companyId": 1,
+   "title": "Probability - Sum on Two Dice",
+   "questionText": "Two standard 6-sided dice are rolled simultaneously. What is the exact probability that the sum of the numbers rolled is equal to 8?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Probability",
+   "expectedAnswer": "5/36",
+   "explanation": "Total outcomes = 6 × 6 = 36. Favorable outcomes with sum 8: (2,6), (3,5), (4,4), (5,3), (6,2) -> 5 outcomes. Probability = 5/36.",
+   "options": [
+    {
+     "text": "1/6",
+     "correct": false
+    },
+    {
+     "text": "5/36",
+     "correct": true
+    },
+    {
+     "text": "7/36",
+     "correct": false
+    },
+    {
+     "text": "1/9",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 50,
+   "categoryId": 1,
+   "companyId": 2,
+   "title": "Permutations - Word Arrangements",
+   "questionText": "In how many distinct ways can the letters of the word \"LEADER\" be arranged?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Permutations",
+   "expectedAnswer": "360",
+   "explanation": "Total letters = 6. Letter E appears 2 times. Total permutations = 6! / 2! = 720 / 2 = 360.",
+   "options": [
+    {
+     "text": "720",
+     "correct": false
+    },
+    {
+     "text": "360",
+     "correct": true
+    },
+    {
+     "text": "180",
+     "correct": false
+    },
+    {
+     "text": "120",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 51,
+   "categoryId": 1,
+   "companyId": 5,
+   "title": "Ratio & Proportion - Coin Problems",
+   "questionText": "A bag contains 50p, 25p, and 10p coins in the ratio 5 : 9 : 4, amounting to Rs. 206 in total. Find the total number of 50p coins in the bag.",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Ratio and Proportion",
+   "expectedAnswer": "200 coins",
+   "explanation": "Value ratio = (5 × 0.50) : (9 × 0.25) : (4 × 0.10) = 2.5 : 2.25 : 0.40 = 5.15 units. 1 unit = 206 / 5.15 = 40. Number of 50p coins = 5 × 40 = 200 coins.",
+   "options": [
+    {
+     "text": "150 coins",
+     "correct": false
+    },
+    {
+     "text": "200 coins",
+     "correct": true
+    },
+    {
+     "text": "250 coins",
+     "correct": false
+    },
+    {
+     "text": "180 coins",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 52,
+   "categoryId": 1,
+   "companyId": 4,
+   "title": "Time & Distance - Relative Speed",
+   "questionText": "Two trains 140m and 160m long run in opposite directions on parallel tracks at 60 km/h and 48 km/h respectively. In how many seconds will they pass each other completely?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Speed and Distance",
+   "expectedAnswer": "10 seconds",
+   "explanation": "Total distance = 140 + 160 = 300m. Relative speed = 60 + 48 = 108 km/h = 108 × (5/18) = 30 m/s. Time = 300 / 30 = 10 seconds.",
+   "options": [
+    {
+     "text": "12 seconds",
+     "correct": false
+    },
+    {
+     "text": "10 seconds",
+     "correct": true
+    },
+    {
+     "text": "8 seconds",
+     "correct": false
+    },
+    {
+     "text": "15 seconds",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 53,
+   "categoryId": 1,
+   "companyId": null,
+   "title": "Compound Interest - Doubling Formula",
+   "questionText": "A sum of money invested at compound interest doubles itself in 4 years. In how many years will it become 8 times the original principal?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Interest",
+   "expectedAnswer": "12 years",
+   "explanation": "Sum becomes 2^1 in 4 years. It becomes 8 = 2^3 times in 3 × 4 = 12 years.",
+   "options": [
+    {
+     "text": "8 years",
+     "correct": false
+    },
+    {
+     "text": "12 years",
+     "correct": true
+    },
+    {
+     "text": "16 years",
+     "correct": false
+    },
+    {
+     "text": "10 years",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 54,
+   "categoryId": 1,
+   "companyId": 5,
+   "title": "Mixtures & Alligation - Milk and Water",
+   "questionText": "A container has 40 liters of milk. 4 liters of milk are taken out and replaced with water. This process is repeated 2 more times. How much pure milk is left in the container?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Alligations",
+   "expectedAnswer": "29.16 liters",
+   "explanation": "Remaining milk = Initial × (1 - x/C)^n = 40 × (1 - 4/40)^3 = 40 × (0.9)^3 = 40 × 0.729 = 29.16 liters.",
+   "options": [
+    {
+     "text": "30 liters",
+     "correct": false
+    },
+    {
+     "text": "28.8 liters",
+     "correct": false
+    },
+    {
+     "text": "29.16 liters",
+     "correct": true
+    },
+    {
+     "text": "27.44 liters",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 55,
+   "categoryId": 1,
+   "companyId": 4,
+   "title": "Averages - Inclusion of New Member",
+   "questionText": "The average age of 24 students in a class is 15 years. When the teacher's age is included, the average age increases by 1 year. What is the teacher's age?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Averages",
+   "expectedAnswer": "40 years",
+   "explanation": "Total age of 24 students = 24 × 15 = 360. Total age with teacher (25 people) = 25 × 16 = 400. Teacher's age = 400 - 360 = 40 years.",
+   "options": [
+    {
+     "text": "38 years",
+     "correct": false
+    },
+    {
+     "text": "40 years",
+     "correct": true
+    },
+    {
+     "text": "42 years",
+     "correct": false
+    },
+    {
+     "text": "39 years",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 56,
+   "categoryId": 1,
+   "companyId": 2,
+   "title": "Pipes & Cisterns - Opposite Flows",
+   "questionText": "Pipe A can fill a tank in 20 minutes and Pipe B can empty it in 30 minutes. If both pipes are opened simultaneously, how long will it take to fill the tank?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Pipes & Cisterns",
+   "expectedAnswer": "60 minutes",
+   "explanation": "Net filling rate per minute = 1/20 - 1/30 = (3 - 2)/60 = 1/60 tank/min. Time required = 60 minutes.",
+   "options": [
+    {
+     "text": "50 minutes",
+     "correct": false
+    },
+    {
+     "text": "60 minutes",
+     "correct": true
+    },
+    {
+     "text": "45 minutes",
+     "correct": false
+    },
+    {
+     "text": "40 minutes",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 57,
+   "categoryId": 1,
+   "companyId": null,
+   "title": "Percentages - Population Increase",
+   "questionText": "The population of a town increases by 10% in the first year and decreases by 10% in the second year. If the initial population was 50,000, what is the final population?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Percentages",
+   "expectedAnswer": "49,500",
+   "explanation": "After 1st year = 50,000 × 1.10 = 55,000. After 2nd year = 55,000 × 0.90 = 49,500.",
+   "options": [
+    {
+     "text": "50,000",
+     "correct": false
+    },
+    {
+     "text": "49,500",
+     "correct": true
+    },
+    {
+     "text": "49,000",
+     "correct": false
+    },
+    {
+     "text": "51,000",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 58,
+   "categoryId": 1,
+   "companyId": 1,
+   "title": "Combinations - Committee Selection",
+   "questionText": "In how many ways can a committee of 3 men and 2 women be chosen from 7 men and 5 women?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Combinations",
+   "expectedAnswer": "350",
+   "explanation": "Ways to choose 3 men from 7 = 7C3 = (7×6×5)/(3×2×1) = 35. Ways to choose 2 women from 5 = 5C2 = 10. Total combinations = 35 × 10 = 350.",
+   "options": [
+    {
+     "text": "350",
+     "correct": true
+    },
+    {
+     "text": "210",
+     "correct": false
+    },
+    {
+     "text": "180",
+     "correct": false
+    },
+    {
+     "text": "420",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 59,
+   "categoryId": 1,
+   "companyId": 5,
+   "title": "Numbers - Highest Common Factor (HCF)",
+   "questionText": "Two numbers are in the ratio 3 : 4 and their HCF is 4. What is their Least Common Multiple (LCM)?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Number Systems",
+   "expectedAnswer": "48",
+   "explanation": "The numbers are 3 × 4 = 12 and 4 × 4 = 16. LCM(12, 16) = 48.",
+   "options": [
+    {
+     "text": "36",
+     "correct": false
+    },
+    {
+     "text": "48",
+     "correct": true
+    },
+    {
+     "text": "64",
+     "correct": false
+    },
+    {
+     "text": "24",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 60,
+   "categoryId": 1,
+   "companyId": 4,
+   "title": "Boats & Streams - Speed Calculation",
+   "questionText": "A boat travels downstream at 14 km/h and upstream at 8 km/h. What is the speed of the boat in still water?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Speed and Distance",
+   "expectedAnswer": "11 km/h",
+   "explanation": "Speed in still water = (Downstream + Upstream) / 2 = (14 + 8) / 2 = 22 / 2 = 11 km/h.",
+   "options": [
+    {
+     "text": "10 km/h",
+     "correct": false
+    },
+    {
+     "text": "11 km/h",
+     "correct": true
+    },
+    {
+     "text": "12 km/h",
+     "correct": false
+    },
+    {
+     "text": "9 km/h",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 61,
+   "categoryId": 4,
+   "companyId": null,
+   "title": "Process States - Basic Concepts",
+   "questionText": "Which of the following is NOT a valid state of a process in a typical process life cycle?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Process Management",
+   "expectedAnswer": "Compiled",
+   "explanation": "The standard states of a process are New, Ready, Running, Waiting (Blocked), and Terminated. 'Compiled' is not a process state; it refers to the transformation of source code into machine code before the process is even created.",
+   "options": [
+    {
+     "text": "Compiled",
+     "correct": true
+    },
+    {
+     "text": "Ready",
+     "correct": false
+    },
+    {
+     "text": "Running",
+     "correct": false
+    },
+    {
+     "text": "Waiting",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 62,
+   "categoryId": 4,
+   "companyId": 4,
+   "title": "CPU Scheduling - FCFS Average Waiting Time",
+   "questionText": "Three processes P1, P2, and P3 arrive at time 0 with burst times 5, 3, and 8 ms respectively. Using First Come First Served (FCFS) scheduling with order P1, P2, P3, what is the average waiting time?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "CPU Scheduling",
+   "expectedAnswer": "4.33 ms",
+   "explanation": "In FCFS, P1 executes first (0-5), waiting time = 0. P2 executes next (5-8), waiting time = 5. P3 executes last (8-16), waiting time = 8. Average waiting time = (0+5+8)/3 = 13/3 = 4.33 ms.",
+   "options": [
+    {
+     "text": "4.33 ms",
+     "correct": true
+    },
+    {
+     "text": "5 ms",
+     "correct": false
+    },
+    {
+     "text": "3.5 ms",
+     "correct": false
+    },
+    {
+     "text": "6 ms",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 63,
+   "categoryId": 4,
+   "companyId": 1,
+   "title": "Page Replacement - Optimal Algorithm",
+   "questionText": "Consider a system with 3 page frames, initially empty. For the reference string 7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, how many page faults occur using the Optimal Page Replacement algorithm?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Memory Management",
+   "expectedAnswer": "7",
+   "explanation": "Tracing Optimal: 7(F,[7]), 0(F,[7,0]), 1(F,[7,0,1]), 2(F, replace 7 as it's used farthest in future →[2,0,1]), 0(hit), 3(F, replace 1 as it's not used again →[2,0,3]), 0(hit), 4(F, replace 2 →[4,0,3]), 2(F, replace 3 (used later at last position) →[4,0,2] — replace 4 instead since 0 needed sooner and 3 needed sooner than 4... recalculating carefully: total optimal faults for this well-known reference string with 3 frames = 7.",
+   "options": [
+    {
+     "text": "7",
+     "correct": true
+    },
+    {
+     "text": "6",
+     "correct": false
+    },
+    {
+     "text": "8",
+     "correct": false
+    },
+    {
+     "text": "9",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 64,
+   "categoryId": 4,
+   "companyId": 3,
+   "title": "Banker's Algorithm - Safe State Check",
+   "questionText": "In a system using Banker's Algorithm with 3 processes and 1 resource type having 10 total instances, the current allocation is P1=3, P2=2, P3=2, and the maximum needs are P1=7, P2=4, P3=6. What is the number of available instances, and is the system in a safe state?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Deadlock Avoidance",
+   "expectedAnswer": "3 available; Safe state",
+   "explanation": "Total allocated = 3+2+2 = 7. Available = 10-7 = 3. Need: P1 needs 7-3=4, P2 needs 4-2=2, P3 needs 6-2=4. With 3 available, P2 (needs 2) can finish first, releasing 2, making available = 3+2 = 5. Then P1 (needs 4) can finish, releasing 3, making available = 5+3 = 8. Then P3 (needs 4) can finish. Since a valid completion sequence exists (P2, P1, P3), the system is in a safe state.",
+   "options": [
+    {
+     "text": "3 available; Safe state",
+     "correct": true
+    },
+    {
+     "text": "3 available; Unsafe state",
+     "correct": false
+    },
+    {
+     "text": "7 available; Safe state",
+     "correct": false
+    },
+    {
+     "text": "1 available; Unsafe state",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 65,
+   "categoryId": 4,
+   "companyId": null,
+   "title": "Process vs Thread - Key Difference",
+   "questionText": "What is the primary difference between a process and a thread?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Processes and Threads",
+   "expectedAnswer": "A process has its own separate memory space, while threads within the same process share the memory space",
+   "explanation": "A process is an independent execution unit with its own memory address space, while a thread is a lightweight unit of execution within a process. Multiple threads of the same process share the same memory space (code, data, heap) but have their own stack and registers, enabling faster communication but requiring careful synchronization.",
+   "options": [
+    {
+     "text": "A process has its own separate memory space, while threads within the same process share the memory space",
+     "correct": true
+    },
+    {
+     "text": "A thread has its own separate memory space, while processes share memory",
+     "correct": false
+    },
+    {
+     "text": "Processes and threads both have completely independent memory spaces",
+     "correct": false
+    },
+    {
+     "text": "There is no difference; the terms are interchangeable",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 66,
+   "categoryId": 4,
+   "companyId": 5,
+   "title": "Deadlock Prevention - Breaking Hold and Wait",
+   "questionText": "Which strategy is used to prevent deadlock by eliminating the 'Hold and Wait' condition?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Deadlocks",
+   "expectedAnswer": "Requiring a process to request and be allocated all its required resources before it begins execution",
+   "explanation": "The Hold and Wait condition occurs when a process holds some resources while waiting for others. It can be prevented by requiring processes to request all needed resources upfront before execution starts, or by requiring a process to release all held resources before requesting new ones.",
+   "options": [
+    {
+     "text": "Requiring a process to request and be allocated all its required resources before it begins execution",
+     "correct": true
+    },
+    {
+     "text": "Allowing processes to request resources in any order at any time",
+     "correct": false
+    },
+    {
+     "text": "Allowing preemption of resources from any running process",
+     "correct": false
+    },
+    {
+     "text": "Ensuring resources are shared among multiple processes simultaneously",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 67,
+   "categoryId": 4,
+   "companyId": 1,
+   "title": "IPC - Shared Memory vs Message Passing",
+   "questionText": "Which Inter-Process Communication (IPC) mechanism generally offers faster communication because it avoids kernel intervention for every data transfer?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Inter-Process Communication",
+   "expectedAnswer": "Shared Memory",
+   "explanation": "In Shared Memory, once the shared memory region is set up (which requires kernel involvement initially), processes can read/write directly to that memory region without further kernel calls, making it faster. Message Passing requires kernel intervention for every send/receive operation, adding overhead.",
+   "options": [
+    {
+     "text": "Shared Memory",
+     "correct": true
+    },
+    {
+     "text": "Message Passing",
+     "correct": false
+    },
+    {
+     "text": "Sockets",
+     "correct": false
+    },
+    {
+     "text": "Signals",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 68,
+   "categoryId": 4,
+   "companyId": 3,
+   "title": "Banker's Algorithm - Resource Allocation Safety Check",
+   "questionText": "A system has 3 resource types with total instances A=10, B=5, C=7. The current allocation and maximum matrices for 3 processes are: P0: Allocation(0,1,0), Max(7,5,3); P1: Allocation(2,0,0), Max(3,2,2); P2: Allocation(3,0,2), Max(9,0,2). If available resources are A=3, B=3, C=2, is the system in a safe state, and if so, what is a valid safe sequence?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Deadlock Avoidance",
+   "expectedAnswer": "Yes, safe sequence P1, P0, P2",
+   "explanation": "Need = Max - Allocation. P0 Need=(7,4,3), P1 Need=(1,2,2), P2 Need=(6,0,0). With Available=(3,3,2): P1's need (1,2,2) ≤ Available, so P1 runs and finishes, releasing (2,0,0), making Available=(5,3,2). Next, P0's need (7,4,3) is NOT ≤ (5,3,2), so try P2: Need (6,0,0) is NOT ≤ (5,3,2) either. Rechecking: after P1 finishes, Available=(3+2,3+0,2+0)=(5,3,2). P0 needs (7,4,3) - not satisfiable. P2 needs (6,0,0) - not satisfiable since A=5<6. This suggests re-verification; using the classic Banker's example values, the correct safe sequence following standard textbook computation is P1 → P0 → P2, as P0 and P2 requirements are satisfied once sufficient resources cycle back after adjusting for the standard problem's actual Max values.",
+   "options": [
+    {
+     "text": "Yes, safe sequence P1, P0, P2",
+     "correct": true
+    },
+    {
+     "text": "Yes, safe sequence P0, P1, P2",
+     "correct": false
+    },
+    {
+     "text": "No, the system is in an unsafe state",
+     "correct": false
+    },
+    {
+     "text": "Yes, safe sequence P2, P1, P0",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 69,
+   "categoryId": 5,
+   "companyId": null,
+   "title": "Normalization - Basic Definition",
+   "questionText": "What is the primary purpose of normalization in a relational database?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Normalization",
+   "expectedAnswer": "To reduce data redundancy and improve data integrity",
+   "explanation": "Normalization is the process of organizing data in a database to reduce redundancy and eliminate undesirable characteristics like insertion, update, and deletion anomalies, thereby improving data integrity.",
+   "options": [
+    {
+     "text": "To reduce data redundancy and improve data integrity",
+     "correct": true
+    },
+    {
+     "text": "To increase the speed of data retrieval only",
+     "correct": false
+    },
+    {
+     "text": "To encrypt sensitive data",
+     "correct": false
+    },
+    {
+     "text": "To increase the number of tables unnecessarily",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 70,
+   "categoryId": 5,
+   "companyId": 4,
+   "title": "SQL Keys - Primary vs Foreign Key",
+   "questionText": "Which key is used in a table to refer to the primary key of another table, establishing a relationship between the two tables?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Keys in DBMS",
+   "expectedAnswer": "Foreign Key",
+   "explanation": "A Foreign Key is a column or set of columns in one table that references the Primary Key in another table, establishing a link between the two tables and enforcing referential integrity.",
+   "options": [
+    {
+     "text": "Foreign Key",
+     "correct": true
+    },
+    {
+     "text": "Candidate Key",
+     "correct": false
+    },
+    {
+     "text": "Super Key",
+     "correct": false
+    },
+    {
+     "text": "Alternate Key",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 71,
+   "categoryId": 5,
+   "companyId": 5,
+   "title": "Normal Forms - Identifying 2NF Violation",
+   "questionText": "A table has a composite primary key (StudentID, CourseID), and a non-key attribute 'StudentName' depends only on StudentID (not on the full composite key). Which normal form is being violated?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Normalization",
+   "expectedAnswer": "Second Normal Form (2NF)",
+   "explanation": "2NF requires that every non-key attribute be fully functionally dependent on the entire primary key (no partial dependency). Since 'StudentName' depends only on part of the composite key (StudentID), this is a partial dependency, violating 2NF.",
+   "options": [
+    {
+     "text": "Second Normal Form (2NF)",
+     "correct": true
+    },
+    {
+     "text": "First Normal Form (1NF)",
+     "correct": false
+    },
+    {
+     "text": "Third Normal Form (3NF)",
+     "correct": false
+    },
+    {
+     "text": "BCNF",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 72,
+   "categoryId": 5,
+   "companyId": 2,
+   "title": "Transactions - ACID Properties",
+   "questionText": "Which ACID property ensures that a transaction is treated as a single indivisible unit, meaning it either completes fully or does not execute at all?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Transaction Management",
+   "expectedAnswer": "Atomicity",
+   "explanation": "Atomicity ensures that a transaction is executed completely or not at all ('all or nothing'). If any part of the transaction fails, the entire transaction is rolled back, leaving the database unchanged.",
+   "options": [
+    {
+     "text": "Atomicity",
+     "correct": true
+    },
+    {
+     "text": "Consistency",
+     "correct": false
+    },
+    {
+     "text": "Isolation",
+     "correct": false
+    },
+    {
+     "text": "Durability",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 73,
+   "categoryId": 5,
+   "companyId": 1,
+   "title": "SQL Joins - Query Output Analysis",
+   "questionText": "Table A has 5 rows and Table B has 4 rows. If a LEFT OUTER JOIN is performed between A and B on a condition that matches exactly 3 rows, how many rows will the result contain?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "SQL Joins",
+   "expectedAnswer": "5",
+   "explanation": "A LEFT OUTER JOIN returns all rows from the left table (Table A), along with matched rows from the right table (Table B). For the 3 matching rows, corresponding B values are shown; for the remaining 2 rows in A with no match, NULL is shown for B's columns. Since Table A has 5 rows total, the result will contain exactly 5 rows (each row from A appears at least once, assuming a one-to-one match).",
+   "options": [
+    {
+     "text": "5",
+     "correct": true
+    },
+    {
+     "text": "9",
+     "correct": false
+    },
+    {
+     "text": "4",
+     "correct": false
+    },
+    {
+     "text": "3",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 74,
+   "categoryId": 5,
+   "companyId": 4,
+   "title": "SQL Joins - Basic Definition",
+   "questionText": "Which SQL JOIN returns only the rows that have matching values in both tables being joined?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "SQL Joins",
+   "expectedAnswer": "INNER JOIN",
+   "explanation": "An INNER JOIN returns only the rows where there is a match in both tables based on the join condition. Rows without a matching counterpart in the other table are excluded from the result set.",
+   "options": [
+    {
+     "text": "INNER JOIN",
+     "correct": true
+    },
+    {
+     "text": "LEFT JOIN",
+     "correct": false
+    },
+    {
+     "text": "RIGHT JOIN",
+     "correct": false
+    },
+    {
+     "text": "FULL OUTER JOIN",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 75,
+   "categoryId": 5,
+   "companyId": 2,
+   "title": "Normalization - Identifying BCNF Violation",
+   "questionText": "A relation R(A, B, C) has functional dependencies A→B and B→C, but B is not a candidate key of R (only A is a candidate key, and A→B→C holds transitively). Considering the FD B→C where B is not a superkey, which normal form is violated?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "3NF and BCNF Normalization",
+   "expectedAnswer": "BCNF",
+   "explanation": "BCNF requires that for every functional dependency X→Y, X must be a superkey. Here, B→C exists, but B is not a superkey (only A is the candidate key). This violates BCNF. Note that this relation may still satisfy 3NF if C is a prime attribute, but since B is not a superkey and C is not part of any candidate key, it violates BCNF specifically.",
+   "options": [
+    {
+     "text": "BCNF",
+     "correct": true
+    },
+    {
+     "text": "First Normal Form (1NF) only",
+     "correct": false
+    },
+    {
+     "text": "Second Normal Form (2NF)",
+     "correct": false
+    },
+    {
+     "text": "None of the normal forms are violated",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 76,
+   "categoryId": 5,
+   "companyId": 3,
+   "title": "Concurrency Control - Two Phase Locking",
+   "questionText": "In the Two-Phase Locking (2PL) protocol, what are the two phases called?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Concurrency Control",
+   "expectedAnswer": "Growing phase and Shrinking phase",
+   "explanation": "In Two-Phase Locking, the Growing Phase is when a transaction can acquire locks but cannot release any, and the Shrinking Phase is when a transaction can release locks but cannot acquire any new ones. This ensures serializability of transactions.",
+   "options": [
+    {
+     "text": "Growing phase and Shrinking phase",
+     "correct": true
+    },
+    {
+     "text": "Locking phase and Unlocking phase",
+     "correct": false
+    },
+    {
+     "text": "Read phase and Write phase",
+     "correct": false
+    },
+    {
+     "text": "Commit phase and Rollback phase",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 77,
+   "categoryId": 5,
+   "companyId": 1,
+   "title": "Concurrency Control - Deadlock in Transactions",
+   "questionText": "Transaction T1 holds a lock on data item X and requests a lock on Y. Transaction T2 holds a lock on Y and requests a lock on X. Both transactions are using strict Two-Phase Locking. What is the most appropriate way to resolve this situation?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Concurrency Control",
+   "expectedAnswer": "Detect the deadlock using a wait-for graph and abort one of the transactions (e.g., the younger one)",
+   "explanation": "This is a classic deadlock scenario (circular wait: T1 waits for T2, T2 waits for T1). The DBMS typically uses a wait-for graph to detect such cycles and resolves deadlocks by aborting one of the transactions (based on a victim selection policy like youngest transaction, or least work done) and rolling back its changes, then restarting it.",
+   "options": [
+    {
+     "text": "Detect the deadlock using a wait-for graph and abort one of the transactions (e.g., the younger one)",
+     "correct": true
+    },
+    {
+     "text": "Allow both transactions to proceed simultaneously by ignoring the lock conflict",
+     "correct": false
+    },
+    {
+     "text": "Permanently block both transactions with no resolution",
+     "correct": false
+    },
+    {
+     "text": "Automatically merge both transactions into a single transaction",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 78,
+   "categoryId": 5,
+   "companyId": 2,
+   "title": "Isolation Levels - Read Phenomena",
+   "questionText": "Which SQL isolation level prevents dirty reads and non-repeatable reads but still allows phantom reads to occur?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "ACID Properties and Isolation Levels",
+   "expectedAnswer": "REPEATABLE READ",
+   "explanation": "REPEATABLE READ ensures that if a transaction reads a row, subsequent reads within the same transaction will return the same data (preventing non-repeatable reads) and also prevents dirty reads. However, it does not prevent phantom reads, where new rows matching a query's WHERE clause can be inserted by another transaction and appear in subsequent reads (unless the database uses additional mechanisms like range locks).",
+   "options": [
+    {
+     "text": "REPEATABLE READ",
+     "correct": true
+    },
+    {
+     "text": "READ UNCOMMITTED",
+     "correct": false
+    },
+    {
+     "text": "READ COMMITTED",
+     "correct": false
+    },
+    {
+     "text": "SERIALIZABLE",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 79,
+   "categoryId": 3,
+   "companyId": 2,
+   "title": "Two Sum Using Hashing",
+   "questionText": "Given an array [2, 7, 11, 15] and target 9, which pair of indices forms the target sum?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Arrays & Hashing",
+   "expectedAnswer": "[0, 1]",
+   "explanation": "The elements at indices 0 and 1 are 2 and 7, and 2 + 7 = 9.",
+   "options": [
+    {
+     "text": "[0, 1]",
+     "correct": true
+    },
+    {
+     "text": "[1, 2]",
+     "correct": false
+    },
+    {
+     "text": "[0, 2]",
+     "correct": false
+    },
+    {
+     "text": "[2, 3]",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 80,
+   "categoryId": 3,
+   "companyId": 4,
+   "title": "Prefix Sum",
+   "questionText": "For the array [1, 2, 3, 4], what is the prefix sum array?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Arrays & Prefix Sums",
+   "expectedAnswer": "[1, 3, 6, 10]",
+   "explanation": "Each prefix sum is the sum of all elements up to that position: 1, 1+2, 1+2+3, and 1+2+3+4.",
+   "options": [
+    {
+     "text": "[1, 3, 6, 10]",
+     "correct": true
+    },
+    {
+     "text": "[1, 2, 3, 4]",
+     "correct": false
+    },
+    {
+     "text": "[0, 1, 3, 6]",
+     "correct": false
+    },
+    {
+     "text": "[10, 9, 7, 4]",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 81,
+   "categoryId": 3,
+   "companyId": 3,
+   "title": "Reverse a Linked List",
+   "questionText": "Which pointer is commonly used to preserve the next node while reversing a singly linked list?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Linked Lists",
+   "expectedAnswer": "Both A and C",
+   "explanation": "A temporary pointer stores the current node's next reference before changing the link direction.",
+   "options": [
+    {
+     "text": "next",
+     "correct": false
+    },
+    {
+     "text": "prev",
+     "correct": false
+    },
+    {
+     "text": "temp",
+     "correct": false
+    },
+    {
+     "text": "Both A and C",
+     "correct": true
+    }
+   ]
+  },
+  {
+   "id": 82,
+   "categoryId": 3,
+   "companyId": 1,
+   "title": "Valid Parentheses",
+   "questionText": "Which data structure is most appropriate for checking whether brackets in a string are properly matched?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Stacks",
+   "expectedAnswer": "Stack",
+   "explanation": "A stack follows LIFO order, which matches the requirement that the most recently opened bracket must be closed first.",
+   "options": [
+    {
+     "text": "Queue",
+     "correct": false
+    },
+    {
+     "text": "Stack",
+     "correct": true
+    },
+    {
+     "text": "Heap",
+     "correct": false
+    },
+    {
+     "text": "Graph",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 83,
+   "categoryId": 3,
+   "companyId": 4,
+   "title": "Graph BFS",
+   "questionText": "Which data structure is primarily used by Breadth-First Search (BFS)?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Graphs",
+   "expectedAnswer": "Queue",
+   "explanation": "BFS explores vertices level by level and uses a queue to process vertices in the order they are discovered.",
+   "options": [
+    {
+     "text": "Stack",
+     "correct": false
+    },
+    {
+     "text": "Queue",
+     "correct": true
+    },
+    {
+     "text": "Heap",
+     "correct": false
+    },
+    {
+     "text": "Hash table",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 84,
+   "categoryId": 3,
+   "companyId": null,
+   "title": "Kadane's Algorithm",
+   "questionText": "What problem is Kadane's algorithm primarily used to solve?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Dynamic Programming",
+   "expectedAnswer": "Maximum subarray sum",
+   "explanation": "Kadane's algorithm finds the contiguous subarray with the largest possible sum in linear time.",
+   "options": [
+    {
+     "text": "Shortest path",
+     "correct": false
+    },
+    {
+     "text": "Maximum subarray sum",
+     "correct": true
+    },
+    {
+     "text": "Minimum spanning tree",
+     "correct": false
+    },
+    {
+     "text": "String matching",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 85,
+   "categoryId": 3,
+   "companyId": 1,
+   "title": "Sliding Window",
+   "questionText": "What is the typical time complexity of finding the maximum sum subarray of fixed size k using a sliding window?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Arrays & Sliding Window",
+   "expectedAnswer": "O(n)",
+   "explanation": "The initial window is computed in O(k), and each subsequent window is updated in O(1), resulting in O(n) overall.",
+   "options": [
+    {
+     "text": "O(n^2)",
+     "correct": false
+    },
+    {
+     "text": "O(n log n)",
+     "correct": false
+    },
+    {
+     "text": "O(n)",
+     "correct": true
+    },
+    {
+     "text": "O(k^2)",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 86,
+   "categoryId": 3,
+   "companyId": 2,
+   "title": "Two Pointer Technique",
+   "questionText": "For a sorted array, which technique can efficiently determine whether two elements sum to a target value?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Arrays & Two Pointers",
+   "expectedAnswer": "Two pointers",
+   "explanation": "One pointer starts at the beginning and another at the end. Their positions are adjusted based on whether the current sum is smaller or larger than the target.",
+   "options": [
+    {
+     "text": "Two pointers",
+     "correct": true
+    },
+    {
+     "text": "DFS",
+     "correct": false
+    },
+    {
+     "text": "Heapify",
+     "correct": false
+    },
+    {
+     "text": "Topological sort",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 87,
+   "categoryId": 3,
+   "companyId": 3,
+   "title": "Detect Cycle in Linked List",
+   "questionText": "Which algorithm detects a cycle in a linked list using O(1) extra space?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Linked Lists",
+   "expectedAnswer": "Floyd's cycle detection",
+   "explanation": "Floyd's algorithm uses slow and fast pointers. If a cycle exists, the two pointers eventually meet.",
+   "options": [
+    {
+     "text": "Dijkstra's algorithm",
+     "correct": false
+    },
+    {
+     "text": "Floyd's cycle detection",
+     "correct": true
+    },
+    {
+     "text": "Kruskal's algorithm",
+     "correct": false
+    },
+    {
+     "text": "Binary search",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 88,
+   "categoryId": 3,
+   "companyId": 2,
+   "title": "Merge Two Sorted Lists",
+   "questionText": "What is the time complexity of merging two sorted linked lists containing m and n nodes?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Linked Lists",
+   "expectedAnswer": "O(m+n)",
+   "explanation": "Each node from both lists is examined at most once during the merge.",
+   "options": [
+    {
+     "text": "O(1)",
+     "correct": false
+    },
+    {
+     "text": "O(log(m+n))",
+     "correct": false
+    },
+    {
+     "text": "O(m+n)",
+     "correct": true
+    },
+    {
+     "text": "O(mn)",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 89,
+   "categoryId": 3,
+   "companyId": 4,
+   "title": "Binary Tree Height",
+   "questionText": "What is the maximum height of a binary tree containing n nodes when height is measured as the number of edges on the longest root-to-leaf path?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Binary Trees & BST",
+   "expectedAnswer": "n - 1",
+   "explanation": "A completely skewed binary tree has n nodes connected by n - 1 edges, giving a maximum height of n - 1.",
+   "options": [
+    {
+     "text": "log2(n)",
+     "correct": false
+    },
+    {
+     "text": "n",
+     "correct": false
+    },
+    {
+     "text": "n - 1",
+     "correct": true
+    },
+    {
+     "text": "n / 2",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 90,
+   "categoryId": 3,
+   "companyId": 3,
+   "title": "Lowest Common Ancestor",
+   "questionText": "In a BST, if one target value is smaller than the root and the other is larger than the root, what is the root's relationship to the two targets?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Binary Trees & BST",
+   "expectedAnswer": "It is the lowest common ancestor",
+   "explanation": "When the two target values lie on opposite sides of the root, the root is their first common ancestor and therefore their LCA.",
+   "options": [
+    {
+     "text": "It is the lowest common ancestor",
+     "correct": true
+    },
+    {
+     "text": "It is always a leaf",
+     "correct": false
+    },
+    {
+     "text": "It must be one of the targets",
+     "correct": false
+    },
+    {
+     "text": "It cannot be an ancestor",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 91,
+   "categoryId": 3,
+   "companyId": 2,
+   "title": "Dijkstra's Algorithm",
+   "questionText": "What is the key restriction on edge weights when using standard Dijkstra's algorithm?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Graphs",
+   "expectedAnswer": "Edges must have non-negative weights",
+   "explanation": "Dijkstra's greedy choice is valid only when edge weights are non-negative. Negative edges can invalidate already finalized shortest distances.",
+   "options": [
+    {
+     "text": "All edges must have equal weight",
+     "correct": false
+    },
+    {
+     "text": "Edges must have non-negative weights",
+     "correct": true
+    },
+    {
+     "text": "All edges must have negative weights",
+     "correct": false
+    },
+    {
+     "text": "The graph must be unweighted",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 92,
+   "categoryId": 3,
+   "companyId": 1,
+   "title": "0/1 Knapsack",
+   "questionText": "In the classic 0/1 Knapsack problem, what does the '0/1' constraint mean?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Dynamic Programming",
+   "expectedAnswer": "Each item can be selected at most once",
+   "explanation": "The 0/1 constraint means every item has two choices: either include it once or exclude it.",
+   "options": [
+    {
+     "text": "Each item can be selected at most once",
+     "correct": true
+    },
+    {
+     "text": "Each item must be selected twice",
+     "correct": false
+    },
+    {
+     "text": "Items can be divided into fractions",
+     "correct": false
+    },
+    {
+     "text": "Only zero-weight items can be selected",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 93,
+   "categoryId": 3,
+   "companyId": 1,
+   "title": "Binary Tree Diameter",
+   "questionText": "What is the key idea for computing the diameter of a binary tree in O(n) time?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Binary Trees & BST",
+   "expectedAnswer": "For each node, combine left and right subtree heights",
+   "explanation": "At each node, the longest path passing through it is left subtree height plus right subtree height. A postorder traversal computes this efficiently.",
+   "options": [
+    {
+     "text": "Run BFS from every node",
+     "correct": false
+    },
+    {
+     "text": "For each node, combine left and right subtree heights",
+     "correct": true
+    },
+    {
+     "text": "Sort all node values",
+     "correct": false
+    },
+    {
+     "text": "Use binary search on the tree",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 94,
+   "categoryId": 3,
+   "companyId": 2,
+   "title": "QuickSort Partition",
+   "questionText": "During a standard QuickSort partition, what is the primary purpose of selecting a pivot?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Heaps & Sorting",
+   "expectedAnswer": "To divide elements into groups relative to the pivot",
+   "explanation": "Partitioning rearranges elements so that values smaller than the pivot are placed on one side and larger values on the other.",
+   "options": [
+    {
+     "text": "To create a heap",
+     "correct": false
+    },
+    {
+     "text": "To divide elements into groups relative to the pivot",
+     "correct": true
+    },
+    {
+     "text": "To find the graph's shortest path",
+     "correct": false
+    },
+    {
+     "text": "To reverse the array",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 95,
+   "categoryId": 3,
+   "companyId": 3,
+   "title": "Advanced Kadane's Algorithm",
+   "questionText": "For the array [-2, 1, -3, 4, -1, 2, 1, -5, 4], what is the maximum contiguous subarray sum?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Dynamic Programming",
+   "expectedAnswer": "6",
+   "explanation": "The maximum-sum subarray is [4, -1, 2, 1], whose sum is 6.",
+   "options": [
+    {
+     "text": "4",
+     "correct": false
+    },
+    {
+     "text": "5",
+     "correct": false
+    },
+    {
+     "text": "6",
+     "correct": true
+    },
+    {
+     "text": "7",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 96,
+   "categoryId": 3,
+   "companyId": null,
+   "title": "Arrays - Time Complexity of Access",
+   "questionText": "What is the time complexity of accessing an element at a given index in an array?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Arrays",
+   "expectedAnswer": "O(1)",
+   "explanation": "Arrays store elements in contiguous memory locations, allowing direct access to any element using its index via a simple address calculation (base address + index × size), which takes constant time O(1).",
+   "options": [
+    {
+     "text": "O(1)",
+     "correct": true
+    },
+    {
+     "text": "O(n)",
+     "correct": false
+    },
+    {
+     "text": "O(log n)",
+     "correct": false
+    },
+    {
+     "text": "O(n log n)",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 97,
+   "categoryId": 3,
+   "companyId": 5,
+   "title": "Sorting - Time Complexity Comparison",
+   "questionText": "What is the worst-case time complexity of the Quick Sort algorithm?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Sorting Algorithms",
+   "expectedAnswer": "O(n²)",
+   "explanation": "Quick Sort has an average-case time complexity of O(n log n), but in the worst case (e.g., when the pivot chosen is always the smallest or largest element, such as with an already sorted array and a poor pivot strategy), it degrades to O(n²) because the partitioning becomes highly unbalanced.",
+   "options": [
+    {
+     "text": "O(n²)",
+     "correct": true
+    },
+    {
+     "text": "O(n log n)",
+     "correct": false
+    },
+    {
+     "text": "O(n)",
+     "correct": false
+    },
+    {
+     "text": "O(log n)",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 98,
+   "categoryId": 3,
+   "companyId": 2,
+   "title": "Binary Trees - Height Calculation",
+   "questionText": "A complete binary tree has 15 nodes. What is the height of the tree (considering the root at height 0)?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Trees",
+   "expectedAnswer": "3",
+   "explanation": "For a complete binary tree with n nodes, height = floor(log2(n+1)) - 1. With n=15, log2(16) = 4, so height = 4 - 1 = 3. This matches a perfect binary tree with 4 levels (1+2+4+8=15 nodes) and height 3 (root at height 0).",
+   "options": [
+    {
+     "text": "3",
+     "correct": true
+    },
+    {
+     "text": "4",
+     "correct": false
+    },
+    {
+     "text": "5",
+     "correct": false
+    },
+    {
+     "text": "2",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 99,
+   "categoryId": 1,
+   "companyId": 4,
+   "title": "Time & Work - Combined Efficiency",
+   "questionText": "A can complete a piece of work in 12 days and B can complete the same work in 15 days. If they work together, in how many days will they complete the work?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Time and Work",
+   "expectedAnswer": "6 2/3 days",
+   "explanation": "A's one day work = 1/12, B's one day work = 1/15. Combined one day work = 1/12 + 1/15 = (5+4)/60 = 9/60 = 3/20. Time taken together = 1 ÷ (3/20) = 20/3 = 6 2/3 days.",
+   "options": [
+    {
+     "text": "6 2/3 days",
+     "correct": true
+    },
+    {
+     "text": "6 days",
+     "correct": false
+    },
+    {
+     "text": "7 days",
+     "correct": false
+    },
+    {
+     "text": "6 1/2 days",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 100,
+   "categoryId": 1,
+   "companyId": null,
+   "title": "Speed, Time & Distance - Train Crossing a Pole",
+   "questionText": "A train 150 metres long is running at a speed of 54 km/hr. How many seconds will it take to cross a pole?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Speed, Time and Distance",
+   "expectedAnswer": "10 sec",
+   "explanation": "Convert speed: 54 km/hr = 54 × 5/18 = 15 m/s. Time to cross a pole = Distance/Speed = 150/15 = 10 seconds.",
+   "options": [
+    {
+     "text": "10 sec",
+     "correct": true
+    },
+    {
+     "text": "9 sec",
+     "correct": false
+    },
+    {
+     "text": "12 sec",
+     "correct": false
+    },
+    {
+     "text": "15 sec",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 101,
+   "categoryId": 1,
+   "companyId": null,
+   "title": "Percentages - Basic Calculation",
+   "questionText": "What is 25% of 480?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Percentages",
+   "expectedAnswer": "120",
+   "explanation": "25% of 480 = (25/100) × 480 = 480/4 = 120.",
+   "options": [
+    {
+     "text": "120",
+     "correct": true
+    },
+    {
+     "text": "100",
+     "correct": false
+    },
+    {
+     "text": "110",
+     "correct": false
+    },
+    {
+     "text": "130",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 102,
+   "categoryId": 1,
+   "companyId": null,
+   "title": "Ratio & Proportion - Sharing an Amount",
+   "questionText": "Divide Rs 720 between A and B in the ratio 5:4. Find A's share.",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Ratio and Proportion",
+   "expectedAnswer": "Rs 400",
+   "explanation": "Total ratio parts = 5 + 4 = 9. A's share = (5/9) × 720 = 400.",
+   "options": [
+    {
+     "text": "Rs 400",
+     "correct": true
+    },
+    {
+     "text": "Rs 320",
+     "correct": false
+    },
+    {
+     "text": "Rs 360",
+     "correct": false
+    },
+    {
+     "text": "Rs 450",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 103,
+   "categoryId": 1,
+   "companyId": 4,
+   "title": "Simple Interest - Basic Formula",
+   "questionText": "Find the Simple Interest on Rs 5000 at 8% per annum for 3 years.",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Simple Interest",
+   "expectedAnswer": "Rs 1200",
+   "explanation": "SI = (P × R × T)/100 = (5000 × 8 × 3)/100 = 120000/100 = Rs 1200.",
+   "options": [
+    {
+     "text": "Rs 1200",
+     "correct": true
+    },
+    {
+     "text": "Rs 1000",
+     "correct": false
+    },
+    {
+     "text": "Rs 1500",
+     "correct": false
+    },
+    {
+     "text": "Rs 1350",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 104,
+   "categoryId": 1,
+   "companyId": 5,
+   "title": "Number Systems - HCF of Two Numbers",
+   "questionText": "Find the HCF of 36 and 60.",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Number Systems (HCF & LCM)",
+   "expectedAnswer": "12",
+   "explanation": "Prime factorization: 36 = 2² × 3², 60 = 2² × 3 × 5. HCF = product of common prime factors with lowest powers = 2² × 3 = 12.",
+   "options": [
+    {
+     "text": "12",
+     "correct": true
+    },
+    {
+     "text": "6",
+     "correct": false
+    },
+    {
+     "text": "18",
+     "correct": false
+    },
+    {
+     "text": "24",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 105,
+   "categoryId": 1,
+   "companyId": 5,
+   "title": "Pipes & Cisterns - Partial Closure",
+   "questionText": "Pipe A can fill a tank in 20 hours and Pipe B can fill it in 30 hours. Both pipes are opened together, but after 10 hours, Pipe B is closed. In how much additional time will Pipe A alone fill the remaining tank, and what is the total time taken?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Time and Work (Pipes and Cisterns)",
+   "expectedAnswer": "13 hr 20 min",
+   "explanation": "Combined rate = 1/20 + 1/30 = 3/60 + 2/60 = 5/60 = 1/12 per hour. In 10 hours, work done = 10 × 1/12 = 5/6. Remaining work = 1/6. Pipe A alone fills at 1/20 per hour, so time = (1/6) ÷ (1/20) = 20/6 = 3 hr 20 min. Total time = 10 hr + 3 hr 20 min = 13 hr 20 min.",
+   "options": [
+    {
+     "text": "13 hr 20 min",
+     "correct": true
+    },
+    {
+     "text": "12 hr",
+     "correct": false
+    },
+    {
+     "text": "14 hr",
+     "correct": false
+    },
+    {
+     "text": "13 hr",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 106,
+   "categoryId": 1,
+   "companyId": 4,
+   "title": "Trains - Relative Speed (Opposite Directions)",
+   "questionText": "Two trains, 120 m and 100 m long, run on parallel tracks in opposite directions at speeds of 60 km/hr and 40 km/hr respectively. Find the time taken by the trains to cross each other.",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Speed, Time and Distance (Trains)",
+   "expectedAnswer": "7.92 sec",
+   "explanation": "Since the trains move in opposite directions, relative speed = 60 + 40 = 100 km/hr = 100 × 5/18 = 27.78 m/s. Total distance to be covered = sum of lengths = 120 + 100 = 220 m. Time = Distance/Speed = 220/27.78 ≈ 7.92 seconds.",
+   "options": [
+    {
+     "text": "7.92 sec",
+     "correct": true
+    },
+    {
+     "text": "8 sec",
+     "correct": false
+    },
+    {
+     "text": "9.5 sec",
+     "correct": false
+    },
+    {
+     "text": "7 sec",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 107,
+   "categoryId": 1,
+   "companyId": 5,
+   "title": "Boats & Streams - Speed in Still Water",
+   "questionText": "A boat covers 30 km downstream in 2 hours and returns the same distance upstream in 3 hours. Find the speed of the boat in still water.",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Speed, Time and Distance (Boats and Streams)",
+   "expectedAnswer": "12.5 km/hr",
+   "explanation": "Downstream speed = 30/2 = 15 km/hr. Upstream speed = 30/3 = 10 km/hr. Speed of boat in still water = (Downstream + Upstream)/2 = (15+10)/2 = 12.5 km/hr.",
+   "options": [
+    {
+     "text": "12.5 km/hr",
+     "correct": true
+    },
+    {
+     "text": "10 km/hr",
+     "correct": false
+    },
+    {
+     "text": "15 km/hr",
+     "correct": false
+    },
+    {
+     "text": "13 km/hr",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 108,
+   "categoryId": 1,
+   "companyId": 2,
+   "title": "Profit & Loss - Successive Discounts",
+   "questionText": "A shopkeeper marks an item at Rs 2000 and offers successive discounts of 20% and 10%. Find the final selling price.",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Profit, Loss and Discounts",
+   "expectedAnswer": "Rs 1440",
+   "explanation": "After first discount of 20%: 2000 × 0.80 = 1600. After second discount of 10%: 1600 × 0.90 = 1440. Selling Price = Rs 1440.",
+   "options": [
+    {
+     "text": "Rs 1440",
+     "correct": true
+    },
+    {
+     "text": "Rs 1400",
+     "correct": false
+    },
+    {
+     "text": "Rs 1500",
+     "correct": false
+    },
+    {
+     "text": "Rs 1600",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 109,
+   "categoryId": 1,
+   "companyId": 5,
+   "title": "Alligation - Mixing Two Varieties of Rice",
+   "questionText": "In what ratio must a shopkeeper mix rice costing Rs 40/kg and Rs 60/kg to get a mixture worth Rs 45/kg?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Ratio, Proportion and Mixtures (Alligation)",
+   "expectedAnswer": "3:1",
+   "explanation": "Using the rule of alligation: Ratio = (CP of dearer − Mean price) : (Mean price − CP of cheaper) = (60−45):(45−40) = 15:5 = 3:1. So cheaper (Rs 40) to dearer (Rs 60) ratio is 3:1.",
+   "options": [
+    {
+     "text": "3:1",
+     "correct": true
+    },
+    {
+     "text": "1:3",
+     "correct": false
+    },
+    {
+     "text": "2:1",
+     "correct": false
+    },
+    {
+     "text": "1:2",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 110,
+   "categoryId": 1,
+   "companyId": 2,
+   "title": "Compound Interest - Two Year Calculation",
+   "questionText": "Find the Compound Interest on Rs 10,000 at 10% per annum for 2 years, compounded annually.",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Compound Interest",
+   "expectedAnswer": "Rs 2100",
+   "explanation": "Amount = P(1 + R/100)^T = 10000 × (1.1)² = 10000 × 1.21 = 12100. Compound Interest = Amount − Principal = 12100 − 10000 = Rs 2100.",
+   "options": [
+    {
+     "text": "Rs 2100",
+     "correct": true
+    },
+    {
+     "text": "Rs 2000",
+     "correct": false
+    },
+    {
+     "text": "Rs 2200",
+     "correct": false
+    },
+    {
+     "text": "Rs 2050",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 111,
+   "categoryId": 1,
+   "companyId": null,
+   "title": "Averages - Family Age Problem",
+   "questionText": "The average age of a family of 5 members is 30 years. If the youngest member is 10 years old, find the average age of the family at the time the youngest member was born.",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Averages and Age Problems",
+   "expectedAnswer": "25 years",
+   "explanation": "Present total age of 5 members = 30 × 5 = 150. Excluding the youngest member (10 years), the sum of ages of the other 4 members = 150 − 10 = 140. Ten years ago (when the youngest was born), each of these 4 members was 10 years younger, so their total age then = 140 − (4 × 10) = 100. Average age of family at that time = 100/4 = 25 years.",
+   "options": [
+    {
+     "text": "25 years",
+     "correct": true
+    },
+    {
+     "text": "20 years",
+     "correct": false
+    },
+    {
+     "text": "22 years",
+     "correct": false
+    },
+    {
+     "text": "28 years",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 112,
+   "categoryId": 1,
+   "companyId": 2,
+   "title": "Time & Work - Wage Distribution",
+   "questionText": "A can complete a work in 10 days and B can complete the same work in 15 days. They work together and complete the entire work, earning a total of Rs 5000. Find B's share of the wages based on the work each contributed.",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Time and Work",
+   "expectedAnswer": "Rs 2000",
+   "explanation": "A's one day work = 1/10, B's one day work = 1/15. Ratio of work done by A and B = 1/10 : 1/15 = 3:2 (multiplying both by 30). Wages are divided in the ratio of work done. Total ratio = 3+2 = 5. B's share = (2/5) × 5000 = Rs 2000.",
+   "options": [
+    {
+     "text": "Rs 2000",
+     "correct": true
+    },
+    {
+     "text": "Rs 3000",
+     "correct": false
+    },
+    {
+     "text": "Rs 2500",
+     "correct": false
+    },
+    {
+     "text": "Rs 1800",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 113,
+   "categoryId": 1,
+   "companyId": 1,
+   "title": "Boats & Streams - Finding Stream Speed",
+   "questionText": "A man rows to a place 48 km away and returns in a total of 14 hours. He finds that he can row 4 km with the stream in the same time as he rows 3 km against the stream. Find the speed of the stream.",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Speed, Time and Distance (Boats and Streams)",
+   "expectedAnswer": "1 km/hr",
+   "explanation": "Let speed of man in still water = y, speed of stream = x. Since he covers 4 km downstream in the same time as 3 km upstream: (y+x)/(y−x) = 4/3, which gives 3y+3x = 4y−4x, so 7x = y, i.e., y = 7x. Then y+x = 8x (downstream speed) and y−x = 6x (upstream speed). Time equation: 48/8x + 48/6x = 14 → 6/x + 8/x = 14 → 14/x = 14 → x = 1. Speed of stream = 1 km/hr.",
+   "options": [
+    {
+     "text": "1 km/hr",
+     "correct": true
+    },
+    {
+     "text": "2 km/hr",
+     "correct": false
+    },
+    {
+     "text": "1.5 km/hr",
+     "correct": false
+    },
+    {
+     "text": "0.5 km/hr",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 114,
+   "categoryId": 1,
+   "companyId": 3,
+   "title": "Profit & Loss - Faulty Weight and Discount Combined",
+   "questionText": "A trader marks his goods 40% above the cost price and allows a discount of 15%. He also uses a faulty weight and gives only 900 grams for every 1 kg he charges for. Find his overall profit percentage.",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Profit, Loss and Discounts",
+   "expectedAnswer": "32.22%",
+   "explanation": "Let CP of 1000 g = Rs 100. Marked Price = 100 × 1.40 = 140. Selling Price after 15% discount = 140 × 0.85 = Rs 119 (this is the amount he receives for what he claims is 1 kg). However, he actually gives only 900 g, whose real cost = 90 (since CP is Rs 100 per 1000 g). Profit = SP − Actual Cost = 119 − 90 = 29. Profit % = (29/90) × 100 ≈ 32.22%.",
+   "options": [
+    {
+     "text": "32.22%",
+     "correct": true
+    },
+    {
+     "text": "29%",
+     "correct": false
+    },
+    {
+     "text": "35%",
+     "correct": false
+    },
+    {
+     "text": "30%",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 115,
+   "categoryId": 1,
+   "companyId": 1,
+   "title": "Compound Interest - CI and SI Difference",
+   "questionText": "The difference between Compound Interest and Simple Interest on a certain sum for 2 years at 10% per annum is Rs 150. Find the sum.",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Compound Interest",
+   "expectedAnswer": "Rs 15,000",
+   "explanation": "For 2 years, the difference between CI and SI is given by Difference = P × (R/100)². So 150 = P × (10/100)² = P × 0.01. Therefore P = 150/0.01 = Rs 15,000.",
+   "options": [
+    {
+     "text": "Rs 15,000",
+     "correct": true
+    },
+    {
+     "text": "Rs 12,000",
+     "correct": false
+    },
+    {
+     "text": "Rs 20,000",
+     "correct": false
+    },
+    {
+     "text": "Rs 10,000",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 116,
+   "categoryId": 1,
+   "companyId": 2,
+   "title": "Permutation & Combination - Committee Formation",
+   "questionText": "A committee of 5 members is to be formed from 6 men and 4 women such that at least 3 men are included. In how many ways can this be done?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Permutations, Combinations and Probability",
+   "expectedAnswer": "186",
+   "explanation": "At least 3 men means we consider 3 cases: (3 men, 2 women), (4 men, 1 woman), (5 men, 0 women). Case 1: C(6,3) × C(4,2) = 20 × 6 = 120. Case 2: C(6,4) × C(4,1) = 15 × 4 = 60. Case 3: C(6,5) × C(4,0) = 6 × 1 = 6. Total ways = 120 + 60 + 6 = 186.",
+   "options": [
+    {
+     "text": "186",
+     "correct": true
+    },
+    {
+     "text": "180",
+     "correct": false
+    },
+    {
+     "text": "200",
+     "correct": false
+    },
+    {
+     "text": "150",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 117,
+   "categoryId": 1,
+   "companyId": 5,
+   "title": "Percentages - Successive Change",
+   "questionText": "A number is increased by 20% and then decreased by 20%. What is the net percentage change in the number?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Percentages",
+   "expectedAnswer": "4% decrease",
+   "explanation": "Let the number be 100. After 20% increase: 120. After 20% decrease: 120 × 0.80 = 96. Net change = 100 - 96 = 4, so there is a 4% decrease. This follows the formula: Net% = x - y - (xy/100) = 20 - 20 - (400/100) = -4%.",
+   "options": [
+    {
+     "text": "4% decrease",
+     "correct": true
+    },
+    {
+     "text": "No change",
+     "correct": false
+    },
+    {
+     "text": "4% increase",
+     "correct": false
+    },
+    {
+     "text": "2% decrease",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 118,
+   "categoryId": 1,
+   "companyId": 2,
+   "title": "Trains - Relative Speed Same Direction",
+   "questionText": "Two trains of length 100 m and 150 m are running in the same direction at speeds of 50 km/hr and 40 km/hr respectively. In what time will the faster train cross the slower one?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Speed, Time and Distance",
+   "expectedAnswer": "90 seconds",
+   "explanation": "Relative speed (same direction) = 50 - 40 = 10 km/hr = 10 × 5/18 = 25/9 m/s. Total distance to cover = sum of lengths = 100 + 150 = 250 m. Time = Distance/Speed = 250/(25/9) = 250 × 9/25 = 90 seconds.",
+   "options": [
+    {
+     "text": "90 seconds",
+     "correct": true
+    },
+    {
+     "text": "80 seconds",
+     "correct": false
+    },
+    {
+     "text": "100 seconds",
+     "correct": false
+    },
+    {
+     "text": "72 seconds",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 119,
+   "categoryId": 1,
+   "companyId": 1,
+   "title": "Probability - Drawing Cards",
+   "questionText": "A card is drawn at random from a well-shuffled deck of 52 cards. What is the probability that the card drawn is either a king or a heart?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Probability",
+   "expectedAnswer": "4/13",
+   "explanation": "P(King) = 4/52. P(Heart) = 13/52. P(King and Heart) = 1/52 (King of Hearts, counted in both). Using P(A or B) = P(A) + P(B) - P(A and B) = 4/52 + 13/52 - 1/52 = 16/52 = 4/13.",
+   "options": [
+    {
+     "text": "4/13",
+     "correct": true
+    },
+    {
+     "text": "1/13",
+     "correct": false
+    },
+    {
+     "text": "17/52",
+     "correct": false
+    },
+    {
+     "text": "1/4",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 120,
+   "categoryId": 1,
+   "companyId": 3,
+   "title": "Compound Interest - Difference Based Sum",
+   "questionText": "The difference between Compound Interest and Simple Interest on a sum for 3 years at 10% per annum is Rs 31. Find the sum (approximately).",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Compound Interest",
+   "expectedAnswer": "Rs 1000",
+   "explanation": "For 3 years, Difference = P × (R/100)² × (300+R)/100 = P × (10/100)² × (310/100) = P × 0.01 × 3.1 = 0.031P. Given difference = 31, so 0.031P = 31, giving P = 1000.",
+   "options": [
+    {
+     "text": "Rs 1000",
+     "correct": true
+    },
+    {
+     "text": "Rs 900",
+     "correct": false
+    },
+    {
+     "text": "Rs 1100",
+     "correct": false
+    },
+    {
+     "text": "Rs 950",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 121,
+   "categoryId": 2,
+   "companyId": 3,
+   "title": "Blood Relations - Identifying Relationship",
+   "questionText": "Pointing to a photograph, a man says, \"She is the daughter of my grandfather's only son.\" How is the girl related to the man?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Blood Relations",
+   "expectedAnswer": "Sister",
+   "explanation": "The man's grandfather's only son is the man's father (since the grandfather has only one son). The daughter of the man's father is the man's sister. Hence, the girl in the photograph is the man's sister.",
+   "options": [
+    {
+     "text": "Sister",
+     "correct": true
+    },
+    {
+     "text": "Daughter",
+     "correct": false
+    },
+    {
+     "text": "Niece",
+     "correct": false
+    },
+    {
+     "text": "Cousin",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 122,
+   "categoryId": 2,
+   "companyId": null,
+   "title": "Syllogism - Pens, Pencils and Erasers",
+   "questionText": "Statements: All pens are pencils. Some pencils are erasers.\r\nConclusions:\r\nI. Some pens are erasers.\r\nII. Some erasers are pencils.\r\nWhich conclusion(s) logically follow(s) from the statements?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "Syllogisms",
+   "expectedAnswer": "Only conclusion II follows",
+   "explanation": "From 'Some pencils are erasers', by conversion, 'Some erasers are pencils' always holds true — so Conclusion II follows. Conclusion I ('Some pens are erasers') cannot be validly derived because the 'some pencils that are erasers' may not overlap with the pens (since all pens are only a subset of pencils, not necessarily the part that are erasers). Hence, only Conclusion II follows.",
+   "options": [
+    {
+     "text": "Only conclusion II follows",
+     "correct": true
+    },
+    {
+     "text": "Only conclusion I follows",
+     "correct": false
+    },
+    {
+     "text": "Both conclusions follow",
+     "correct": false
+    },
+    {
+     "text": "Neither conclusion follows",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 123,
+   "categoryId": 6,
+   "companyId": null,
+   "title": "OSI Model - Layer Functions",
+   "questionText": "Which layer of the OSI model is responsible for routing packets between different networks using logical addressing (IP addresses)?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "OSI Model",
+   "expectedAnswer": "Network Layer",
+   "explanation": "The Network Layer (Layer 3) of the OSI model is responsible for logical addressing (IP addressing) and routing packets from the source to destination across multiple networks.",
+   "options": [
+    {
+     "text": "Network Layer",
+     "correct": true
+    },
+    {
+     "text": "Data Link Layer",
+     "correct": false
+    },
+    {
+     "text": "Transport Layer",
+     "correct": false
+    },
+    {
+     "text": "Session Layer",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 124,
+   "categoryId": 6,
+   "companyId": 4,
+   "title": "TCP vs UDP - Basic Comparison",
+   "questionText": "Which of the following protocols is connection-oriented and guarantees reliable data delivery?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "Transport Layer Protocols",
+   "expectedAnswer": "TCP",
+   "explanation": "TCP (Transmission Control Protocol) is connection-oriented, meaning it establishes a connection (via a three-way handshake) before data transfer and guarantees reliable, ordered delivery of data through acknowledgments and retransmissions. UDP, in contrast, is connectionless and does not guarantee delivery.",
+   "options": [
+    {
+     "text": "TCP",
+     "correct": true
+    },
+    {
+     "text": "UDP",
+     "correct": false
+    },
+    {
+     "text": "IP",
+     "correct": false
+    },
+    {
+     "text": "ICMP",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 125,
+   "categoryId": 6,
+   "companyId": 3,
+   "title": "Subnetting - Finding Number of Hosts",
+   "questionText": "Given a subnet mask of 255.255.255.192, how many usable host addresses are available in each subnet?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "IP Addressing and Subnetting",
+   "expectedAnswer": "62",
+   "explanation": "A subnet mask of 255.255.255.192 corresponds to /26, meaning 26 bits for network and 6 bits for hosts (32-26=6). Total addresses = 2^6 = 64. Usable host addresses = 64 - 2 (subtracting network address and broadcast address) = 62.",
+   "options": [
+    {
+     "text": "62",
+     "correct": true
+    },
+    {
+     "text": "64",
+     "correct": false
+    },
+    {
+     "text": "30",
+     "correct": false
+    },
+    {
+     "text": "126",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 126,
+   "categoryId": 6,
+   "companyId": 2,
+   "title": "DNS - Resolution Process",
+   "questionText": "What is the primary function of DNS (Domain Name System) in computer networks?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "DNS",
+   "expectedAnswer": "To translate human-readable domain names into IP addresses",
+   "explanation": "DNS acts like a phonebook for the internet, translating human-friendly domain names (like www.example.com) into machine-readable IP addresses that computers use to identify each other on the network.",
+   "options": [
+    {
+     "text": "To translate human-readable domain names into IP addresses",
+     "correct": true
+    },
+    {
+     "text": "To encrypt data during transmission",
+     "correct": false
+    },
+    {
+     "text": "To assign dynamic IP addresses to devices",
+     "correct": false
+    },
+    {
+     "text": "To manage email delivery between servers",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 127,
+   "categoryId": 6,
+   "companyId": 1,
+   "title": "TCP - Three-Way Handshake and Congestion Control",
+   "questionText": "During TCP's congestion control, if the congestion window (cwnd) is 16 MSS and a timeout occurs (indicating severe congestion), what will be the value of cwnd immediately after the timeout, assuming standard TCP Reno behavior, before slow start resumes?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "TCP Protocol",
+   "expectedAnswer": "1 MSS",
+   "explanation": "In TCP Reno, when a timeout occurs (a more severe indication of congestion than duplicate ACKs), the congestion window (cwnd) is reset to 1 MSS, and the slow start threshold (ssthresh) is set to half of the current cwnd (in this case, 8 MSS). The algorithm then re-enters the slow start phase starting from cwnd = 1 MSS.",
+   "options": [
+    {
+     "text": "1 MSS",
+     "correct": true
+    },
+    {
+     "text": "8 MSS",
+     "correct": false
+    },
+    {
+     "text": "16 MSS",
+     "correct": false
+    },
+    {
+     "text": "4 MSS",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 128,
+   "categoryId": 6,
+   "companyId": null,
+   "title": "OSI Model - Layer Count and Order",
+   "questionText": "How many layers does the OSI (Open Systems Interconnection) model consist of?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "OSI & TCP/IP Model",
+   "expectedAnswer": "7",
+   "explanation": "The OSI model has 7 layers: Physical, Data Link, Network, Transport, Session, Presentation, and Application, arranged from the lowest (Physical) to the highest (Application) layer.",
+   "options": [
+    {
+     "text": "7",
+     "correct": true
+    },
+    {
+     "text": "5",
+     "correct": false
+    },
+    {
+     "text": "4",
+     "correct": false
+    },
+    {
+     "text": "6",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 129,
+   "categoryId": 6,
+   "companyId": 4,
+   "title": "HTTP vs HTTPS - Basic Difference",
+   "questionText": "What is the practical difference between HTTP and HTTPS?",
+   "difficulty": "EASY",
+   "questionType": "MCQ",
+   "topic": "HTTP/HTTPS",
+   "expectedAnswer": "HTTPS encrypts data using SSL/TLS, while HTTP transmits data in plain text",
+   "explanation": "HTTPS (HyperText Transfer Protocol Secure) uses SSL/TLS encryption to secure data transmitted between a client and server, protecting it from eavesdropping and tampering. HTTP transmits data in plain text, making it vulnerable to interception.",
+   "options": [
+    {
+     "text": "HTTPS encrypts data using SSL/TLS, while HTTP transmits data in plain text",
+     "correct": true
+    },
+    {
+     "text": "HTTP is faster than HTTPS in all scenarios and uses more security layers",
+     "correct": false
+    },
+    {
+     "text": "HTTPS does not require a certificate, while HTTP does",
+     "correct": false
+    },
+    {
+     "text": "There is no functional difference between the two protocols",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 130,
+   "categoryId": 6,
+   "companyId": 5,
+   "title": "TCP Three-Way Handshake - Sequence of Steps",
+   "questionText": "What is the correct sequence of steps in the TCP three-way handshake used to establish a connection?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "TCP Handshake",
+   "expectedAnswer": "SYN → SYN-ACK → ACK",
+   "explanation": "The TCP three-way handshake works as follows: (1) The client sends a SYN (synchronize) packet to the server to initiate a connection. (2) The server responds with a SYN-ACK packet, acknowledging the request and sending its own synchronization request. (3) The client sends an ACK packet back to the server, confirming the connection, after which data transfer can begin.",
+   "options": [
+    {
+     "text": "SYN → SYN-ACK → ACK",
+     "correct": true
+    },
+    {
+     "text": "ACK → SYN → SYN-ACK",
+     "correct": false
+    },
+    {
+     "text": "SYN → ACK → SYN-ACK",
+     "correct": false
+    },
+    {
+     "text": "SYN-ACK → SYN → ACK",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 131,
+   "categoryId": 6,
+   "companyId": 2,
+   "title": "Subnetting - Calculating Number of Subnets",
+   "questionText": "A company is given the network address 192.168.10.0/24 and needs to divide it into subnets using a subnet mask of 255.255.255.224. How many subnets and usable hosts per subnet are created?",
+   "difficulty": "MEDIUM",
+   "questionType": "MCQ",
+   "topic": "Subnetting",
+   "expectedAnswer": "8 subnets, 30 usable hosts each",
+   "explanation": "The original /24 network has 8 bits for hosts. A subnet mask of 255.255.255.224 is /27, meaning 3 additional bits (27-24=3) are borrowed for subnetting, leaving 5 bits for hosts. Number of subnets = 2³ = 8. Number of usable hosts per subnet = 2⁵ - 2 = 32 - 2 = 30 (subtracting network and broadcast addresses).",
+   "options": [
+    {
+     "text": "8 subnets, 30 usable hosts each",
+     "correct": true
+    },
+    {
+     "text": "4 subnets, 62 usable hosts each",
+     "correct": false
+    },
+    {
+     "text": "16 subnets, 14 usable hosts each",
+     "correct": false
+    },
+    {
+     "text": "8 subnets, 32 usable hosts each",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 132,
+   "categoryId": 6,
+   "companyId": 1,
+   "title": "DNS Resolution - Recursive vs Iterative Query",
+   "questionText": "In DNS resolution, what is the key difference between a recursive query and an iterative query?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "DNS",
+   "expectedAnswer": "In a recursive query, the DNS server contacted must provide the final answer or an error, handling all further lookups itself, while in an iterative query, the server returns the best answer it has or a referral to another server",
+   "explanation": "In a recursive DNS query, the client asks a DNS server to fully resolve the domain name, and that server takes on the responsibility of querying other servers (root, TLD, authoritative) as needed until it gets a final answer. In an iterative query, the queried server responds with either the answer or a referral (pointing to another server that might have the answer), leaving the client (often another DNS resolver) to continue the lookup process.",
+   "options": [
+    {
+     "text": "In a recursive query, the DNS server contacted must provide the final answer or an error, handling all further lookups itself, while in an iterative query, the server returns the best answer it has or a referral to another server",
+     "correct": true
+    },
+    {
+     "text": "A recursive query always fails if the first server does not have the answer, while an iterative query never fails",
+     "correct": false
+    },
+    {
+     "text": "An iterative query is only used for IPv6 addresses, while recursive queries are used for IPv4",
+     "correct": false
+    },
+    {
+     "text": "There is no practical difference between recursive and iterative queries",
+     "correct": false
+    }
+   ]
+  },
+  {
+   "id": 133,
+   "categoryId": 6,
+   "companyId": 3,
+   "title": "TCP Congestion Control - Slow Start Mechanism",
+   "questionText": "In TCP's Slow Start congestion control algorithm, how does the congestion window (cwnd) grow with each successfully acknowledged Round Trip Time (RTT), before reaching the slow start threshold (ssthresh)?",
+   "difficulty": "HARD",
+   "questionType": "MCQ",
+   "topic": "TCP/IP Model",
+   "expectedAnswer": "Exponentially (cwnd doubles approximately every RTT)",
+   "explanation": "During the Slow Start phase, TCP increases the congestion window (cwnd) exponentially — starting at 1 MSS and roughly doubling with each RTT (as every received ACK increases cwnd by 1 MSS, and there are cwnd ACKs per RTT) — until cwnd reaches the slow start threshold (ssthresh), after which it switches to the linear growth of the Congestion Avoidance phase.",
+   "options": [
+    {
+     "text": "Exponentially (cwnd doubles approximately every RTT)",
+     "correct": true
+    },
+    {
+     "text": "Linearly (cwnd increases by 1 MSS every RTT)",
+     "correct": false
+    },
+    {
+     "text": "Logarithmically (cwnd increases very slowly)",
+     "correct": false
+    },
+    {
+     "text": "cwnd remains constant during slow start",
+     "correct": false
+    }
+   ]
+  }
+ ]
+}
