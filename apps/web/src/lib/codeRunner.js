@@ -1,6 +1,9 @@
 import { verdictOf } from '@prepwise/core/src/coding/judge';
-import JsWorker from '../workers/jsRunner.worker.js?worker';
-import PyWorker from '../workers/pyRunner.worker.js?worker';
+
+// Workers are started from their own files (not Vite's "?worker" import, which wraps them in a blob that would inherit
+// the page's Content-Security-Policy and block evaluating the student's code).
+const JsWorker = function JsWorker() { return new Worker(new URL('../workers/jsRunner.worker.js', import.meta.url)); };
+const PyWorker = function PyWorker() { return new Worker(new URL('../workers/pyRunner.worker.js', import.meta.url)); };
 
 // Runs a submission in a Web Worker and judges it. A test that runs too long gets its worker terminated, which is
 // the only way to stop an infinite loop in the browser. Nothing here touches the network except downloading Python.
@@ -13,7 +16,7 @@ let pyReady = null;
 export function preparePython(onStatus) {
   if (pyReady) return pyReady;
   onStatus?.('loading');
-  pyWorker = new PyWorker();
+  pyWorker = PyWorker();
   pyReady = new Promise((resolve, reject) => {
     pyWorker.onmessage = (e) => {
       if (e.data.type === 'ready') { onStatus?.('ready'); resolve(pyWorker); }
@@ -37,7 +40,7 @@ function reset() {
  */
 export async function runSubmission({ language, code, problem, onProgress }) {
   const started = performance.now();
-  const worker = language === 'python' ? await preparePython() : new JsWorker();
+  const worker = language === 'python' ? await preparePython() : JsWorker();
   const limit = LIMIT_MS[language];
   const results = [];
   let timer = null;

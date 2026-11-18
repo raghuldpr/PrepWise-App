@@ -12,6 +12,10 @@ export const users = sqliteTable(
     passwordHash: text("password_hash").notNull(),
     role: text("role", { enum: ["STUDENT", "ADMIN"] }).notNull().default("STUDENT"),
     isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
+    // Brute-force protection and "log out of all devices": bumping sessionVersion invalidates every issued cookie.
+    failedLogins: integer("failed_logins").notNull().default(0),
+    lockedUntil: text("locked_until"),
+    sessionVersion: integer("session_version").notNull().default(1),
     onboardingCompleted: integer("onboarding_completed", { mode: "boolean" }).notNull().default(false),
     createdAt: text("created_at").notNull().default(now),
     updatedAt: text("updated_at").notNull().default(now),

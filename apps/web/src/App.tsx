@@ -76,11 +76,11 @@ const LandingPage: React.FC = () => {
       {/* Hero Body */}
       <main className="max-w-4xl mx-auto my-auto text-center py-16 px-4">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#EAE6DF] dark:bg-[#242424] text-[#C85232] border border-[rgba(200,82,50,0.25)] mb-6">
-          <Sparkles size={14} /> AI-Powered Placement Prep
+          <Sparkles size={14} /> Placement Prep, Free and Always On
         </div>
 
         <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 font-heading text-[#111111] dark:text-white leading-tight">
-          Master Your Campus Placements with Intelligent AI Coaching
+          Master Your Campus Placements with Structured Practice
         </h1>
 
         <p className="text-lg md:text-xl text-[#5E5B56] dark:text-[#A0A0A0] max-w-2xl mx-auto mb-10 leading-relaxed font-body">
@@ -121,7 +121,7 @@ const LandingPage: React.FC = () => {
               Personalized Roadmaps
             </h3>
             <p className="text-sm text-[#5E5B56] dark:text-[#A0A0A0]">
-              AI-generated study plans targeting your specific skill gaps and career goals.
+              Study plans built from your skill gaps, role and weekly hours.
             </p>
           </div>
         </div>

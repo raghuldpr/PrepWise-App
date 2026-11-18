@@ -20,6 +20,12 @@ import { userRoutes } from "./routes/users";
 
 const app = new Hono<AppEnv>();
 
+app.use("/api/*", async (c, next) => {
+  await next();
+  c.header("X-Content-Type-Options", "nosniff");
+  c.header("Cache-Control", "no-store"); // API responses are per user; never let a shared cache keep them
+  c.header("Referrer-Policy", "no-referrer");
+});
 app.use("/api/*", originGuard);
 app.get("/api/health", (c) => c.json({ status: "ok", runtime: "workers" }));
 app.route("/api/auth", authRoutes);

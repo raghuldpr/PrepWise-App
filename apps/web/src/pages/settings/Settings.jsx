@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../../services/api';
 import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
 import LoadingState from '../../components/common/LoadingState';
@@ -232,7 +233,7 @@ export default function Settings() {
   };
 
   const handleLogoutAllDevices = async () => {
-    // Sessions are stateless cookies, so this ends the session on this device only.
+    try { await api.post('/auth/logout-all'); } catch { /* the local logout below still runs */ }
     await logout();
     setIsLogoutModalOpen(false);
     navigate('/login');
@@ -483,7 +484,7 @@ export default function Settings() {
                   {
                     key: 'mockInterviewReminders',
                     title: 'Mock Interview Reminders',
-                    desc: 'Receive reminders 15 minutes before scheduled AI technical mock interview sessions.',
+                    desc: 'Receive reminders 15 minutes before scheduled mock interview sessions.',
                   },
                   {
                     key: 'dailyPracticeReminders',
@@ -548,7 +549,7 @@ export default function Settings() {
                   <Briefcase size={18} className="text-[#C85232]" /> Placement Goal Settings
                 </h3>
                 <p className="text-xs text-[#5E5B56] dark:text-[#A0A0A0] mt-0.5">
-                  Configure default job role targeting used to tailor question difficulty and AI feedback.
+                  Configure default job role targeting used to prefer matching interview topics and learning plans.
                 </p>
               </div>
 

@@ -37,9 +37,9 @@ export const errorBody = (status: number, message: string) => ({
   message,
 });
 
-export async function startSession(c: Context<AppEnv>, userId: number, email: string) {
+export async function startSession(c: Context<AppEnv>, userId: number, email: string, sessionVersion = 1) {
   const token = await sign(
-    { sub: String(userId), email, exp: Math.floor(Date.now() / 1000) + SESSION_SECONDS },
+    { sub: String(userId), email, sv: sessionVersion, exp: Math.floor(Date.now() / 1000) + SESSION_SECONDS },
     c.env.JWT_SECRET,
     "HS256",
   );
@@ -59,7 +59,11 @@ export const requireAuth: MiddlewareHandler<AppEnv> = async (c, next) => {
   if (!token) throw httpError(401, "Authentication required");
   try {
     const payload = await verify(token, c.env.JWT_SECRET, "HS256");
-    c.set("userId", Number(payload.sub));
+    const userId = Number(payload.sub);
+    // One indexed read per request: lets "log out of all devices" and account deactivation take effect at once.
+    const row = await c.env.DB.prepare("SELECT session_version AS sv, is_active AS active FROM users WHERE id = ?").bind(userId).first<{ sv: number; active: number }>();
+    if (!row || !row.active || row.sv !== (typeof payload.sv === "number" ? payload.sv : 1)) throw new Error("revoked");
+    c.set("userId", userId);
   } catch {
     throw httpError(401, "Session expired or invalid");
   }

@@ -4,7 +4,7 @@ import { z } from "zod";
 import { PROFILE_TEXT_FIELDS, profiles, skills, userSkills, users } from "../db/schema";
 import { hashPassword, verifyPassword } from "../lib/password";
 import { ensureProfile, loadProfileResponse } from "../lib/profile";
-import { type AppEnv, getDb, httpError, requireAuth, validate } from "../lib/http";
+import { type AppEnv, getDb, httpError, requireAuth, startSession, validate } from "../lib/http";
 
 const levelEnum = z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT"]);
 const optText = z.string().max(5000).nullish();
@@ -111,6 +111,9 @@ userRoutes.post("/change-password", validate("json", passwordSchema), async (c) 
     throw httpError(400, "Current password does not match.");
   }
   const passwordHash = await hashPassword(newPassword, c.env.PASSWORD_PEPPER);
-  await db.update(users).set({ passwordHash, updatedAt: new Date().toISOString() }).where(eq(users.id, u.id));
+  // A new password ends every other session; this device gets a fresh one so the user stays signed in.
+  const sessionVersion = u.sessionVersion + 1;
+  await db.update(users).set({ passwordHash, sessionVersion, failedLogins: 0, lockedUntil: null, updatedAt: new Date().toISOString() }).where(eq(users.id, u.id));
+  await startSession(c, u.id, u.email, sessionVersion);
   return c.json({ message: "Password changed successfully" });
 });

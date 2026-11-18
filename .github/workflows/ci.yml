@@ -15,7 +15,27 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx tsc -p apps/api --noEmit
-      - run: npx vitest run --passWithNoTests
+      - run: npx tsc -p packages/core --noEmit
+      - run: npx vitest run
+      - run: npm run build -w @prepwise/web
+
+      # End-to-end check: start the Worker locally with a throwaway database and run every smoke suite against it.
+      - name: Start the Worker locally
+        working-directory: apps/api
+        run: |
+          printf 'JWT_SECRET=%s\nPASSWORD_PEPPER=%s\n' "$(openssl rand -hex 32)" "$(openssl rand -hex 32)" > .dev.vars
+          npx wrangler d1 migrations apply prepwise-db --local
+          nohup npx wrangler dev --local --port 8787 > ../../worker.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf http://localhost:8787/api/health && break; sleep 2; done
+          curl -sf http://localhost:8787/api/health
+      - name: Smoke suites
+        run: |
+          for f in smoke smoke-practice smoke-resume smoke-learning smoke-interview smoke-coding smoke-security smoke-ai; do
+            echo "== $f"; node scripts/$f.mjs http://localhost:8787 || exit 1
+          done
+      - name: Worker log (on failure)
+        if: failure()
+        run: tail -n 80 worker.log || true
 
   deploy-api:
     needs: test
@@ -30,7 +50,12 @@ jobs:
       - run: npm ci
       - run: npm run build -w @prepwise/web
       # Needs repository secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID.
-      # Schema changes: run `npx wrangler d1 migrations apply prepwise-db --remote` first.
+      # Migrations are applied first so the new code never runs against an old schema.
+      - run: npx wrangler d1 migrations apply prepwise-db --remote
+        working-directory: apps/api
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       - run: npx wrangler deploy
         working-directory: apps/api
         env:

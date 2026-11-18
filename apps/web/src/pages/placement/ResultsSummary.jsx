@@ -114,7 +114,7 @@ export default function ResultsSummary() {
       {/* Main Hero Header */}
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#EAE6DF] dark:bg-[#242424] text-[#C85232] border border-[#C85232]/30">
-          <Sparkles size={14} /> AI Practice Assessment Complete
+          <Sparkles size={14} /> Practice Assessment Complete
         </div>
         <h1 className="text-3xl md:text-5xl font-extrabold font-heading text-[#111111] dark:text-white">
           Session Results Summary

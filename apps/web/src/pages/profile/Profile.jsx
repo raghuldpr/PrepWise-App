@@ -925,7 +925,7 @@ export default function Profile() {
             ) : (
               <div className="text-center py-8 space-y-3 bg-surface-alt/50 rounded-xl border border-dashed border-[rgba(0,0,0,0.15)] dark:border-[rgba(255,255,255,0.15)] p-6">
                 <p className="text-sm text-[#5E5B56] dark:text-[#A0A0A0] max-w-md mx-auto">
-                  No technical skills configured yet. Add your core languages, frameworks, and subjects to personalize your AI practice sessions and skill gap analysis.
+                  No technical skills configured yet. Add your core languages, frameworks, and subjects to personalize your practice sessions and skill gap analysis.
                 </p>
                 <button
                   onClick={() => navigate('/onboarding/skills')}

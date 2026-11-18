@@ -50,6 +50,13 @@
       "when": 1795019148910,
       "tag": "0009_ai",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1795019980519,
+      "tag": "0010_security",
+      "breakpoints": true
     }
   ]
 }

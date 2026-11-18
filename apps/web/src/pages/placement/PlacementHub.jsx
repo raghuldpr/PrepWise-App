@@ -227,7 +227,7 @@ export default function PlacementHub() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
           <div className="space-y-1">
             <div className="flex items-center justify-center md:justify-start gap-2 text-[#C85232] font-bold text-sm">
-              <Trophy size={18} /> AI Adaptive Question Bank
+              <Trophy size={18} /> Question Bank
             </div>
             <h3 className="text-xl font-bold font-heading text-[#111111] dark:text-white">
               Track Skill Gaps & Weak Area Callouts

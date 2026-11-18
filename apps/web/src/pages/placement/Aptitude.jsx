@@ -453,8 +453,8 @@ export default function Aptitude() {
             <div className="pt-4 border-t border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.1)] flex flex-col sm:flex-row justify-between items-center gap-4">
               <div className="text-xs text-[#5E5B56] dark:text-[#A0A0A0]">
                 {attemptResult
-                  ? 'Answer submitted and evaluated by AI Engine.'
-                  : 'Select your answer and submit for immediate AI feedback.'}
+                  ? 'Answer checked against the stored correct option.'
+                  : 'Select your answer and submit for instant feedback.'}
               </div>
 
               {!attemptResult ? (
@@ -508,7 +508,7 @@ export default function Aptitude() {
                     <p className="text-sm opacity-90">
                       {attemptResult.isCorrect
                         ? 'Great job! Your mathematical logic and speed are spot on.'
-                        : `Correct answer is "${attemptResult.correctAnswer}". Review the AI breakdown below.`}
+                        : `Correct answer is "${attemptResult.correctAnswer}". Review the explanation below.`}
                     </p>
                   </div>
                 </div>
@@ -517,7 +517,7 @@ export default function Aptitude() {
                 {attemptResult.explanation && (
                   <Card className="bg-[#EAE6DF]/80 dark:bg-[#242424]/80 border-amber-500/30 p-5 space-y-2">
                     <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400 font-bold text-sm font-heading">
-                      <Lightbulb size={18} /> AI Step-by-Step Explanation:
+                      <Lightbulb size={18} /> Step-by-step explanation:
                     </div>
                     <p className="text-sm md:text-base leading-relaxed text-[#111111] dark:text-[#E2E2E2] whitespace-pre-line">
                       {attemptResult.explanation}

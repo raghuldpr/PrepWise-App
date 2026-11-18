@@ -162,7 +162,7 @@ export const AppLayout = () => {
                 PrepWise
               </span>
               <span className="block text-[10px] uppercase font-bold tracking-wider text-[#C85232]">
-                Placement AI Engine
+                Placement Prep
               </span>
             </div>
           </div>
