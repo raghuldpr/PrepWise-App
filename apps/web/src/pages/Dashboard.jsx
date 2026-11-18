@@ -190,7 +190,7 @@ export default function Dashboard() {
             />
           </div>
           <p className="text-xs text-[#5E5B56] dark:text-[#A0A0A0] mt-3">
-            Average evaluation score from completed AI mock interviews.
+            Average score from your completed mock interviews.
           </p>
         </div>
 
@@ -290,7 +290,7 @@ export default function Dashboard() {
                 Start Mock Interview
               </h3>
               <p className="text-sm text-[#5E5B56] dark:text-[#A0A0A0] leading-relaxed mb-6">
-                Simulate a live AI technical or HR interview session tailored to your target software engineer role.
+                Practise a technical or HR interview round and get a report on what you covered and what to revise.
               </p>
             </div>
             <Link
@@ -350,7 +350,7 @@ export default function Dashboard() {
               </div>
             ))}
 
-            {interviewsData.map((item, idx) => (
+            {interviewsData.slice(0, 3).map((item, idx) => (
               <div
                 key={item.id || `int-${idx}`}
                 className="card-warm dark:bg-[#1E1E1E] p-4 flex items-center justify-between gap-4"

@@ -259,6 +259,30 @@ export const userProjects = sqliteTable(
   (t) => [uniqueIndex("user_projects_unique").on(t.userId, t.projectId)],
 );
 
+export const INTERVIEW_TYPES = ["TECHNICAL", "HR", "MIXED"] as const;
+export const interviews = sqliteTable(
+  "interviews",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    interviewType: text("interview_type", { enum: INTERVIEW_TYPES }).notNull(),
+    targetRole: text("target_role").notNull(),
+    roleId: text("role_id"),
+    companyName: text("company_name"),
+    difficulty: text("difficulty", { enum: DIFFICULTIES }).notNull().default("MEDIUM"),
+    questionCount: integer("question_count").notNull(),
+    status: text("status", { enum: ["IN_PROGRESS", "COMPLETED"] }).notNull().default("IN_PROGRESS"),
+    // The bank lives in code (packages/content), so questions are referenced by id inside JSON.
+    planJson: text("plan_json").notNull(), // kind for each position
+    answersJson: text("answers_json").notNull().default("[]"), // AnswerRecord[]
+    reportJson: text("report_json"),
+    overallScore: integer("overall_score"),
+    createdAt: text("created_at").notNull().default(now),
+    completedAt: text("completed_at"),
+  },
+  (t) => [index("interviews_user_idx").on(t.userId, t.createdAt)],
+);
+
 // Profile columns that clients may edit (shared by the update route and the response mapper).
 export const PROFILE_TEXT_FIELDS = [
   "phone", "avatarUrl", "degree", "branch", "currentSemester", "education", "college",

@@ -64,7 +64,7 @@ export const Complete = () => {
               <Brain size={18} />
             </div>
             <h3 className="font-bold text-xs uppercase tracking-wider text-[#111111] dark:text-white mb-1">
-              AI Mock Practice
+              Mock Interviews
             </h3>
             <p className="text-xs text-[#5E5B56] dark:text-[#A0A0A0]">
               Personalized technical questions tailored to your skills.

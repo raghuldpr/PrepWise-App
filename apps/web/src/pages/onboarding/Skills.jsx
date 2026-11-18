@@ -215,7 +215,7 @@ export const Skills = () => {
             {isManagingExisting ? 'Manage Your Technical Skills' : 'What are your core technical skills?'}
           </h1>
           <p className="text-base text-[#5E5B56] dark:text-[#A0A0A0] max-w-xl mx-auto">
-            Select the languages, frameworks, core subjects, and aptitude areas you know. This builds your diagnostic baseline for AI mock interviews and skill gap roadmaps.
+            Select the languages, frameworks, core subjects, and aptitude areas you know. This builds your diagnostic baseline for mock interviews and skill gap roadmaps.
           </p>
         </div>
 

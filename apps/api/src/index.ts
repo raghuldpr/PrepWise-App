@@ -5,6 +5,7 @@ import { analyticsRoutes } from "./routes/analytics";
 import { attemptRoutes } from "./routes/attempts";
 import { authRoutes } from "./routes/auth";
 import { companyRoutes } from "./routes/companies";
+import { interviewRoutes } from "./routes/interviews";
 import { progressRoutes } from "./routes/progress";
 import { questionRoutes } from "./routes/questions";
 import { projectRoutes } from "./routes/projects";
@@ -32,6 +33,7 @@ app.route("/api/study-plan", studyPlanRoutes);
 app.route("/api/projects", projectRoutes);
 app.route("/api/onboarding", onboardingRoutes);
 app.route("/api/skills", skillRoutes);
+app.route("/api/interviews", interviewRoutes);
 
 app.notFound((c) => c.json(errorBody(404, "Not found"), 404));
 app.onError((err, c) => {

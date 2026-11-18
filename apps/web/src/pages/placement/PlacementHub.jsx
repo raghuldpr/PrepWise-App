@@ -28,7 +28,7 @@ export default function PlacementHub() {
           Campus Placement Preparation
         </h1>
         <p className="text-base text-[#5E5B56] dark:text-[#A0A0A0] mt-2 max-w-2xl leading-relaxed">
-          Master quantitative aptitude, logical reasoning, core technical domains, and company-specific interview patterns with AI evaluation.
+          Master quantitative aptitude, logical reasoning, core technical domains, and company-specific interview patterns.
         </p>
       </div>
 

@@ -123,7 +123,7 @@ export const Register = () => {
             Create Your Account
           </h1>
           <p className="text-sm md:text-base text-[#5E5B56] dark:text-[#A0A0A0]">
-            Start building your career readiness with AI-powered coaching
+            Start building your career readiness with guided practice
           </p>
         </div>
 

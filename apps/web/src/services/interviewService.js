@@ -1,43 +1,12 @@
 import api from './api';
 
-export const createInterview = async (data) => {
-  const response = await api.post('/interviews', data);
-  return response.data;
-};
+export const getInterviewOptions = async () => (await api.get('/interviews/options')).data;
+export const createInterview = async (payload) => (await api.post('/interviews', payload)).data;
+export const getInterview = async (id) => (await api.get(`/interviews/${id}`)).data;
+export const answerQuestion = async (id, payload) => (await api.post(`/interviews/${id}/answer`, payload)).data;
+export const completeInterview = async (id) => (await api.post(`/interviews/${id}/complete`)).data;
+export const getInterviewReport = async (id) => (await api.get(`/interviews/${id}/report`)).data;
+export const getUserInterviewHistory = async () => (await api.get('/interviews/history')).data;
+export const deleteInterview = async (id) => (await api.delete(`/interviews/${id}`)).data;
 
-export const startInterview = async (id) => {
-  const response = await api.post(`/interviews/${id}/start`);
-  return response.data;
-};
-
-export const answerQuestion = async (id, data) => {
-  const response = await api.post(`/interviews/${id}/answer`, data);
-  return response.data;
-};
-
-export const submitCodingAnswer = async (id, data) => {
-  const response = await api.post(`/interviews/${id}/coding-submit`, data);
-  return response.data;
-};
-
-export const completeInterview = async (id) => {
-  const response = await api.post(`/interviews/${id}/complete`);
-  return response.data;
-};
-
-export const getInterviewReport = async (id) => {
-  const response = await api.get(`/interviews/${id}/report`);
-  return response.data;
-};
-
-export const getUserInterviewHistory = async (page = 0, size = 10) => {
-  const response = await api.get('/interviews/history', {
-    params: { page, size }
-  });
-  return response.data;
-};
-
-export const getInterview = async (id) => {
-  const response = await api.get(`/interviews/${id}`);
-  return response.data;
-};
+export const errorMessage = (err, fallback) => err?.response?.data?.message || fallback;

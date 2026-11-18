@@ -29,9 +29,7 @@ import Roadmap from './pages/hub/Roadmap';
 import StudyPlan from './pages/hub/StudyPlan';
 import Setup from './pages/interview/Setup';
 import Session from './pages/interview/Session';
-import CodingSession from './pages/interview/CodingSession';
 import Report from './pages/interview/Report';
-import InterviewComplete from './pages/interview/Complete';
 import History from './pages/interview/History';
 import Profile from './pages/profile/Profile';
 import Settings from './pages/settings/Settings';
@@ -102,10 +100,10 @@ const LandingPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left mt-12">
           <div className="card-warm dark:bg-[#1E1E1E]">
             <h3 className="text-lg font-bold mb-2 font-heading text-[#111111] dark:text-white">
-              Mock AI Interviews
+              Mock Interviews
             </h3>
             <p className="text-sm text-[#5E5B56] dark:text-[#A0A0A0]">
-              Real-time technical and HR mock interviews tailored to companies like Google, Amazon, and TCS.
+              Technical and HR mock interviews, with a report on what you covered and what to revise.
             </p>
           </div>
 
@@ -183,8 +181,6 @@ export default function App() {
 
                 {/* Standalone Immersive Session Routes (No Main Sidebar) */}
                 <Route path="/interview/session/:id" element={<Session />} />
-                <Route path="/interview/session/:id/coding" element={<CodingSession />} />
-                <Route path="/interview/session/:id/complete" element={<InterviewComplete />} />
                 <Route path="/interview/report/:id" element={<Report />} />
 
                 <Route element={<AppLayout />}>
