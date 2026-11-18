@@ -11,6 +11,13 @@ export type Bindings = {
   JWT_SECRET: string;
   PASSWORD_PEPPER: string;
   ALLOWED_ORIGINS?: string; // comma separated, for the dev proxy
+  // Optional AI assistant (off unless AI_ENABLED is "true" and at least one key is set as a secret).
+  AI_ENABLED?: string;
+  AI_PROVIDERS?: string; // comma separated order, for example "gemini,groq,openrouter"
+  AI_DAILY_LIMIT?: string;
+  GEMINI_API_KEY?: string; GEMINI_MODEL?: string; GEMINI_BASE_URL?: string;
+  GROQ_API_KEY?: string; GROQ_MODEL?: string; GROQ_BASE_URL?: string;
+  OPENROUTER_API_KEY?: string; OPENROUTER_MODEL?: string; OPENROUTER_BASE_URL?: string;
 };
 export type Vars = { userId: number };
 export type AppEnv = { Bindings: Bindings; Variables: Vars };
@@ -21,7 +28,7 @@ const SESSION_SECONDS = 60 * 60 * 24 * 7;
 export const getDb = (c: Context<AppEnv>) => drizzle(c.env.DB);
 
 // Errors use the same shape the old Spring backend used: the frontend reads `message`.
-export const httpError = (status: 400 | 401 | 403 | 404 | 409, message: string) =>
+export const httpError = (status: 400 | 401 | 403 | 404 | 409 | 429 | 502, message: string) =>
   new HTTPException(status, { message });
 
 export const errorBody = (status: number, message: string) => ({

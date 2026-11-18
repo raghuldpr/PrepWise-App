@@ -13,3 +13,15 @@ binding = "DB"
 database_name = "prepwise-db"
 database_id = "bc2fb20a-9fb7-41e3-9dca-9295a0db22c7"
 migrations_dir = "migrations"
+
+# Optional AI assistant. Off by default. To turn it on set AI_ENABLED = "true" and add at least one key as a secret:
+#   npx wrangler secret put GEMINI_API_KEY      (also GROQ_API_KEY, OPENROUTER_API_KEY)
+# Providers are tried in AI_PROVIDERS order; the next one is used when one fails. Model names change often:
+# check them with scripts/check-ai-providers.mjs and edit below.
+[vars]
+AI_ENABLED = "false"
+AI_PROVIDERS = "gemini,groq,openrouter"
+AI_DAILY_LIMIT = "25"
+GEMINI_MODEL = "gemini-3.8-flash"
+GROQ_MODEL = "qwen/qwen3.8-27b"
+OPENROUTER_MODEL = "openrouter/free"

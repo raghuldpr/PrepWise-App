@@ -20,7 +20,7 @@ export default function CareerHubHeader() {
         </div>
         <div>
           <h2 className="font-bold text-sm font-heading text-[#111111] dark:text-white">Career Acceleration Hub</h2>
-          <p className="text-[10px] text-[#5E5B56] dark:text-neutral-400">AI tools for skill gap, learning roadmaps, study plans & portfolio</p>
+          <p className="text-[10px] text-[#5E5B56] dark:text-neutral-400">Skill gap, learning roadmaps, study plans, resume and projects</p>
         </div>
       </div>
 

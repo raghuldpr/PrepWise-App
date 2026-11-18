@@ -1,485 +1,198 @@
-import React, { useState, useEffect, useRef } from 'react';
-import {
-  Send,
-  Bot,
-  User,
-  Plus,
-  Trash2,
-  MessageSquare,
-  AlertTriangle,
-  RefreshCw,
-  Copy,
-  Check,
-  Sparkles,
-  PanelLeftOpen,
-  PanelLeftClose,
-  Compass,
-  ArrowRight
-} from 'lucide-react';
-import {
-  askAiQuestion,
-  getAiConversations,
-  getAiConversationById,
-  deleteAiConversation
-} from '../../services/aiService';
-import { getAiErrorMessage } from '../../utils/aiErrorUtils';
-import CareerHubHeader from '../../components/hub/CareerHubHeader';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { AlertTriangle, Bot, Image as ImageIcon, Info, Loader2, MessageSquare, Plus, Send, Trash2, User, X } from 'lucide-react';
+import Card from '../../components/common/Card';
+import Badge from '../../components/common/Badge';
+import Button from '../../components/common/Button';
+import LoadingState from '../../components/common/LoadingState';
 import FormattedMarkdown from '../../components/common/FormattedMarkdown';
+import CareerHubHeader from '../../components/hub/CareerHubHeader';
+import { deleteAiConversation, errorMessage, getAiConversation, getAiConversations, getAiStatus, sendAiMessage } from '../../services/aiService';
+import { resizeImage } from '../../lib/resizeImage';
+
+const STARTERS = [
+  'How should I explain my final year project in a technical interview?',
+  'What should I revise in 2 weeks before a campus placement test?',
+  'Explain deadlock like I am a beginner, with an example.',
+  'How do I answer "What is your biggest weakness?" honestly?',
+];
+
+const PROVIDER_LABEL = { gemini: 'Gemini', groq: 'Groq', openrouter: 'OpenRouter' };
+
+function Disabled({ reason }) {
+  return (
+    <div className="max-w-3xl mx-auto space-y-6 pb-12">
+      <CareerHubHeader />
+      <Card className="space-y-4">
+        <Badge variant="primary" icon={Bot}>AI ASSISTANT (OPTIONAL)</Badge>
+        <h1 className="text-2xl font-extrabold font-heading">The AI assistant is not switched on</h1>
+        <p className="text-sm">{reason} Everything else in PrepWise works without it: your skill gap, roadmap, study plan, resume check, mock interviews and coding practice are all rule-based.</p>
+        <div className="flex flex-wrap gap-3 text-sm font-semibold">
+          <Link className="text-[#C85232] underline" to="/hub/skill-gap">Skill gap</Link>
+          <Link className="text-[#C85232] underline" to="/interview/setup/role">Mock interview</Link>
+          <Link className="text-[#C85232] underline" to="/placement/coding">Coding practice</Link>
+        </div>
+        <p className="text-xs text-[#5E5B56] dark:text-[#A0A0A0]">Site owner: set <code>AI_ENABLED = "true"</code> and add at least one provider key as a secret (see the README) to turn it on.</p>
+      </Card>
+    </div>
+  );
+}
 
 export default function AiAssistant() {
+  const [status, setStatus] = useState(null);
   const [conversations, setConversations] = useState([]);
-  const [currentConversationId, setCurrentConversationId] = useState(null);
+  const [activeId, setActiveId] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [inputQuestion, setInputQuestion] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [fetchingConversations, setFetchingConversations] = useState(true);
-  const [error, setError] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [copiedIndex, setCopiedIndex] = useState(null);
+  const [text, setText] = useState('');
+  const [image, setImage] = useState(null);
+  const [shareContext, setShareContext] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
+  const [note, setNote] = useState('');
+  const [loadError, setLoadError] = useState('');
+  const endRef = useRef(null);
+  const fileRef = useRef(null);
 
-  const messagesEndRef = useRef(null);
-  const inputRef = useRef(null);
-
-  const starterPrompts = [
-    {
-      title: "Project Explanation",
-      prompt: "How should I structure the explanation of my final year project in a technical interview?"
-    },
-    {
-      title: "System Design Basics",
-      prompt: "What are the most essential System Design concepts to master for SDE-1 campus placements?"
-    },
-    {
-      title: "TCS / Infosys Aptitude",
-      prompt: "Give me a quick 3-step strategy to crack quantitative aptitude for IT services company hiring."
-    },
-    {
-      title: "Mock HR Answer",
-      prompt: "How do I answer 'What is your biggest weakness?' effectively without sounding cliché?"
-    }
-  ];
-
-  // Fetch all user conversations on mount
-  useEffect(() => {
-    loadConversations();
+  const refresh = useCallback(async () => {
+    const [s, list] = await Promise.all([getAiStatus(), getAiConversations().catch(() => [])]);
+    setStatus(s);
+    setConversations(list);
   }, []);
 
-  // Auto-scroll to bottom of chat
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, loading]);
+  useEffect(() => { refresh().catch((err) => setLoadError(errorMessage(err, 'Could not load the assistant.'))); }, [refresh]);
+  useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, sending]);
+  useEffect(() => () => { if (image?.previewUrl) URL.revokeObjectURL(image.previewUrl); }, [image]);
 
-  const loadConversations = async () => {
+  const open = async (id) => {
+    setError(''); setNote('');
     try {
-      setFetchingConversations(true);
-      const data = await getAiConversations();
-      setConversations(data || []);
-    } catch (err) {
-      console.error("Failed to load conversations:", err);
-    } finally {
-      setFetchingConversations(false);
-    }
+      const c = await getAiConversation(id);
+      setActiveId(id);
+      setMessages(c.messages.map((m) => ({ role: m.role, content: m.content, hadImage: m.hadImage, provider: m.provider })));
+    } catch (err) { setError(errorMessage(err, 'Could not open that conversation.')); }
+  };
+  const fresh = () => { setActiveId(null); setMessages([]); setError(''); setNote(''); setImage(null); };
+  const remove = async (id) => {
+    if (!window.confirm('Delete this conversation?')) return;
+    try {
+      await deleteAiConversation(id);
+      if (id === activeId) fresh();
+      setConversations((xs) => xs.filter((x) => x.id !== id));
+    } catch (err) { setError(errorMessage(err, 'Could not delete it.')); }
   };
 
-  const handleSelectConversation = async (convId) => {
+  const pickImage = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    setError('');
+    try { setImage(await resizeImage(file)); } catch (err) { setError(err.message); }
+  };
+
+  const send = async (override) => {
+    const message = (override ?? text).trim();
+    if (!message || sending) return;
+    setSending(true); setError(''); setNote('');
+    const attached = image;
+    setMessages((m) => [...m, { role: 'user', content: message, hadImage: !!attached, preview: attached?.previewUrl }]);
+    setText(''); setImage(null);
     try {
-      setError(null);
-      setLoading(true);
-      setCurrentConversationId(convId);
-      const conv = await getAiConversationById(convId);
-      if (conv && conv.messages) {
-        setMessages(conv.messages);
-      } else {
-        setMessages([]);
+      const res = await sendAiMessage({
+        conversationId: activeId, message, shareContext,
+        image: attached ? { mimeType: attached.mimeType, dataBase64: attached.dataBase64 } : null,
+      });
+      setActiveId(res.conversationId);
+      setMessages((m) => [...m, { role: 'assistant', content: res.reply.content, provider: res.reply.provider }]);
+      setStatus((s) => ({ ...s, usedToday: res.usedToday }));
+      if (res.fellBack) {
+        const failed = res.attempts.filter((a) => !a.ok).map((a) => `${PROVIDER_LABEL[a.provider] ?? a.provider} (${a.reason})`).join(', ');
+        setNote(`Answered by ${PROVIDER_LABEL[res.reply.provider] ?? res.reply.provider} after ${failed} failed.`);
       }
+      refresh().catch(() => {});
     } catch (err) {
-      console.error("Failed to fetch conversation details:", err);
-      setError("Unable to load chat history. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+      setMessages((m) => m.slice(0, -1)); // the question was not answered, so take it back out
+      setText(message); setImage(attached);
+      setError(errorMessage(err, 'Could not reach the assistant. Please try again.'));
+    } finally { setSending(false); }
   };
 
-  const handleNewChat = () => {
-    setCurrentConversationId(null);
-    setMessages([]);
-    setError(null);
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  };
+  if (loadError) return <div className="max-w-3xl mx-auto py-12"><p role="alert" className="text-sm text-rose-600">{loadError}</p></div>;
+  if (!status) return <LoadingState message="Checking the assistant..." />;
+  if (!status.enabled) return <Disabled reason={status.reason ?? 'It has not been enabled.'} />;
 
-  const handleDeleteConversation = async (e, convId) => {
-    e.stopPropagation();
-    if (!window.confirm("Are you sure you want to delete this conversation?")) return;
-
-    try {
-      await deleteAiConversation(convId);
-      setConversations(prev => prev.filter(c => c.id !== convId));
-      if (currentConversationId === convId) {
-        handleNewChat();
-      }
-    } catch (err) {
-      console.error("Failed to delete conversation:", err);
-      alert("Could not delete conversation. Please try again.");
-    }
-  };
-
-  const lastQuestionRef = useRef('');
-
-  const handleSendMessage = async (textToSend) => {
-    const questionText = textToSend || inputQuestion || lastQuestionRef.current;
-    if (!questionText || !questionText.trim()) return;
-
-    lastQuestionRef.current = questionText.trim();
-
-    setError(null);
-    const userMessageObj = {
-      id: Date.now(),
-      role: 'user',
-      messageText: questionText.trim(),
-      createdAt: new Date().toISOString()
-    };
-
-    // Append user message immediately
-    setMessages(prev => [...prev, userMessageObj]);
-    setInputQuestion('');
-    setLoading(true);
-
-    try {
-      const payload = {
-        question: questionText.trim(),
-        conversationId: currentConversationId
-      };
-
-      const res = await askAiQuestion(payload);
-
-      if (res && res.reply) {
-        const aiMessageObj = {
-          id: Date.now() + 1,
-          role: 'assistant',
-          messageText: res.reply,
-          createdAt: new Date().toISOString()
-        };
-
-        setMessages(prev => [...prev, aiMessageObj]);
-
-        if (res.conversationId) {
-          setCurrentConversationId(res.conversationId);
-        }
-
-        // Refresh conversation sidebar list
-        loadConversations();
-      } else {
-        throw new Error("Received empty response from AI assistant");
-      }
-    } catch (err) {
-      console.error("AI Assistant error:", err);
-      setError(getAiErrorMessage(err));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
-
-  const copyToClipboard = (text, index) => {
-    navigator.clipboard.writeText(text);
-    setCopiedIndex(index);
-    setTimeout(() => setCopiedIndex(null), 2000);
-  };
+  const left = Math.max(0, status.dailyLimit - status.usedToday);
 
   return (
-    <div className="space-y-6 font-body pb-12">
+    <div className="max-w-6xl mx-auto space-y-4 pb-12">
       <CareerHubHeader />
+      <div className="grid lg:grid-cols-[250px,1fr] gap-4 items-start">
+        <Card padding="compact" className="space-y-3">
+          <Button onClick={fresh} className="w-full"><Plus size={14} /> New chat</Button>
+          <ul className="space-y-1 max-h-72 overflow-y-auto">
+            {conversations.length === 0 && <li className="text-xs text-[#5E5B56] dark:text-[#A0A0A0]">No chats yet.</li>}
+            {conversations.map((c) => (
+              <li key={c.id} className={`group flex items-center gap-1 rounded-lg ${c.id === activeId ? 'bg-[#C85232]/10' : ''}`}>
+                <button type="button" onClick={() => open(c.id)} className="flex-1 min-w-0 text-left px-2 py-1.5 text-xs inline-flex items-center gap-1.5"><MessageSquare size={13} className="shrink-0" /><span className="truncate">{c.title}</span></button>
+                <button type="button" aria-label={`Delete ${c.title}`} onClick={() => remove(c.id)} className="p-1 text-[#5E5B56] hover:text-rose-600"><Trash2 size={13} /></button>
+              </li>
+            ))}
+          </ul>
+          <p className="text-[11px] text-[#5E5B56] dark:text-[#A0A0A0]">{left} of {status.dailyLimit} messages left today. Up to the newest 30 chats are kept.</p>
+        </Card>
 
-      <div className="min-h-[calc(100vh-9rem)] flex flex-col md:flex-row bg-[#EFECE6] dark:bg-[#121212] text-[#111111] dark:text-white rounded-2xl overflow-hidden border border-[rgba(0,0,0,0.08)] dark:border-[#2A2A2A] shadow-2xl font-body">
-      {/* Sidebar - Past Conversations */}
-      <div
-        className={`${
-          sidebarOpen ? 'w-full md:w-80 flex' : 'hidden md:hidden'
-        } flex-col bg-[#EAE6DF] dark:bg-[#181818] border-r border-[rgba(0,0,0,0.08)] dark:border-[#2A2A2A] transition-all duration-200 z-10`}
-      >
-        {/* Sidebar Top Header */}
-        <div className="p-4 border-b border-[rgba(0,0,0,0.08)] dark:border-[#2A2A2A] flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#C85232] flex items-center justify-center text-white font-bold">
-              <Sparkles size={18} />
-            </div>
-            <div>
-              <h2 className="font-bold text-sm font-heading tracking-tight text-[#111111] dark:text-white">AI Placement Assistant</h2>
-              <span className="text-[10px] text-[#C85232] dark:text-amber-500 font-semibold uppercase tracking-wider">24/7 AI Tutor</span>
-            </div>
-          </div>
-          <button
-            onClick={() => setSidebarOpen(false)}
-            className="md:hidden p-1.5 rounded-lg text-[#5E5B56] dark:text-neutral-400 hover:text-[#111111] dark:hover:text-white hover:bg-[#DFD9CE] dark:hover:bg-[#2A2A2A]"
-          >
-            <PanelLeftClose size={18} />
-          </button>
-        </div>
-
-        {/* New Chat Button */}
-        <div className="p-3">
-          <button
-            onClick={handleNewChat}
-            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#C85232] hover:bg-[#B34528] text-white font-semibold text-sm transition-all shadow-md active:scale-98"
-          >
-            <Plus size={18} />
-            <span>New Chat</span>
-          </button>
-        </div>
-
-        {/* Conversations List */}
-        <div className="flex-1 overflow-y-auto px-3 py-2 space-y-1">
-          <div className="px-2 py-1.5 text-[11px] font-bold uppercase tracking-wider text-[#5E5B56] dark:text-neutral-500">
-            Past Discussions
+        <div className="space-y-3 min-w-0">
+          <div role="note" className="flex items-start gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs">
+            <Info size={15} className="shrink-0 mt-0.5 text-amber-600" />
+            <span>Your messages and any image are sent to an outside AI provider ({status.providers.map((p) => PROVIDER_LABEL[p.id] ?? p.id).join(', ')}), which may keep them under its own policy. Do not share passwords, ID numbers or other private details. Answers can be wrong: check anything important.</span>
           </div>
 
-          {fetchingConversations ? (
-            <div className="p-4 text-center text-xs text-[#5E5B56] dark:text-neutral-500 space-y-2">
-              <div className="w-4 h-4 border-2 border-[#C85232] border-t-transparent rounded-full animate-spin mx-auto"></div>
-              <p>Loading history...</p>
-            </div>
-          ) : conversations.length === 0 ? (
-            <div className="p-6 text-center text-xs text-[#5E5B56] dark:text-neutral-500">
-              <MessageSquare size={24} className="mx-auto mb-2 opacity-40" />
-              <p>No chat history yet.</p>
-              <p className="text-[11px] mt-1 text-[#5E5B56]/80 dark:text-neutral-600">Start a new conversation to ask questions!</p>
-            </div>
-          ) : (
-            conversations.map((conv) => {
-              const isSelected = currentConversationId === conv.id;
-              return (
-                <div
-                  key={conv.id}
-                  onClick={() => handleSelectConversation(conv.id)}
-                  className={`group flex items-center justify-between p-3 rounded-xl cursor-pointer text-xs transition-all ${
-                    isSelected
-                      ? 'bg-[#EFECE6] dark:bg-[#2A2A2A] text-[#111111] dark:text-white font-semibold border border-[rgba(0,0,0,0.12)] dark:border-neutral-700 shadow-xs'
-                      : 'text-[#5E5B56] dark:text-neutral-400 hover:bg-[#E2DDD5] dark:hover:bg-[#222222] hover:text-[#111111] dark:hover:text-neutral-200'
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5 truncate flex-1 min-w-0 pr-2">
-                    <MessageSquare size={15} className={isSelected ? 'text-[#C85232]' : 'text-[#5E5B56] dark:text-neutral-500'} />
-                    <span className="truncate">{conv.title || 'Placement Inquiry'}</span>
-                  </div>
-                  <button
-                    onClick={(e) => handleDeleteConversation(e, conv.id)}
-                    className="opacity-0 group-hover:opacity-100 p-1 text-[#5E5B56] dark:text-neutral-500 hover:text-rose-500 dark:hover:text-rose-400 transition-opacity"
-                    title="Delete Chat"
-                  >
-                    <Trash2 size={14} />
-                  </button>
+          <Card padding="compact" className="min-h-[320px] max-h-[60vh] overflow-y-auto space-y-4" aria-live="polite">
+            {messages.length === 0 && !sending && (
+              <div className="space-y-3">
+                <p className="text-sm font-semibold">Ask a placement question, or attach a screenshot of a question, an error or a resume section.</p>
+                <div className="grid sm:grid-cols-2 gap-2">
+                  {STARTERS.map((s) => <button key={s} type="button" onClick={() => send(s)} className="text-left text-xs rounded-xl border border-[rgba(0,0,0,0.1)] dark:border-neutral-700 p-3 hover:border-[#C85232]">{s}</button>)}
                 </div>
-              );
-            })
-          )}
-        </div>
-      </div>
-
-      {/* Main Workspace */}
-      <div className="flex-1 flex flex-col bg-[#F7F5F0] dark:bg-[#121212] relative overflow-hidden">
-        {/* Workspace Top Bar */}
-        <div className="p-4 bg-[#EFECE6] dark:bg-[#181818] border-b border-[rgba(0,0,0,0.08)] dark:border-[#2A2A2A] flex items-center justify-between z-10">
-          <div className="flex items-center gap-3">
-            {!sidebarOpen && (
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="p-1.5 rounded-lg text-[#5E5B56] dark:text-neutral-400 hover:text-[#111111] dark:hover:text-white hover:bg-[#EAE6DF] dark:hover:bg-[#2A2A2A] transition-colors"
-                title="Open Sidebar"
-              >
-                <PanelLeftOpen size={20} />
-              </button>
+              </div>
             )}
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#C85232] to-amber-600 flex items-center justify-center text-white font-bold text-sm shadow-xs">
-              <Bot size={18} />
-            </div>
-            <div>
-              <h1 className="font-bold text-sm font-heading text-[#111111] dark:text-white">Placement Assistant AI</h1>
-              <p className="text-[11px] text-[#5E5B56] dark:text-neutral-400 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                Ready to help with DSA, System Design, HR & Resume
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={handleNewChat}
-            className="text-xs bg-[#EAE6DF] hover:bg-[#E2DDD5] dark:bg-[#222222] dark:hover:bg-[#2A2A2A] border border-[rgba(0,0,0,0.12)] dark:border-[#333333] text-[#111111] dark:text-neutral-300 hover:text-[#111111] dark:hover:text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors font-medium"
-          >
-            <Plus size={14} />
-            <span className="hidden sm:inline">New Session</span>
-          </button>
-        </div>
-
-        {/* Chat Messages Stream */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
-          {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center max-w-xl mx-auto py-8">
-              <div className="w-16 h-16 rounded-2xl bg-[#EAE6DF] dark:bg-[#1E1E1E] border border-[rgba(0,0,0,0.08)] dark:border-[#2E2E2E] flex items-center justify-center text-[#C85232] mb-4 shadow-sm">
-                <Sparkles size={32} />
-              </div>
-              <h2 className="text-2xl font-bold font-heading mb-2 text-[#111111] dark:text-white">How can I assist your placement prep today?</h2>
-              <p className="text-xs text-[#5E5B56] dark:text-neutral-400 mb-8 leading-relaxed">
-                Ask anything about technical interviews, DSA logic, core CS concepts, resume bullet points, or company-specific hiring rounds.
-              </p>
-
-              {/* Starter Prompts Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full text-left">
-                {starterPrompts.map((item, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => handleSendMessage(item.prompt)}
-                    className="p-3.5 rounded-xl bg-[#EFECE6] hover:bg-[#EAE6DF] dark:bg-[#1E1E1E] dark:hover:bg-[#282828] border border-[rgba(0,0,0,0.08)] dark:border-[#2E2E2E] hover:border-[#C85232]/40 transition-all text-left group shadow-xs"
-                  >
-                    <p className="text-xs font-bold text-[#C85232] mb-1 group-hover:text-[#A43A1E] dark:group-hover:text-amber-400 flex items-center justify-between">
-                      <span>{item.title}</span>
-                      <ArrowRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </p>
-                    <p className="text-[11px] text-[#5E5B56] dark:text-neutral-400 line-clamp-2">{item.prompt}</p>
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : (
-            messages.map((msg, index) => {
-              const isUser = msg.role === 'user';
-              return (
-                <div
-                  key={msg.id || index}
-                  className={`flex gap-3 max-w-3xl ${isUser ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}
-                >
-                  {/* Avatar */}
-                  <div
-                    className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 text-white font-bold text-xs shadow-sm ${
-                      isUser
-                        ? 'bg-neutral-800 border border-neutral-700'
-                        : 'bg-gradient-to-tr from-[#C85232] to-amber-600'
-                    }`}
-                  >
-                    {isUser ? <User size={16} /> : <Bot size={16} />}
-                  </div>
-
-                  {/* Message Content Bubble */}
-                  <div
-                    className={`relative group rounded-2xl p-4 text-xs sm:text-sm leading-relaxed shadow-sm ${
-                      isUser
-                        ? 'bg-[#C85232] text-white rounded-tr-none'
-                        : 'bg-[#EFECE6] dark:bg-[#1E1E1E] text-[#111111] dark:text-neutral-200 border border-[rgba(0,0,0,0.08)] dark:border-[#2A2A2A] rounded-tl-none'
-                    }`}
-                  >
-                    {isUser ? (
-                      <div className="whitespace-pre-wrap font-body font-normal">
-                        {msg.messageText}
-                      </div>
-                    ) : (
-                      <FormattedMarkdown content={msg.messageText} />
-                    )}
-
-                    {!isUser && (
-                      <div className="mt-2 pt-2 border-t border-[rgba(0,0,0,0.08)] dark:border-[#2A2A2A] flex items-center justify-between text-[10px] text-[#5E5B56] dark:text-neutral-500">
-                        <span>AI Assistant</span>
-                        <button
-                          onClick={() => copyToClipboard(msg.messageText, index)}
-                          className="flex items-center gap-1 text-[#5E5B56] dark:text-neutral-400 hover:text-[#111111] dark:hover:text-white transition-colors"
-                          title="Copy message"
-                        >
-                          {copiedIndex === index ? (
-                            <>
-                              <Check size={12} className="text-emerald-500 dark:text-emerald-400" />
-                              <span className="text-emerald-500 dark:text-emerald-400 font-semibold">Copied</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy size={12} />
-                              <span>Copy</span>
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    )}
-                  </div>
+            {messages.map((m, i) => (
+              <div key={i} className={`flex gap-3 ${m.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                <div className={`w-8 h-8 shrink-0 rounded-full flex items-center justify-center ${m.role === 'user' ? 'bg-[#C85232] text-white' : 'bg-[#EAE6DF] dark:bg-neutral-800 text-[#C85232]'}`}>{m.role === 'user' ? <User size={15} /> : <Bot size={15} />}</div>
+                <div className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${m.role === 'user' ? 'bg-[#C85232]/10' : 'bg-[#FAF8F5] dark:bg-[#0E0E10] border border-[rgba(0,0,0,0.06)] dark:border-neutral-800'}`}>
+                  {m.preview && <img src={m.preview} alt="Attached" className="max-h-40 rounded-lg mb-2" />}
+                  {m.hadImage && !m.preview && <p className="text-[11px] italic text-[#5E5B56] mb-1 inline-flex items-center gap-1"><ImageIcon size={12} /> image attached</p>}
+                  {m.role === 'assistant' ? <FormattedMarkdown content={m.content} /> : <p className="whitespace-pre-wrap">{m.content}</p>}
+                  {m.role === 'assistant' && m.provider && <p className="text-[10px] text-[#5E5B56] dark:text-[#A0A0A0] mt-1">via {PROVIDER_LABEL[m.provider] ?? m.provider}</p>}
                 </div>
-              );
-            })
-          )}
+              </div>
+            ))}
+            {sending && <p className="text-xs text-[#5E5B56] inline-flex items-center gap-2"><Loader2 size={14} className="animate-spin" /> Thinking... (if one provider is busy, the next one is tried)</p>}
+            <div ref={endRef} />
+          </Card>
 
-          {/* Typing Loading Indicator */}
-          {loading && (
-            <div className="flex gap-3 max-w-3xl mr-auto">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#C85232] to-amber-600 flex items-center justify-center text-white shrink-0">
-                <Bot size={16} />
+          {note && <p role="status" className="text-xs text-[#5E5B56] dark:text-[#A0A0A0]">{note}</p>}
+          {error && <p role="alert" className="text-sm text-rose-600 inline-flex items-start gap-1.5"><AlertTriangle size={16} className="mt-0.5 shrink-0" /> {error}</p>}
+
+          <Card padding="compact" className="space-y-2">
+            {image && (
+              <div className="flex items-center gap-2"><img src={image.previewUrl} alt="Selected" className="h-14 rounded-lg" /><button type="button" onClick={() => setImage(null)} aria-label="Remove image" className="text-[#5E5B56] hover:text-rose-600"><X size={16} /></button></div>
+            )}
+            <textarea value={text} rows={3} maxLength={4000} disabled={sending} aria-label="Your message"
+              onChange={(e) => setText(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); send(); } }}
+              placeholder="Type your question. Press Ctrl+Enter to send."
+              className="w-full rounded-xl p-3 text-sm bg-[#FAF8F5] dark:bg-[#0E0E10] border border-[rgba(0,0,0,0.1)] dark:border-neutral-800 focus:outline-none focus:border-[#C85232]" />
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-4">
+                <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={pickImage} />
+                <button type="button" onClick={() => fileRef.current?.click()} disabled={sending} className="text-xs font-semibold text-[#C85232] inline-flex items-center gap-1"><ImageIcon size={14} /> Attach image</button>
+                <label className="text-xs inline-flex items-center gap-1.5"><input type="checkbox" checked={shareContext} onChange={(e) => setShareContext(e.target.checked)} /> Share my target role and skill names to get tailored answers</label>
               </div>
-              <div className="bg-[#EFECE6] dark:bg-[#1E1E1E] border border-[rgba(0,0,0,0.08)] dark:border-[#2A2A2A] rounded-2xl rounded-tl-none p-4 text-xs text-[#5E5B56] dark:text-neutral-400 flex items-center gap-2 shadow-xs">
-                <span className="w-2 h-2 rounded-full bg-[#C85232] animate-bounce"></span>
-                <span className="w-2 h-2 rounded-full bg-amber-500 animate-bounce [animation-delay:0.2s]"></span>
-                <span className="w-2 h-2 rounded-full bg-amber-300 animate-bounce [animation-delay:0.4s]"></span>
-                <span className="text-[11px] ml-2 text-[#5E5B56] dark:text-neutral-500">AI is thinking...</span>
-              </div>
+              <Button onClick={() => send()} disabled={sending || !text.trim() || left === 0}><Send size={14} /> Send</Button>
             </div>
-          )}
-
-          {/* Error Banner */}
-          {error && (
-            <div className="p-4 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 rounded-xl text-rose-700 dark:text-rose-300 text-xs flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <AlertTriangle size={18} className="text-rose-600 dark:text-rose-400 shrink-0" />
-                <span>{error}</span>
-              </div>
-              <button
-                onClick={() => handleSendMessage()}
-                className="px-3 py-1 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-lg text-[11px] flex items-center gap-1 transition-colors shrink-0"
-              >
-                <RefreshCw size={12} /> Retry
-              </button>
-            </div>
-          )}
-
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* Input Bar Pinned at Bottom */}
-        <div className="p-3 sm:p-4 bg-[#EFECE6] dark:bg-[#181818] border-t border-[rgba(0,0,0,0.08)] dark:border-[#2A2A2A]">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSendMessage();
-            }}
-            className="flex items-center gap-2 bg-[#EAE6DF] dark:bg-[#121212] border border-[rgba(0,0,0,0.12)] dark:border-[#2A2A2A] focus-within:border-[#C85232] rounded-xl p-2 transition-colors"
-          >
-            <textarea
-              ref={inputRef}
-              value={inputQuestion}
-              onChange={(e) => setInputQuestion(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Ask a placement question (e.g., 'Explain binary search space reduction' or 'Resume review tips')..."
-              rows={1}
-              disabled={loading}
-              className="flex-1 bg-transparent text-[#111111] dark:text-white text-xs sm:text-sm placeholder-[#5E5B56]/70 dark:placeholder-neutral-500 focus:outline-none resize-none px-2 py-1 max-h-32 min-h-[38px]"
-            />
-
-            <button
-              type="submit"
-              disabled={loading || !inputQuestion.trim()}
-              className="w-10 h-10 rounded-lg bg-[#C85232] hover:bg-[#A43A1E] disabled:bg-[#E2DDD5] dark:disabled:bg-neutral-800 disabled:text-[#5E5B56] dark:disabled:text-neutral-600 text-white font-bold flex items-center justify-center transition-all shrink-0 shadow-md active:scale-95 cursor-pointer"
-              title="Send Question"
-            >
-              <Send size={18} />
-            </button>
-          </form>
-          <div className="flex items-center justify-between mt-2 px-1 text-[10px] text-[#5E5B56] dark:text-neutral-500">
-            <span>Press Enter to send, Shift + Enter for new line</span>
-            <span className="hidden sm:inline">Powered by Groq Cloud AI</span>
-          </div>
+          </Card>
         </div>
       </div>
-    </div>
     </div>
   );
 }

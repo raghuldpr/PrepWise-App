@@ -302,6 +302,44 @@ export const codingSubmissions = sqliteTable(
   (t) => [index("coding_user_problem_idx").on(t.userId, t.problemId, t.createdAt)],
 );
 
+export const aiConversations = sqliteTable(
+  "ai_conversations",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    title: text("title").notNull(),
+    createdAt: text("created_at").notNull().default(now),
+    updatedAt: text("updated_at").notNull().default(now),
+  },
+  (t) => [index("ai_conv_user_idx").on(t.userId, t.updatedAt)],
+);
+
+// Text only: images are sent to the provider and never stored.
+export const aiMessages = sqliteTable(
+  "ai_messages",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    conversationId: integer("conversation_id").notNull().references(() => aiConversations.id, { onDelete: "cascade" }),
+    role: text("role", { enum: ["user", "assistant"] }).notNull(),
+    content: text("content").notNull(),
+    hadImage: integer("had_image", { mode: "boolean" }).notNull().default(false),
+    provider: text("provider"),
+    model: text("model"),
+    createdAt: text("created_at").notNull().default(now),
+  },
+  (t) => [index("ai_msg_conv_idx").on(t.conversationId, t.id)],
+);
+
+export const aiUsage = sqliteTable(
+  "ai_usage",
+  {
+    userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    day: text("day").notNull(), // UTC date, YYYY-MM-DD
+    count: integer("count").notNull().default(0),
+  },
+  (t) => [uniqueIndex("ai_usage_unique").on(t.userId, t.day)],
+);
+
 // Profile columns that clients may edit (shared by the update route and the response mapper).
 export const PROFILE_TEXT_FIELDS = [
   "phone", "avatarUrl", "degree", "branch", "currentSemester", "education", "college",

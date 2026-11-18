@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { type AppEnv, errorBody, originGuard } from "./lib/http";
+import { aiRoutes } from "./routes/ai";
 import { analyticsRoutes } from "./routes/analytics";
 import { attemptRoutes } from "./routes/attempts";
 import { authRoutes } from "./routes/auth";
@@ -36,6 +37,7 @@ app.route("/api/onboarding", onboardingRoutes);
 app.route("/api/skills", skillRoutes);
 app.route("/api/interviews", interviewRoutes);
 app.route("/api/coding", codingRoutes);
+app.route("/api/ai", aiRoutes);
 
 app.notFound((c) => c.json(errorBody(404, "Not found"), 404));
 app.onError((err, c) => {
