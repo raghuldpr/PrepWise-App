@@ -9,6 +9,7 @@ import FormattedMarkdown from '../../components/common/FormattedMarkdown';
 import CareerHubHeader from '../../components/hub/CareerHubHeader';
 import { deleteAiConversation, errorMessage, getAiConversation, getAiConversations, getAiStatus, sendAiMessage } from '../../services/aiService';
 import { resizeImage } from '../../lib/resizeImage';
+import { searchStudy } from '../../lib/studyIndex';
 
 const STARTERS = [
   'How should I explain my final year project in a technical interview?',
@@ -28,6 +29,7 @@ function Disabled({ reason }) {
         <h1 className="text-2xl font-extrabold font-heading">The AI assistant is not switched on</h1>
         <p className="text-sm">{reason} Everything else in PrepWise works without it: your skill gap, roadmap, study plan, resume check, mock interviews and coding practice are all rule-based.</p>
         <div className="flex flex-wrap gap-3 text-sm font-semibold">
+          <Link className="text-[#C85232] underline" to="/hub/search">Study search</Link>
           <Link className="text-[#C85232] underline" to="/hub/skill-gap">Skill gap</Link>
           <Link className="text-[#C85232] underline" to="/interview/setup/role">Mock interview</Link>
           <Link className="text-[#C85232] underline" to="/placement/coding">Coding practice</Link>
@@ -46,6 +48,7 @@ export default function AiAssistant() {
   const [text, setText] = useState('');
   const [image, setImage] = useState(null);
   const [shareContext, setShareContext] = useState(false);
+  const [useSources, setUseSources] = useState(true);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const [note, setNote] = useState('');
@@ -68,7 +71,7 @@ export default function AiAssistant() {
     try {
       const c = await getAiConversation(id);
       setActiveId(id);
-      setMessages(c.messages.map((m) => ({ role: m.role, content: m.content, hadImage: m.hadImage, provider: m.provider })));
+      setMessages(c.messages.map((m) => ({ role: m.role, content: m.content, hadImage: m.hadImage, provider: m.provider, sources: m.sources ?? [] })));
     } catch (err) { setError(errorMessage(err, 'Could not open that conversation.')); }
   };
   const fresh = () => { setActiveId(null); setMessages([]); setError(''); setNote(''); setImage(null); };
@@ -97,12 +100,17 @@ export default function AiAssistant() {
     setMessages((m) => [...m, { role: 'user', content: message, hadImage: !!attached, preview: attached?.previewUrl }]);
     setText(''); setImage(null);
     try {
+      // Find study passages on this device first (TF-IDF); only their ids are sent, and the server rebuilds the text.
+      let sourceIds = [];
+      if (useSources) {
+        try { sourceIds = (await searchStudy(message, { k: 4, minScore: 0.12 })).map((h) => h.id); } catch { /* answer without sources */ }
+      }
       const res = await sendAiMessage({
-        conversationId: activeId, message, shareContext,
+        conversationId: activeId, message, shareContext, sourceIds,
         image: attached ? { mimeType: attached.mimeType, dataBase64: attached.dataBase64 } : null,
       });
       setActiveId(res.conversationId);
-      setMessages((m) => [...m, { role: 'assistant', content: res.reply.content, provider: res.reply.provider }]);
+      setMessages((m) => [...m, { role: 'assistant', content: res.reply.content, provider: res.reply.provider, sources: res.reply.sources ?? [] }]);
       setStatus((s) => ({ ...s, usedToday: res.usedToday }));
       if (res.fellBack) {
         const failed = res.attempts.filter((a) => !a.ok).map((a) => `${PROVIDER_LABEL[a.provider] ?? a.provider} (${a.reason})`).join(', ');
@@ -162,6 +170,12 @@ export default function AiAssistant() {
                   {m.preview && <img src={m.preview} alt="Attached" className="max-h-40 rounded-lg mb-2" />}
                   {m.hadImage && !m.preview && <p className="text-[11px] italic text-[#5E5B56] mb-1 inline-flex items-center gap-1"><ImageIcon size={12} /> image attached</p>}
                   {m.role === 'assistant' ? <FormattedMarkdown content={m.content} /> : <p className="whitespace-pre-wrap">{m.content}</p>}
+                  {m.role === 'assistant' && m.sources?.length > 0 && (
+                    <div className="mt-2 pt-2 border-t border-[rgba(0,0,0,0.08)] dark:border-neutral-800">
+                      <p className="text-[11px] font-bold uppercase text-[#5E5B56] dark:text-[#A0A0A0] mb-1">Sources from PrepWise</p>
+                      <ol className="space-y-0.5">{m.sources.map((s) => <li key={s.id} className="text-xs"><span className="font-mono">[{s.n}]</span> <Link to={s.link} className="underline text-[#C85232]">{s.title.length > 90 ? `${s.title.slice(0, 87)}...` : s.title}</Link></li>)}</ol>
+                    </div>
+                  )}
                   {m.role === 'assistant' && m.provider && <p className="text-[10px] text-[#5E5B56] dark:text-[#A0A0A0] mt-1">via {PROVIDER_LABEL[m.provider] ?? m.provider}</p>}
                 </div>
               </div>
@@ -186,6 +200,7 @@ export default function AiAssistant() {
               <div className="flex flex-wrap items-center gap-4">
                 <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={pickImage} />
                 <button type="button" onClick={() => fileRef.current?.click()} disabled={sending} className="text-xs font-semibold text-[#C85232] inline-flex items-center gap-1"><ImageIcon size={14} /> Attach image</button>
+                <label className="text-xs inline-flex items-center gap-1.5"><input type="checkbox" checked={useSources} onChange={(e) => setUseSources(e.target.checked)} /> Use PrepWise study material as sources</label>
                 <label className="text-xs inline-flex items-center gap-1.5"><input type="checkbox" checked={shareContext} onChange={(e) => setShareContext(e.target.checked)} /> Share my target role and skill names to get tailored answers</label>
               </div>
               <Button onClick={() => send()} disabled={sending || !text.trim() || left === 0}><Send size={14} /> Send</Button>

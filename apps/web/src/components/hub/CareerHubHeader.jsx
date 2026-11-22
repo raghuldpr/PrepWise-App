@@ -1,10 +1,11 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Bot, FileText, Code2, Sparkles, Target, Compass, Calendar } from 'lucide-react';
+import { Bot, Search, FileText, Code2, Sparkles, Target, Compass, Calendar } from 'lucide-react';
 
 export default function CareerHubHeader() {
   const tabs = [
     { name: 'AI Assistant', path: '/hub/ai-assistant', altPath: '/career-hub', icon: Bot },
+    { name: 'Search', path: '/hub/search', icon: Search },
     { name: 'Skill Gap', path: '/hub/skill-gap', icon: Target },
     { name: 'Roadmap', path: '/hub/roadmap', icon: Compass },
     { name: 'Study Plan', path: '/hub/study-plan', icon: Calendar },

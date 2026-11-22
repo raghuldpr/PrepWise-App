@@ -1,7 +1,8 @@
 import { Hono } from "hono";
 import { and, asc, desc, eq, notInArray } from "drizzle-orm";
 import { z } from "zod";
-import { analyzeGap, buildMessages, checkImage, ChainError, contextNote, runChain, SYSTEM_PROMPT, titleFrom, type ChatTurn, type Fetch } from "@prepwise/core";
+import { analyzeGap, buildMessages, referenceNote, checkImage, ChainError, contextNote, runChain, SYSTEM_PROMPT, titleFrom, type ChatTurn, type Fetch } from "@prepwise/core";
+import { passageById, KIND_LABEL } from "../../../../packages/content/src/rag-corpus";
 import { aiConversations, aiMessages } from "../db/schema";
 import { aiEnabled, configuredProviders, dailyLimit, MINUTE_LIMIT } from "../lib/aiProviders";
 import { loadEvidence, resolveRole } from "../lib/evidence";
@@ -23,6 +24,8 @@ const chatSchema = z.object({
   message: z.string().trim().min(1, "Write a message").max(MAX_TEXT, `Keep the message under ${MAX_TEXT} characters`),
   image: z.object({ mimeType: z.string().max(30), dataBase64: z.string().max(1_400_000) }).nullish(),
   shareContext: z.boolean().default(false),
+  // Ids of study passages the browser found (TF-IDF search runs there). The server rebuilds the text itself.
+  sourceIds: z.array(z.string().max(100)).max(5).default([]),
 });
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -65,7 +68,15 @@ aiRoutes.get("/conversations", async (c) => {
 aiRoutes.get("/conversations/:id", async (c) => {
   const row = await conv(c, idParam(c));
   const messages = await getDb(c).select().from(aiMessages).where(eq(aiMessages.conversationId, row.id)).orderBy(asc(aiMessages.id));
-  return c.json({ ...row, messages });
+  return c.json({
+    ...row,
+    messages: messages.map((m) => {
+      let sources: unknown[] = [];
+      try { sources = m.sourcesJson ? JSON.parse(m.sourcesJson) : []; } catch { /* a malformed value just shows no citations */ }
+      const { sourcesJson: _omit, ...rest } = m;
+      return { ...rest, sources };
+    }),
+  });
 });
 
 aiRoutes.delete("/conversations/:id", async (c) => {
@@ -117,6 +128,13 @@ aiRoutes.post("/chat", validate("json", chatSchema), async (c) => {
     }
   }
 
+  // retrieved study passages: looked up by id on the server, so a client cannot invent a "source"
+  const sources = [...new Set(body.sourceIds)].map((id) => passageById(id)).filter((p): p is NonNullable<typeof p> => !!p);
+  if (sources.length) system = `${system}
+
+${referenceNote(sources.map((p) => ({ kind: KIND_LABEL[p.kind], title: p.title, text: p.text })))}`;
+  const citations = sources.map((p, i) => ({ n: i + 1, id: p.id, kind: p.kind, title: p.title, link: p.link }));
+
   // count the attempt before calling out, so a retry loop cannot burn the provider quota
   await c.env.DB.prepare(
     "INSERT INTO ai_usage (user_id, day, count) VALUES (?, ?, 1) ON CONFLICT(user_id, day) DO UPDATE SET count = count + 1",
@@ -145,12 +163,12 @@ aiRoutes.post("/chat", validate("json", chatSchema), async (c) => {
   }
   await db.insert(aiMessages).values([
     { conversationId: conversation.id, role: "user", content: body.message, hadImage: !!body.image },
-    { conversationId: conversation.id, role: "assistant", content: result.text, provider: result.provider, model: result.model },
+    { conversationId: conversation.id, role: "assistant", content: result.text, provider: result.provider, model: result.model, sourcesJson: citations.length ? JSON.stringify(citations) : null },
   ]);
 
   return c.json({
     conversationId: conversation.id,
-    reply: { content: result.text, provider: result.provider, model: result.model },
+    reply: { content: result.text, provider: result.provider, model: result.model, sources: citations },
     fellBack: result.attempts.length > 1,
     attempts: result.attempts.map((a) => ({ provider: a.provider, ok: a.ok, reason: a.reason })),
     usedToday: await usedToday(c),

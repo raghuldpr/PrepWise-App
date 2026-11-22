@@ -327,6 +327,8 @@ export const aiMessages = sqliteTable(
     role: text("role", { enum: ["user", "assistant"] }).notNull(),
     content: text("content").notNull(),
     hadImage: integer("had_image", { mode: "boolean" }).notNull().default(false),
+    // Citations shown with an assistant reply: [{ n, id, kind, title, link }]. Passage text is never stored.
+    sourcesJson: text("sources_json"),
     provider: text("provider"),
     model: text("model"),
     createdAt: text("created_at").notNull().default(now),

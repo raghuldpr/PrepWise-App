@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildMessages, callProvider, ChainError, checkImage, contextNote, runChain, titleFrom, type Fetch, type ProviderConfig } from "./index";
+import { buildMessages, callProvider, ChainError, checkImage, contextNote, referenceNote, runChain, titleFrom, type Fetch, type ProviderConfig } from "./index";
 
 const P = (id: string, over: Partial<ProviderConfig> = {}): ProviderConfig => ({ id, baseUrl: `https://${id}.test/v1/`, model: `${id}-model`, apiKey: `key-${id}`, vision: true, ...over });
 const ok = (text: string) => ({ ok: true, status: 200, json: async () => ({ choices: [{ message: { content: text } }] }), text: async () => text });
@@ -118,5 +118,15 @@ describe("prompt helpers", () => {
     expect(titleFrom("  How do I   explain my project?  ")).toBe("How do I explain my project?");
     expect(titleFrom("x".repeat(100))).toHaveLength(60);
     expect(titleFrom("   ")).toBe("New conversation");
+  });
+  it("builds a delimited, numbered reference block that is labelled as data", () => {
+    const note = referenceNote([{ kind: "Interview question", title: "What is ACID?", text: "Atomicity, consistency." }, { kind: "Learning topic", title: "Docker", text: "Containers." }]);
+    expect(note).toMatch(/not instructions/);
+    expect(note).toContain("<<<REFERENCE_MATERIAL");
+    expect(note).toContain("REFERENCE_MATERIAL>>>");
+    expect(note).toContain("[1] (Interview question) What is ACID?\nAtomicity, consistency.");
+    expect(note).toContain("[2] (Learning topic) Docker");
+    expect(note).toMatch(/cite/);
+    expect(referenceNote([])).toBe("");
   });
 });

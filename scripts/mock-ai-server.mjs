@@ -32,7 +32,7 @@ const server = createServer((req, res) => {
     if (mode === "slow") { await new Promise((r) => setTimeout(r, 30000)); }
     if (mode === "empty") return send(200, { choices: [{ message: { content: "" } }] });
     const text = Array.isArray(last?.content) ? last.content.find((p) => p.type === "text")?.text : last?.content;
-    send(200, { choices: [{ message: { content: `[${key}/${payload.model}] msgs=${msgs.length} image=${image} ctx=${system.includes("About the student")} you said: ${String(text).slice(0, 60)}` } }] });
+    send(200, { choices: [{ message: { content: `[${key}/${payload.model}] msgs=${msgs.length} image=${image} ctx=${system.includes("About the student")} refs=${(system.match(/\n\[\d\] \(/g) ?? []).length} marker=${system.includes("<<<REFERENCE_MATERIAL")} you said: ${String(text).slice(0, 60)}` } }] });
   });
 });
 server.listen(PORT, () => console.log(`mock AI provider on http://localhost:${PORT}/v1`));

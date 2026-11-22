@@ -15,6 +15,7 @@ import Technical from './pages/placement/Technical';
 import Coding from './pages/placement/Coding';
 import Dsa from './pages/placement/Dsa';
 import SmartPractice from './pages/practice/SmartPractice';
+import StudySearch from './pages/hub/StudySearch';
 import CodingProblemDetail from './pages/placement/CodingProblemDetail';
 import Companies from './pages/placement/Companies';
 import CompanyDetail from './pages/placement/CompanyDetail';
@@ -203,6 +204,7 @@ export default function App() {
                   <Route path="/hub/resume/result/:id" element={<ResumeResult />} />
                   <Route path="/hub/projects" element={<ProjectFinder />} />
                   <Route path="/hub/projects/:id" element={<ProjectDetail />} />
+                  <Route path="/hub/search" element={<StudySearch />} />
                   <Route path="/hub/skill-gap" element={<SkillGap />} />
                   <Route path="/hub/roadmap" element={<Roadmap />} />
                   <Route path="/hub/study-plan" element={<StudyPlan />} />

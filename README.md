@@ -42,7 +42,8 @@ It was rebuilt from a Spring Boot and MySQL project into a modular app that:
 | **Project Finder** | 28 portfolio projects ranked for your role and gaps, with build plans | Rule-based ranking with reasons |
 | **Mock Interview** | Technical, HR and mixed rounds with adaptive difficulty, a detailed report and history | 71 technical and 16 HR questions scored by which key ideas an answer covers |
 | **Coding Practice** | 27 problems with 205 tests; write JavaScript or Python and run it instantly | Code runs in a Web Worker on your device; infinite loops are stopped after 2 seconds |
-| **AI Assistant** *(optional)* | Chat with image upload for screenshots of questions or errors | Gemini, Groq and OpenRouter with automatic fallback; off until you add a key |
+| **Study Search** | Ask a question in your own words and get the closest topics, interview answers, practice questions and coding problems | TF-IDF with cosine similarity, running in your browser; no AI |
+| **AI Assistant** *(optional)* | Chat with image upload for screenshots of questions or errors | Gemini, Groq and OpenRouter with automatic fallback, and cites PrepWise's own material as sources; off until you add a key |
 
 Every module is explained, with what was verified and its known limits, in the [iteration documents](#documentation).
 
@@ -229,6 +230,7 @@ Found a vulnerability? Please open a private security advisory on GitHub rather 
 | [Iteration 7](docs/ITERATION-7.md) | Optional AI assistant |
 | [Iteration 8](docs/ITERATION-8.md) | Hardening, CI and docs |
 | [Iteration 9](docs/ITERATION-9.md) | Smart Practice (reinforcement learning) |
+| [Iteration 10](docs/ITERATION-10.md) | Study search and retrieval-augmented assistant |
 | [Demo script](docs/DEMO.md) | A 10-minute walkthrough |
 
 ## Contributing
