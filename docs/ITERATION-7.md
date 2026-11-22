@@ -47,3 +47,19 @@ It tests each provider with a text question and a small image and tells you whic
 - Free quotas change; a provider can start answering 429 at any time, which is what the fallback is for.
 - Replies are not streamed; a slow answer shows a spinner for up to 20 s per provider (worst case about a minute).
 - Answers can be wrong. The page says so; nothing in PrepWise relies on them.
+
+## When the AI cannot answer (added after the first live test)
+
+If the student has used the daily allowance, a per-minute limit is hit, every provider fails or runs out of quota, or the connection drops, the assistant does not just show an error. It falls back to **search**: the browser finds the closest passages from PrepWise's own study material (Iteration 10) and shows them under a heading that says "search result, not AI", with the reason the AI was unavailable. Nothing is saved for these replies and no AI quota is used. Request problems such as an unreadable image still show an error and keep the text so it can be fixed.
+
+Order of fallbacks for one message: the providers in `AI_PROVIDERS` order, then study search.
+
+## Live test with real keys (first run)
+
+| Provider | Result |
+|---|---|
+| Groq (`qwen/qwen3.8-27b`) | Text answered and cited a PrepWise source; an image question ("what colour is the square?") answered "Red" |
+| Gemini (`gemini-3.8-flash`) | **Key rejected.** The most likely cause is a key of the wrong kind: Gemini's OpenAI-compatible endpoint needs a key from Google AI Studio (https://aistudio.google.com/apikey), not a Vertex AI key. Not working yet |
+| OpenRouter (`google/gemma-4-31b-it:free`) | **Rate limited** at the time of the test (free models share a small quota). It may work later |
+
+Groq is first in `AI_PROVIDERS`, so the assistant works today. With only Gemini enabled (a temporary test), the live page showed the study-search fallback correctly.

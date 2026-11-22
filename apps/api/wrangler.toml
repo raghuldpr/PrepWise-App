@@ -19,9 +19,9 @@ migrations_dir = "migrations"
 # Providers are tried in AI_PROVIDERS order; the next one is used when one fails. Model names change often:
 # check them with scripts/check-ai-providers.mjs and edit below.
 [vars]
-AI_ENABLED = "false"
-AI_PROVIDERS = "gemini,groq,openrouter"
+AI_ENABLED = "true"
+AI_PROVIDERS = "groq,gemini,openrouter"
 AI_DAILY_LIMIT = "25"
 GEMINI_MODEL = "gemini-3.8-flash"
 GROQ_MODEL = "qwen/qwen3.8-27b"
-OPENROUTER_MODEL = "openrouter/free"
+OPENROUTER_MODEL = "google/gemma-4-31b-it:free"

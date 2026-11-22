@@ -92,6 +92,18 @@ export default function AiAssistant() {
     try { setImage(await resizeImage(file)); } catch (err) { setError(err.message); }
   };
 
+  // When the AI cannot answer (daily limit used, every provider out of quota or down), the student still gets help:
+  // the closest passages from PrepWise's own study material, found on this device. It is labelled as a search result.
+  const studyFallback = async (message, reason) => {
+    let hits = [];
+    try { hits = await searchStudy(message, { k: 4, minScore: 0.1 }); } catch { /* the material could not load either */ }
+    const sources = hits.map((h, i) => ({ n: i + 1, id: h.id, title: h.passage.title, link: h.passage.link, snippet: h.passage.text.slice(0, 220) }));
+    const content = hits.length
+      ? `${reason} Here is the closest material from PrepWise's own notes instead. This is a search result, not an AI answer.`
+      : `${reason} I could not find matching study material for that question either. Try the Study search page with other words.`;
+    setMessages((m) => [...m, { role: 'assistant', content, sources, fallback: true }]);
+  };
+
   const send = async (override) => {
     const message = (override ?? text).trim();
     if (!message || sending) return;
@@ -99,6 +111,11 @@ export default function AiAssistant() {
     const attached = image;
     setMessages((m) => [...m, { role: 'user', content: message, hadImage: !!attached, preview: attached?.previewUrl }]);
     setText(''); setImage(null);
+    if (status && status.dailyLimit - status.usedToday <= 0) {
+      await studyFallback(message, "You have used all of today's AI messages (they reset at midnight UTC).");
+      setSending(false);
+      return;
+    }
     try {
       // Find study passages on this device first (TF-IDF); only their ids are sent, and the server rebuilds the text.
       let sourceIds = [];
@@ -118,9 +135,16 @@ export default function AiAssistant() {
       }
       refresh().catch(() => {});
     } catch (err) {
-      setMessages((m) => m.slice(0, -1)); // the question was not answered, so take it back out
-      setText(message); setImage(attached);
-      setError(errorMessage(err, 'Could not reach the assistant. Please try again.'));
+      const code = err.response?.status;
+      // Limits and outages (429 limit or rate limit, 502 every provider failed, 503/504, no connection): fall back to search.
+      if (!err.response || [429, 502, 503, 504].includes(code)) {
+        await studyFallback(message, errorMessage(err, 'The AI assistant could not be reached.'));
+        if (code === 429) refresh().catch(() => {});
+      } else {
+        setMessages((m) => m.slice(0, -1)); // a request problem (for example a bad image): take the question back out so it can be fixed
+        setText(message); setImage(attached);
+        setError(errorMessage(err, 'Could not reach the assistant. Please try again.'));
+      }
     } finally { setSending(false); }
   };
 
@@ -172,8 +196,8 @@ export default function AiAssistant() {
                   {m.role === 'assistant' ? <FormattedMarkdown content={m.content} /> : <p className="whitespace-pre-wrap">{m.content}</p>}
                   {m.role === 'assistant' && m.sources?.length > 0 && (
                     <div className="mt-2 pt-2 border-t border-[rgba(0,0,0,0.08)] dark:border-neutral-800">
-                      <p className="text-[11px] font-bold uppercase text-[#5E5B56] dark:text-[#A0A0A0] mb-1">Sources from PrepWise</p>
-                      <ol className="space-y-0.5">{m.sources.map((s) => <li key={s.id} className="text-xs"><span className="font-mono">[{s.n}]</span> <Link to={s.link} className="underline text-[#C85232]">{s.title.length > 90 ? `${s.title.slice(0, 87)}...` : s.title}</Link></li>)}</ol>
+                      <p className="text-[11px] font-bold uppercase text-[#5E5B56] dark:text-[#A0A0A0] mb-1">{m.fallback ? 'Closest study material (search result, not AI)' : 'Sources from PrepWise'}</p>
+                      <ol className="space-y-0.5">{m.sources.map((s) => <li key={s.id} className="text-xs"><span className="font-mono">[{s.n}]</span> <Link to={s.link} className="underline text-[#C85232]">{s.title.length > 90 ? `${s.title.slice(0, 87)}...` : s.title}</Link>{s.snippet && <span className="block text-[11px] text-[#5E5B56] dark:text-[#A0A0A0] mt-0.5">{s.snippet}...</span>}</li>)}</ol>
                     </div>
                   )}
                   {m.role === 'assistant' && m.provider && <p className="text-[10px] text-[#5E5B56] dark:text-[#A0A0A0] mt-1">via {PROVIDER_LABEL[m.provider] ?? m.provider}</p>}
@@ -203,7 +227,7 @@ export default function AiAssistant() {
                 <label className="text-xs inline-flex items-center gap-1.5"><input type="checkbox" checked={useSources} onChange={(e) => setUseSources(e.target.checked)} /> Use PrepWise study material as sources</label>
                 <label className="text-xs inline-flex items-center gap-1.5"><input type="checkbox" checked={shareContext} onChange={(e) => setShareContext(e.target.checked)} /> Share my target role and skill names to get tailored answers</label>
               </div>
-              <Button onClick={() => send()} disabled={sending || !text.trim() || left === 0}><Send size={14} /> Send</Button>
+              <Button onClick={() => send()} disabled={sending || !text.trim()}><Send size={14} /> Send</Button>
             </div>
           </Card>
         </div>
