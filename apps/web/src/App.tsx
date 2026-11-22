@@ -14,6 +14,7 @@ import Aptitude from './pages/placement/Aptitude';
 import Technical from './pages/placement/Technical';
 import Coding from './pages/placement/Coding';
 import Dsa from './pages/placement/Dsa';
+import SmartPractice from './pages/practice/SmartPractice';
 import CodingProblemDetail from './pages/placement/CodingProblemDetail';
 import Companies from './pages/placement/Companies';
 import CompanyDetail from './pages/placement/CompanyDetail';
@@ -191,6 +192,7 @@ export default function App() {
                   <Route path="/placement/technical" element={<Technical />} />
                   <Route path="/placement/coding" element={<Coding />} />
                   <Route path="/placement/dsa" element={<Dsa />} />
+                  <Route path="/practice/smart" element={<SmartPractice />} />
                   <Route path="/placement/coding/:id" element={<CodingProblemDetail />} />
                   <Route path="/placement/companies" element={<Companies />} />
                   <Route path="/placement/companies/:id" element={<CompanyDetail />} />

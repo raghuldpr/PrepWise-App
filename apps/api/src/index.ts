@@ -15,6 +15,7 @@ import { resumeRoutes } from "./routes/resume";
 import { roadmapRoutes } from "./routes/roadmap";
 import { studyPlanRoutes } from "./routes/studyPlan";
 import { onboardingRoutes } from "./routes/onboarding";
+import { smartRoutes } from "./routes/smart";
 import { skillRoutes } from "./routes/skills";
 import { userRoutes } from "./routes/users";
 
@@ -44,6 +45,7 @@ app.route("/api/skills", skillRoutes);
 app.route("/api/interviews", interviewRoutes);
 app.route("/api/coding", codingRoutes);
 app.route("/api/ai", aiRoutes);
+app.route("/api/smart", smartRoutes);
 
 app.notFound((c) => c.json(errorBody(404, "Not found"), 404));
 app.onError((err, c) => {

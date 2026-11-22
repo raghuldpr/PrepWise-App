@@ -32,6 +32,20 @@ export default function PlacementHub() {
         </p>
       </div>
 
+      {/* Smart Practice (bandit-chosen topics) */}
+      <Link to="/practice/smart" className="block">
+        <Card hoverable className="flex flex-wrap items-center justify-between gap-4 border-[#C85232]/40">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-[#C85232] text-white flex items-center justify-center"><Brain size={24} /></div>
+            <div>
+              <p className="font-bold font-heading text-lg">Smart Practice</p>
+              <p className="text-sm text-[#5E5B56] dark:text-[#A0A0A0]">Let the app choose your next topic from your recent mistakes, and watch your learning curve.</p>
+            </div>
+          </div>
+          <span className="inline-flex items-center gap-1.5 font-semibold text-[#C85232]">Start <ArrowRight size={16} /></span>
+        </Card>
+      </Link>
+
       {/* Main Placement Modules Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Quantitative & Logical Aptitude */}

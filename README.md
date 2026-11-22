@@ -35,6 +35,7 @@ It was rebuilt from a Spring Boot and MySQL project into a modular app that:
 |---|---|---|
 | **Accounts and onboarding** | Register, log in, profile, skills and goals, settings | httpOnly session cookie, login lockout, log out of all devices |
 | **Practice** | 210 multiple-choice questions across aptitude, technical, DSA and HR topics; progress, accuracy and weak areas | Answers graded on the server; progress per category |
+| **Smart Practice** | The app picks your next topic from your recent mistakes and draws your learning curve | A multi-armed bandit (Thompson sampling), explained in a "Why this topic?" panel |
 | **Companies** | Company profiles and preparation material | Curated content |
 | **Resume Analyzer** | A 100-point score with a breakdown, skills found and missing for your role, fixes, and match against a job description | PDF and DOCX are read **in your browser**; the file is never uploaded |
 | **Skill Gap, Roadmap, Study Plan** | What you cover, what to improve and what is missing for a role; a phased learning roadmap; a dated weekly plan that fits your hours | Prerequisite graph of 62 topics, 9 role profiles; says plainly when the plan does not fit |
@@ -151,7 +152,7 @@ npx tsc -p apps/api --noEmit               # type check
 node scripts/smoke.mjs http://localhost:8787
 ```
 
-Eight smoke suites run against a live Worker, local or deployed: `smoke`, `smoke-practice`, `smoke-resume`, `smoke-learning`, `smoke-interview`, `smoke-coding`, `smoke-security` and `smoke-ai`. Pull requests and pushes run them in CI against a throwaway local database.
+Nine smoke suites run against a live Worker, local or deployed: `smoke`, `smoke-practice`, `smoke-resume`, `smoke-learning`, `smoke-interview`, `smoke-coding`, `smoke-security`, `smoke-ai` and `smoke-smart`. Pull requests and pushes run them in CI against a throwaway local database.
 
 Useful tools: `scripts/author-coding-problems.mjs` regenerates the coding bank and cross-checks every expected output with an independent Python solution, `scripts/check-links.mjs` checks every learning resource link, and `scripts/stress-*.mjs` check worst-case CPU use against production.
 
@@ -227,6 +228,7 @@ Found a vulnerability? Please open a private security advisory on GitHub rather 
 | [Iteration 6](docs/ITERATION-6.md) | Coding practice |
 | [Iteration 7](docs/ITERATION-7.md) | Optional AI assistant |
 | [Iteration 8](docs/ITERATION-8.md) | Hardening, CI and docs |
+| [Iteration 9](docs/ITERATION-9.md) | Smart Practice (reinforcement learning) |
 | [Demo script](docs/DEMO.md) | A 10-minute walkthrough |
 
 ## Contributing

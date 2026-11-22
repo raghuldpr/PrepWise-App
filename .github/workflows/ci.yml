@@ -30,7 +30,7 @@ jobs:
           curl -sf http://localhost:8787/api/health
       - name: Smoke suites
         run: |
-          for f in smoke smoke-practice smoke-resume smoke-learning smoke-interview smoke-coding smoke-security smoke-ai; do
+          for f in smoke smoke-practice smoke-resume smoke-learning smoke-interview smoke-coding smoke-security smoke-ai smoke-smart; do
             echo "== $f"; node scripts/$f.mjs http://localhost:8787 || exit 1
           done
       - name: Worker log (on failure)
