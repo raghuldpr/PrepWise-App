@@ -11,7 +11,12 @@ export type ProviderConfig = {
   apiKey: string;
   vision: boolean;
   headers?: Record<string, string>;
+  /** For providers that are not an HTTP chat endpoint (the Cloudflare Workers AI binding): returns the reply text. */
+  run?: (messages: OpenAiMessage[], ctx: { hasImage: boolean }) => Promise<string>;
 };
+
+/** Short replies are plenty for placement questions, and fewer tokens stretch the free quotas. */
+export const MAX_REPLY_TOKENS = 450;
 
 export type Attempt = { provider: string; ok: boolean; status?: number; ms: number; reason?: string };
 export type ChainResult = { text: string; provider: string; model: string; attempts: Attempt[] };
@@ -37,14 +42,41 @@ export type Fetch = (url: string, init: { method: string; headers: Record<string
 const reasonFor = (status: number) =>
   status === 429 ? "rate limited" : status === 401 || status === 403 ? "key rejected" : status === 404 ? "model or URL not found" : status === 400 ? "request rejected" : status >= 500 ? "provider error" : `HTTP ${status}`;
 
-export async function callProvider(p: ProviderConfig, messages: OpenAiMessage[], fetchFn: Fetch, timeoutMs: number): Promise<{ text: string; status: number }> {
+/** Maps an error thrown by a non-HTTP provider to the same short reasons the HTTP path uses. */
+function classifyRunError(err: unknown): { status: number; message: string } {
+  const m = String((err as { message?: string })?.message ?? err);
+  if (/neuron|allocation|quota|rate|limit|capacity|too many|429/i.test(m)) return { status: 429, message: "rate limited" };
+  if (/auth|permission|forbidden|not allowed|agree|license|401|403/i.test(m)) return { status: 403, message: "key rejected" };
+  if (/not found|no such model|unknown model|deprecat|404/i.test(m)) return { status: 404, message: "model or URL not found" };
+  return { status: 500, message: "provider error" };
+}
+
+export async function callProvider(p: ProviderConfig, messages: OpenAiMessage[], fetchFn: Fetch, timeoutMs: number, hasImage = false): Promise<{ text: string; status: number }> {
+  if (p.run) {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    try {
+      const text = await Promise.race([
+        p.run(messages, { hasImage }),
+        new Promise<never>((_, reject) => { timer = setTimeout(() => reject(Object.assign(new Error("timed out"), { status: 0, timeout: true })), timeoutMs); }),
+      ]);
+      if (!String(text ?? "").trim()) throw Object.assign(new Error("empty reply"), { status: 200 });
+      return { text: String(text).trim(), status: 200 };
+    } catch (err) {
+      const e = err as { status?: number; message?: string; timeout?: boolean };
+      if (e.timeout || e.message === "empty reply") throw err;
+      const c = classifyRunError(err);
+      throw Object.assign(new Error(c.message), { status: c.status });
+    } finally {
+      if (timer) clearTimeout(timer);
+    }
+  }
   const ctl = new AbortController();
   const timer = setTimeout(() => ctl.abort(), timeoutMs);
   try {
     const res = await fetchFn(`${p.baseUrl.replace(/\/+$/, "")}/chat/completions`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${p.apiKey}`, ...(p.headers ?? {}) },
-      body: JSON.stringify({ model: p.model, messages, temperature: 0.4, max_tokens: 900 }),
+      body: JSON.stringify({ model: p.model, messages, temperature: 0.4, max_tokens: MAX_REPLY_TOKENS }),
       signal: ctl.signal,
     });
     if (!res.ok) throw Object.assign(new Error(reasonFor(res.status)), { status: res.status });
@@ -73,7 +105,7 @@ export async function runChain(providers: ProviderConfig[], messages: OpenAiMess
   for (const p of usable) {
     const t0 = now();
     try {
-      const { text, status } = await callProvider(p, messages, fetchFn, timeoutMs);
+      const { text, status } = await callProvider(p, messages, fetchFn, timeoutMs, hasImage);
       attempts.push({ provider: p.id, ok: true, status, ms: now() - t0 });
       return { text, provider: p.id, model: p.model, attempts };
     } catch (err) {
@@ -102,5 +134,25 @@ export function checkImage(img: ImagePart): string | null {
   if (bytes > MAX_IMAGE_BYTES) return `The image is too large (limit ${Math.round(MAX_IMAGE_BYTES / 1000)} KB after resizing).`;
   const head = atob(img.dataBase64.slice(0, 20)).split("").map((c) => c.charCodeAt(0));
   if (!SIGNATURES[img.mimeType](head)) return "The file does not match its image type.";
+  return null;
+}
+
+// ---- circuit breaker: stop calling a provider that has just told us it is out of quota -------------------------------
+// State is a map of provider id to "blocked until" (epoch ms), kept by the caller (the API stores it in D1).
+
+/** Providers that may be tried now. */
+export function availableProviders(providers: ProviderConfig[], blockedUntil: Record<string, number>, now: number): ProviderConfig[] {
+  return providers.filter((p) => !(blockedUntil[p.id] > now));
+}
+
+/**
+ * How long to skip a provider after a failed attempt, or null to keep trying it.
+ * A rate limit or exhausted quota is skipped for `seconds`; a rejected key or missing model for ten times as long
+ * (it will not fix itself); timeouts, network errors, server errors and empty replies are transient and never blocked.
+ */
+export function blockUntil(attempt: Attempt, now: number, seconds: number): number | null {
+  if (attempt.ok || seconds <= 0) return null;
+  if (attempt.reason === "rate limited") return now + seconds * 1000;
+  if (attempt.reason === "key rejected" || attempt.reason === "model or URL not found") return now + seconds * 10_000;
   return null;
 }

@@ -63,3 +63,29 @@ Order of fallbacks for one message: the providers in `AI_PROVIDERS` order, then 
 | OpenRouter (`google/gemma-4-31b-it:free`) | **Rate limited** at the time of the test (free models share a small quota). It may work later |
 
 Groq is first in `AI_PROVIDERS`, so the assistant works today. With only Gemini enabled (a temporary test), the live page showed the study-search fallback correctly.
+
+## Providers and free-quota protection (final set)
+
+**Providers, in order:** Groq, Cloudflare Workers AI, OpenRouter. Gemini is no longer used (the code still supports it, but it is not in the default order and its key is not needed). Details from each provider's official documentation, read on 22 November 2026:
+
+| Provider | Free allowance | Notes |
+|---|---|---|
+| Groq (`qwen/qwen3.8-27b`) | 30 requests a minute, 1,000 a day, but only **8,000 tokens a minute and 200,000 a day**, shared by the whole organisation (so by all students) | The token caps are what runs out, not the request counts. The page did not clearly label which plan its table described, so check your account's limits page |
+| Cloudflare Workers AI | **10,000 Neurons a day**, free, on the Cloudflare account that hosts the app; no key. Past the allowance requests fail | Uses the `AI` binding in `wrangler.toml`. Text: `@cf/meta/llama-3.3-70b-instruct-fp8-fast` (about 75 Neurons for a typical reply, so about 130 replies a day). Images: `@cf/meta/llama-4-scout-17b-16e-instruct`. Some other models need a paid plan |
+| OpenRouter (`google/gemma-4-31b-it:free`) | 20 requests a minute and **50 a day**; 1,000 a day after buying $10 of credit once | Small backup; it was rate limited when tested |
+
+Not used: Cerebras (no renewing free tier: a one-time $5 credit that needs a card and expires after 30 days), GitHub Models (retired on 30 July 2026), Hugging Face (no free credits), Mistral (no free tier could be confirmed).
+
+**What protects the quotas** (all in `apps/api/src/routes/ai.ts`, `packages/core/src/ai`):
+
+- **Fewer tokens per message:** at most 2 reference passages (each cut to 600 characters), the last 4 messages of history, and replies capped at 450 tokens. Roughly a third of the tokens of the first version.
+- **Circuit breaker:** when a provider reports an exhausted quota (HTTP 429, or a Workers AI allowance error) it is skipped for 120 seconds (`AI_BREAKER_SECONDS`); a rejected key or missing model is skipped for 20 minutes. Timeouts, network errors and empty replies are transient and never blocked. State is two small rows in `ai_provider_state`, written only on failures.
+- **Site-wide daily budget:** `AI_SITE_DAILY_LIMIT` (300) messages for all students together per UTC day, then the page falls back to study search.
+- **Per student:** 10 messages a day and 3 a minute (`AI_DAILY_LIMIT`, `AI_MINUTE_LIMIT`). Failed requests are refunded.
+- **Fallback:** when no provider can answer, or any limit above is reached, the page shows the closest passages from PrepWise's own notes, labelled as a search result.
+
+**Live test (real providers):** Groq answered text with a cited PrepWise source and "Red" for the image question; Workers AI alone also answered the text question with a citation and "Red." for the image; OpenRouter was rate limited.
+
+**Tests:** 151 unit tests (provider runner that is not an HTTP endpoint, error mapping, breaker rules). `scripts/smoke-ai.mjs --mock` still passes (30+ checks), and a new local-only `scripts/smoke-ai-limits.mjs` (12 checks) proves the breaker skips a limited provider without calling it, a recovered provider stays skipped until the block ends, a transient error does not block, everything-out-of-quota answers at once without calling anyone and without using the student's allowance, and the site budget refuses the fifth message for every student.
+
+**Limits you should know:** the numbers above are the providers' free allowances today and can change; the Workers AI Neuron costs are my arithmetic from their price list; with these protections the combined free capacity is still only a few hundred messages a day, which is why the fallback exists.

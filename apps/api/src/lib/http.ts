@@ -15,6 +15,10 @@ export type Bindings = {
   AI_ENABLED?: string;
   AI_PROVIDERS?: string; // comma separated order, for example "gemini,groq,openrouter"
   AI_DAILY_LIMIT?: string;
+  // Cloudflare Workers AI binding (free daily allowance, no key). Optional: absent when not configured.
+  AI?: { run(model: string, inputs: unknown): Promise<unknown> };
+  WORKERSAI_MODEL?: string; WORKERSAI_VISION_MODEL?: string;
+  AI_SITE_DAILY_LIMIT?: string; AI_MINUTE_LIMIT?: string; AI_BREAKER_SECONDS?: string;
   GEMINI_API_KEY?: string; GEMINI_MODEL?: string; GEMINI_BASE_URL?: string;
   GROQ_API_KEY?: string; GROQ_MODEL?: string; GROQ_BASE_URL?: string;
   OPENROUTER_API_KEY?: string; OPENROUTER_MODEL?: string; OPENROUTER_BASE_URL?: string;

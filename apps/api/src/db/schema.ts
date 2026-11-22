@@ -336,6 +336,20 @@ export const aiMessages = sqliteTable(
   (t) => [index("ai_msg_conv_idx").on(t.conversationId, t.id)],
 );
 
+// Providers that recently told us they are out of quota, so the next messages skip them instead of waiting for a failure.
+export const aiProviderState = sqliteTable("ai_provider_state", {
+  provider: text("provider").primaryKey(),
+  blockedUntil: text("blocked_until").notNull(),
+  reason: text("reason"),
+  updatedAt: text("updated_at").notNull().default(now),
+});
+
+// All students together, per UTC day: protects the free provider quotas.
+export const aiSiteUsage = sqliteTable("ai_site_usage", {
+  day: text("day").primaryKey(),
+  count: integer("count").notNull().default(0),
+});
+
 export const aiUsage = sqliteTable(
   "ai_usage",
   {

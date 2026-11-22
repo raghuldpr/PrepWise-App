@@ -120,7 +120,7 @@ export default function AiAssistant() {
       // Find study passages on this device first (TF-IDF); only their ids are sent, and the server rebuilds the text.
       let sourceIds = [];
       if (useSources) {
-        try { sourceIds = (await searchStudy(message, { k: 4, minScore: 0.12 })).map((h) => h.id); } catch { /* answer without sources */ }
+        try { sourceIds = (await searchStudy(message, { k: 2, minScore: 0.15 })).map((h) => h.id); } catch { /* answer without sources */ }
       }
       const res = await sendAiMessage({
         conversationId: activeId, message, shareContext, sourceIds,

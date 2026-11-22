@@ -64,6 +64,13 @@
       "when": 1795334609409,
       "tag": "0011_ai_sources",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1795338092722,
+      "tag": "0012_ai_limits",
+      "breakpoints": true
     }
   ]
 }

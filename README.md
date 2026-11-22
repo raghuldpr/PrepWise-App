@@ -43,7 +43,7 @@ It was rebuilt from a Spring Boot and MySQL project into a modular app that:
 | **Mock Interview** | Technical, HR and mixed rounds with adaptive difficulty, a detailed report and history | 71 technical and 16 HR questions scored by which key ideas an answer covers |
 | **Coding Practice** | 27 problems with 205 tests; write JavaScript or Python and run it instantly | Code runs in a Web Worker on your device; infinite loops are stopped after 2 seconds |
 | **Study Search** | Ask a question in your own words and get the closest topics, interview answers, practice questions and coding problems | TF-IDF with cosine similarity, running in your browser; no AI |
-| **AI Assistant** *(optional)* | Chat with image upload for screenshots of questions or errors | Gemini, Groq and OpenRouter with automatic fallback, and cites PrepWise's own material as sources; off until you add a key |
+| **AI Assistant** *(optional)* | Chat with image upload for screenshots of questions or errors | Groq, Cloudflare Workers AI and OpenRouter with automatic fallback, free-quota protection, and cited PrepWise sources |
 
 Every module is explained, with what was verified and its known limits, in the [iteration documents](#documentation).
 
@@ -74,7 +74,7 @@ flowchart LR
   B["Browser<br/>React 19 + Vite + Tailwind<br/>resume parsing, code judge<br/>(Web Workers, Pyodide)"]
   W["Cloudflare Worker<br/>Hono API + static app"]
   D[("D1 (SQLite)")]
-  A["Optional AI providers<br/>Gemini, Groq, OpenRouter"]
+  A["Optional AI providers<br/>Groq, Workers AI, OpenRouter"]
   B -- "same origin" --> W
   W --> D
   W -. "only if enabled" .-> A
@@ -195,7 +195,7 @@ As a rough estimate, this is enough for a few hundred active students a day. Lim
 
 ### Optional AI assistant
 
-Off by default. To enable it, add a provider key as a Worker secret (`npx wrangler secret put GEMINI_API_KEY`, and optionally `GROQ_API_KEY` and `OPENROUTER_API_KEY`), run `node scripts/check-ai-providers.mjs` to confirm the model names work for your keys, then set `AI_ENABLED = "true"` in `apps/api/wrangler.toml` and redeploy. Messages and images go to the chosen provider, so the page shows a privacy notice. Details: [docs/ITERATION-7.md](docs/ITERATION-7.md).
+On in the deployed site (`AI_ENABLED` in `apps/api/wrangler.toml`). It tries Groq, then Cloudflare Workers AI (no key: it uses your account's free daily allowance through the `AI` binding), then OpenRouter, and when none can answer or a limit is reached it falls back to searching the study material. Add keys as Worker secrets (`npx wrangler secret put GROQ_API_KEY`, and optionally `OPENROUTER_API_KEY`), and run `node scripts/check-ai-providers.mjs` to confirm model names. Per-student, site-wide and circuit-breaker limits protect the free quotas. Messages and images go to the chosen provider, so the page shows a privacy notice. Details: [docs/ITERATION-7.md](docs/ITERATION-7.md).
 
 ## Security
 

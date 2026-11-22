@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildMessages, callProvider, ChainError, checkImage, contextNote, referenceNote, runChain, titleFrom, type Fetch, type ProviderConfig } from "./index";
+import { availableProviders, blockUntil, buildMessages, callProvider, ChainError, checkImage, contextNote, referenceNote, runChain, titleFrom, type Attempt, type Fetch, type ProviderConfig } from "./index";
 
 const P = (id: string, over: Partial<ProviderConfig> = {}): ProviderConfig => ({ id, baseUrl: `https://${id}.test/v1/`, model: `${id}-model`, apiKey: `key-${id}`, vision: true, ...over });
 const ok = (text: string) => ({ ok: true, status: 200, json: async () => ({ choices: [{ message: { content: text } }] }), text: async () => text });
@@ -128,5 +128,58 @@ describe("prompt helpers", () => {
     expect(note).toContain("[2] (Learning topic) Docker");
     expect(note).toMatch(/cite/);
     expect(referenceNote([])).toBe("");
+  });
+});
+
+describe("providers that are not HTTP endpoints (Cloudflare Workers AI binding)", () => {
+  const bound = (run: ProviderConfig["run"]): ProviderConfig => ({ id: "workersai", baseUrl: "", model: "@cf/test", apiKey: "binding", vision: true, run });
+  const never: Fetch = async () => { throw new Error("fetch must not be called"); };
+
+  it("returns the reply text and tells the runner whether an image is present", async () => {
+    const seen: boolean[] = [];
+    const r = await runChain([bound(async (_m, ctx) => { seen.push(ctx.hasImage); return "  hello  "; })], MSGS, true, never);
+    expect(r).toMatchObject({ text: "hello", provider: "workersai" });
+    expect(seen).toEqual([true]);
+  });
+  it("maps quota, permission and model errors to the same short reasons as HTTP providers", async () => {
+    const cases: [string, string][] = [
+      ["4006: you have used up your daily free allocation of 10,000 neurons", "rate limited"],
+      ["3040: Capacity temporarily exceeded", "rate limited"],
+      ["AiError: Forbidden: you must agree to the license", "key rejected"],
+      ["5007: No such model @cf/x", "model or URL not found"],
+      ["something exploded", "provider error"],
+    ];
+    for (const [message, reason] of cases) {
+      const err = await runChain([bound(async () => { throw new Error(message); })], MSGS, false, never).catch((e) => e);
+      expect(err.attempts[0].reason, message).toBe(reason);
+      expect(JSON.stringify(err.attempts)).not.toContain(message);
+    }
+  });
+  it("treats an empty reply as a failure and times out a slow run, then falls back to the next provider", async () => {
+    const f: Fetch = async () => ok("from http") as never;
+    const r1 = await runChain([bound(async () => "   "), P("b")], MSGS, false, f);
+    expect(r1.provider).toBe("b");
+    expect(r1.attempts[0].reason).toBe("empty reply");
+    const r2 = await runChain([bound(() => new Promise<string>(() => {})), P("b")], MSGS, false, f, { timeoutMs: 20 });
+    expect(r2.provider).toBe("b");
+    expect(r2.attempts[0].reason).toBe("timed out");
+  });
+});
+
+describe("circuit breaker", () => {
+  const A = (reason: string): Attempt => ({ provider: "x", ok: false, ms: 1, reason });
+  it("blocks quota failures briefly and a rejected key for ten times as long, never transient errors", () => {
+    expect(blockUntil(A("rate limited"), 1000, 120)).toBe(1000 + 120_000);
+    expect(blockUntil(A("key rejected"), 1000, 120)).toBe(1000 + 1_200_000);
+    expect(blockUntil(A("model or URL not found"), 1000, 120)).toBe(1000 + 1_200_000);
+    for (const reason of ["timed out", "network error", "provider error", "empty reply", "request rejected"]) expect(blockUntil(A(reason), 1000, 120), reason).toBeNull();
+    expect(blockUntil({ provider: "x", ok: true, ms: 1 }, 1000, 120)).toBeNull();
+    expect(blockUntil(A("rate limited"), 1000, 0)).toBeNull(); // seconds = 0 turns the breaker off
+  });
+  it("lists only providers that are not currently blocked", () => {
+    const ps = [P("a"), P("b"), P("c")];
+    expect(availableProviders(ps, { a: 5000, b: 900 }, 1000).map((p) => p.id)).toEqual(["b", "c"]); // a is blocked until 5000, b's block has expired
+    expect(availableProviders(ps, {}, 1000)).toHaveLength(3);
+    expect(availableProviders(ps, { a: 5000, b: 5000, c: 5000 }, 1000)).toEqual([]);
   });
 });

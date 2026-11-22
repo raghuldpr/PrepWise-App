@@ -1,10 +1,10 @@
 import { Hono } from "hono";
 import { and, asc, desc, eq, notInArray } from "drizzle-orm";
 import { z } from "zod";
-import { analyzeGap, buildMessages, referenceNote, checkImage, ChainError, contextNote, runChain, SYSTEM_PROMPT, titleFrom, type ChatTurn, type Fetch } from "@prepwise/core";
+import { analyzeGap, availableProviders, blockUntil, buildMessages, referenceNote, checkImage, ChainError, contextNote, runChain, SYSTEM_PROMPT, titleFrom, type Attempt, type ChatTurn, type Fetch } from "@prepwise/core";
 import { passageById, KIND_LABEL } from "../../../../packages/content/src/rag-corpus";
 import { aiConversations, aiMessages } from "../db/schema";
-import { aiEnabled, configuredProviders, dailyLimit, MINUTE_LIMIT } from "../lib/aiProviders";
+import { aiEnabled, breakerSeconds, configuredProviders, dailyLimit, minuteLimit, siteDailyLimit } from "../lib/aiProviders";
 import { loadEvidence, resolveRole } from "../lib/evidence";
 import { type AppEnv, getDb, httpError, requireAuth, validate } from "../lib/http";
 
@@ -16,7 +16,7 @@ aiRoutes.use("*", requireAuth);
 
 const MAX_CONVERSATIONS = 30;
 const MAX_MESSAGES = 60; // per conversation
-const HISTORY_TURNS = 10; // sent to the provider
+const HISTORY_TURNS = 4; // earlier messages sent to the provider (fewer tokens stretch the free quotas)
 const MAX_TEXT = 4000;
 
 const chatSchema = z.object({
@@ -103,7 +103,32 @@ aiRoutes.post("/chat", validate("json", chatSchema), async (c) => {
     `SELECT COUNT(*) AS n FROM ai_messages m JOIN ai_conversations v ON v.id = m.conversation_id
      WHERE v.user_id = ? AND m.role = 'user' AND m.created_at > ?`,
   ).bind(userId, new Date(Date.now() - 60_000).toISOString()).first<{ n: number }>();
-  if ((recent?.n ?? 0) >= MINUTE_LIMIT) throw httpError(429, "Slow down: at most 5 messages a minute.");
+  if ((recent?.n ?? 0) >= minuteLimit(c.env)) throw httpError(429, `Slow down: at most ${minuteLimit(c.env)} messages a minute.`);
+
+  // all students together: stop before the free provider quotas run out for everyone
+  const siteLimit = siteDailyLimit(c.env);
+  const site = await c.env.DB.prepare("SELECT count FROM ai_site_usage WHERE day = ?").bind(today()).first<{ count: number }>();
+  if ((site?.count ?? 0) >= siteLimit) throw httpError(429, "The assistant has reached its free daily limit across all students. It resets at midnight UTC.");
+
+  // circuit breaker: skip providers that recently reported an exhausted quota instead of waiting for them to fail again
+  const breakerSecs = breakerSeconds(c.env);
+  const blockedRows = breakerSecs > 0
+    ? (await c.env.DB.prepare("SELECT provider, blocked_until AS until FROM ai_provider_state").all<{ provider: string; until: string }>()).results
+    : [];
+  const blocked = Object.fromEntries(blockedRows.map((r) => [r.provider, Date.parse(r.until) || 0]));
+  const usable = availableProviders(providers, blocked, Date.now());
+  if (usable.length === 0) throw httpError(502, "Every AI provider is out of quota for the moment; they are skipped for a few minutes after a limit. Try again shortly.");
+  const recordBlocks = async (attempts: Attempt[]) => {
+    const t = Date.now();
+    for (const a of attempts) {
+      const until = blockUntil(a, t, breakerSecs);
+      if (until) {
+        await c.env.DB.prepare(
+          "INSERT INTO ai_provider_state (provider, blocked_until, reason, updated_at) VALUES (?, ?, ?, ?) ON CONFLICT(provider) DO UPDATE SET blocked_until = excluded.blocked_until, reason = excluded.reason, updated_at = excluded.updated_at",
+        ).bind(a.provider, new Date(until).toISOString(), a.reason ?? null, new Date(t).toISOString()).run();
+      }
+    }
+  };
 
   // conversation and history
   let conversation = body.conversationId ? await conv(c, body.conversationId) : null;
@@ -139,20 +164,28 @@ ${referenceNote(sources.map((p) => ({ kind: KIND_LABEL[p.kind], title: p.title, 
   await c.env.DB.prepare(
     "INSERT INTO ai_usage (user_id, day, count) VALUES (?, ?, 1) ON CONFLICT(user_id, day) DO UPDATE SET count = count + 1",
   ).bind(userId, today()).run();
-  const refund = () => c.env.DB.prepare("UPDATE ai_usage SET count = MAX(0, count - 1) WHERE user_id = ? AND day = ?").bind(userId, today()).run();
+  await c.env.DB.prepare(
+    "INSERT INTO ai_site_usage (day, count) VALUES (?, 1) ON CONFLICT(day) DO UPDATE SET count = count + 1",
+  ).bind(today()).run();
+  const refund = async () => {
+    await c.env.DB.prepare("UPDATE ai_usage SET count = MAX(0, count - 1) WHERE user_id = ? AND day = ?").bind(userId, today()).run();
+    await c.env.DB.prepare("UPDATE ai_site_usage SET count = MAX(0, count - 1) WHERE day = ?").bind(today()).run();
+  };
 
   let result;
   try {
-    result = await runChain(providers, buildMessages(system, history, body.message, body.image ?? undefined), !!body.image, fetch as unknown as Fetch);
+    result = await runChain(usable, buildMessages(system, history, body.message, body.image ?? undefined), !!body.image, fetch as unknown as Fetch);
   } catch (err) {
     await refund();
     if (err instanceof ChainError) {
+      await recordBlocks(err.attempts);
       const tried = err.attempts.map((a) => `${a.provider}: ${a.reason ?? "failed"}`).join("; ");
       throw httpError(502, `${err.message}${tried ? ` (${tried})` : ""}`);
     }
     throw err;
   }
 
+  await recordBlocks(result.attempts); // a provider that failed on the way to this answer may need a rest
   const now = new Date().toISOString();
   if (!conversation) {
     [conversation] = await db.insert(aiConversations).values({ userId, title: titleFrom(body.message) }).returning();

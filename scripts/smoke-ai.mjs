@@ -41,10 +41,20 @@ check("status needs a session -> 401", (await new Client().call("GET", "/api/ai/
 check("chat needs a session -> 401", (await new Client().call("POST", "/api/ai/chat", { message: "hi" })).status === 401);
 
 if (!MOCK) {
+  // This mode works whether or not the assistant is switched on, and never sends a real chat (that would use up free quota).
   let r = await a.call("GET", "/api/ai/status");
-  check("assistant is off by default", r.status === 200 && r.json.enabled === false && r.json.providers.length === 0 && /off|No AI/.test(r.json.reason), r.text);
-  r = await a.call("POST", "/api/ai/chat", { message: "hello" });
-  check("chat is refused while off -> 403", r.status === 403, r.text);
+  check("status reports whether the assistant is available, without revealing any key", r.status === 200 && typeof r.json.enabled === "boolean" && Array.isArray(r.json.providers) && r.json.dailyLimit >= 1 && !/gsk_|sk-or|AIza|nvapi|Bearer/.test(r.text), r.text);
+  if (!r.json.enabled) {
+    r = await a.call("POST", "/api/ai/chat", { message: "hello" });
+    check("chat is refused while the assistant is off -> 403", r.status === 403, r.text);
+  } else {
+    check("every enabled provider is named with its model", r.json.providers.length > 0 && r.json.providers.every((p) => p.id && p.model), r.text);
+    check("an empty message is rejected before any provider is called -> 400", (await a.call("POST", "/api/ai/chat", { message: "   " })).status === 400);
+    check("an over-long message is rejected -> 400", (await a.call("POST", "/api/ai/chat", { message: "x".repeat(4001) })).status === 400);
+    check("an SVG disguised as a PNG is rejected -> 400", (await a.call("POST", "/api/ai/chat", { message: "look", image: { mimeType: "image/png", dataBase64: Buffer.from("<svg onload=alert(1)>").toString("base64") } })).status === 400);
+    check("more than 5 sources is rejected -> 400", (await a.call("POST", "/api/ai/chat", { message: "x", sourceIds: ["topic:a", "topic:b", "topic:c", "topic:d", "topic:e", "topic:f"] })).status === 400);
+    check("an unknown conversation -> 404", (await a.call("POST", "/api/ai/chat", { message: "hi", conversationId: 99999 })).status === 404);
+  }
   r = await a.call("GET", "/api/ai/conversations");
   check("conversation list still works (empty)", r.status === 200 && Array.isArray(r.json) && r.json.length === 0, r.text);
   console.log(failed ? `\n${failed} check(s) FAILED` : "\nAll checks passed");
